@@ -88,6 +88,7 @@ final class MemberGlut_Plugin {
 			'MemberGlut_Assets',
 			'MemberGlut_Account',
 			'MemberGlut_Checkout',
+			'MemberGlut_Payments',
 			'MemberGlut_Gateways',
 			'MemberGlut_Privacy',
 			'MemberGlut_User_Profile',

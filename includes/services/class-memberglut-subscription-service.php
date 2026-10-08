@@ -392,6 +392,9 @@ class MemberGlut_Subscription_Service {
 			} else {
 				$data['expires_at'] = MemberGlut_Plans::calculate_expiry( $plan, $start );
 			}
+			if ( ! empty( $sub['meta']['free_forever'] ) ) {
+				$data['expires_at'] = null;
+			}
 			if ( 'paid' === $plan['type'] && 'recurring' === $plan['billing'] ) {
 				$data['next_payment_at'] = $data['expires_at'];
 			}

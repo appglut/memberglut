@@ -1,5 +1,5 @@
 import { d8 as reactExports, j as ConfigContext, dm as useCSSVarCls, dI as useStyle, l as ConfirmContent, r as Footer, G as Panel, aw as classNames, d9 as renderCloseIcon, M as Modal$1, dC as useModal, aB as confirm, dS as withInfo, dT as withSuccess, dR as withError, dQ as withConfirm, aF as destroyFns, d0 as modalGlobalConfig, dU as withWarn } from "./Page-C9tSda4_.js";
-import { aV as withPureRenderTheme } from "./api-Dio4a_nt.js";
+import { a$ as withPureRenderTheme } from "./api-B7vDfSa0.js";
 var __rest = function(s, e) {
   var t = {};
   for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];

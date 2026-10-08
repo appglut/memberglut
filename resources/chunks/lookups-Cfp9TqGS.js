@@ -289,12 +289,13 @@ const L = {
   gateways: [],
   site: { url: "/" },
   signup_base: "",
+  can: {},
   currency: { code: "USD", symbol: "$", position: "before", thousand: ",", decimal: ".", decimals: 2 },
   ...admin.lookups || {}
 };
 admin.user || {};
 const planById = (id) => L.plans.find((p) => p.id === Number(id));
-const planOptions = (filter) => L.plans.filter(() => true).map((p) => ({ value: p.id, label: p.status === "active" ? p.name : `${p.name} (inactive)` }));
+const planOptions = (filter) => L.plans.filter(filter || (() => true)).map((p) => ({ value: p.id, label: p.status === "active" ? p.name : `${p.name} (inactive)` }));
 const roleOptions = (filter) => L.roles.filter(filter || (() => true)).map((r) => ({ value: r.slug, label: r.name }));
 const roleName = (slug) => (L.roles.find((r) => r.slug === slug) || {}).name || slug;
 const pageOptions = () => L.pages;

@@ -1,47 +1,20 @@
 import { cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, d6 as queryArg, a8 as __, cW as link, a2 as StatusBadge, c as Button, q as FontAwesomeIcon, b9 as faEllipsis, bs as faLayerGroup, aX as faCalendarPlus, aO as faBan, E as PageHeader, ba as faEnvelope, bF as faPlus, a1 as StatCard, c7 as faUsers, b0 as faCircleCheck, b_ as faUserClock, bn as faHourglassEnd, aj as _n, bZ as faUserCheck, bW as faTrashCan, ca as faXmark, bv as faMagnifyingGlass, bf as faFileExport, bd as faEye, c6 as faUserXmark, bA as faPaperPlane, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { b as planOptions, d as dayjs } from "./chunks/lookups-DN25OZmC.js";
-import { A as Avatar, C as ChangePlanModal, a as ExtendModal } from "./chunks/MemberModals-CyGU3Hp1.js";
-import { a1 as getMembers, S as Select, T as Tooltip, o as bulkMembers, A as exportMembers, R as Radio, l as addMember, n as broadcast, aE as searchUsers } from "./chunks/api-Dio4a_nt.js";
-import { S as SUB_STATUS, d as date, i as initials, G as GATEWAY, m as money } from "./chunks/format-CNHKAmkn.js";
-import { D as Dropdown, F as ForwardTable, C as Checkbox } from "./chunks/Table-BvILjgAE.js";
+import { b as planOptions, d as dayjs } from "./chunks/lookups-Cfp9TqGS.js";
+import { A as Avatar, C as ChangePlanModal, a as ExtendModal } from "./chunks/MemberModals-BTEJQON7.js";
+import { a4 as getMembers, S as Select, T as Tooltip, p as bulkMembers, G as exportMembers, R as Radio, l as addMember, o as broadcast } from "./chunks/api-B7vDfSa0.js";
+import { S as SUB_STATUS, d as date, i as initials, G as GATEWAY, m as money } from "./chunks/format-DjWmiSLr.js";
+import { U as UserSearch } from "./chunks/UserSearch-DlHc0XmM.js";
+import { D as Dropdown, F as ForwardTable, C as Checkbox } from "./chunks/Table-B97Zri6O.js";
 import { I as Input } from "./chunks/index-vq8i8Snb.js";
-import { P as Popconfirm } from "./chunks/index-7UTxYmoy.js";
-import { F as Form } from "./chunks/index-BRTJlPnN.js";
-import { M as Modal } from "./chunks/index-CoXNCXsy.js";
-import { D as DatePicker } from "./chunks/index-fHKxISrQ.js";
-import { S as Spin } from "./chunks/index-BDXpcJpj.js";
-import "./chunks/useBreakpoint-CPqLtmmb.js";
-import "./chunks/index-BcvGEOpP.js";
+import { P as Popconfirm } from "./chunks/index-CBMipQNv.js";
+import { F as Form } from "./chunks/index-BUcQTrsH.js";
+import { M as Modal } from "./chunks/index-BrCu-FXS.js";
+import { D as DatePicker } from "./chunks/index-_8mLokV3.js";
+import "./chunks/useBreakpoint-DJXkR6lG.js";
+import "./chunks/index-CRoY-Qmr.js";
 import "./chunks/index-CoZNuKmg.js";
-function UserSearch({ value, onChange }) {
-  const [options, setOptions] = reactExports.useState([]);
-  const [loading, setLoading] = reactExports.useState(false);
-  const timer = reactExports.useRef();
-  const search = (q) => {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setLoading(true);
-      searchUsers(q).then(setOptions).finally(() => setLoading(false));
-    }, 250);
-  };
-  reactExports.useEffect(() => {
-    search("");
-  }, []);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Select,
-    {
-      showSearch: true,
-      value,
-      onChange,
-      filterOption: false,
-      onSearch: search,
-      options,
-      notFoundContent: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "small" }) : null,
-      placeholder: __("Search by name, username or email…", "memberglut")
-    }
-  );
-}
+import "./chunks/index-BDXpcJpj.js";
 function AddMemberModal({ open, onClose, onSaved }) {
   const { message } = App.useApp();
   const [form] = Form.useForm();

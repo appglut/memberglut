@@ -1,27 +1,26 @@
 import { a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, q as FontAwesomeIcon, b5 as faCopy, bC as faPenToSquare, bW as faTrashCan, a2 as StatusBadge, E as PageHeader, c as Button, bg as faFileImport, bF as faPlus, p as Drawer, c9 as faWandMagicSparkles, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { d as dayjs } from "./chunks/lookups-DN25OZmC.js";
-import { V as getCoupons, R as Radio, S as Select, at as saveCoupon } from "./chunks/api-Dio4a_nt.js";
-import { m as money, d as date } from "./chunks/format-CNHKAmkn.js";
-import { P as PLANS } from "./chunks/demoData-BRskJB-O.js";
-import { P as Popconfirm } from "./chunks/index-7UTxYmoy.js";
-import { T as Tag } from "./chunks/index-QResbeLU.js";
-import { P as Progress } from "./chunks/progress-1lGvYr_h.js";
-import { U as Upload } from "./chunks/index-YerrIPbS.js";
-import { F as ForwardTable } from "./chunks/Table-BvILjgAE.js";
-import { F as Form } from "./chunks/index-BRTJlPnN.js";
+import { a as planById, d as dayjs, L, b as planOptions } from "./chunks/lookups-Cfp9TqGS.js";
+import { Y as getCoupons, u as deleteCoupon, am as importCoupons, R as Radio, S as Select, az as saveCoupon } from "./chunks/api-B7vDfSa0.js";
+import { m as money, d as date } from "./chunks/format-DjWmiSLr.js";
+import { P as Popconfirm } from "./chunks/index-CBMipQNv.js";
+import { T as Tag } from "./chunks/index-DblzLh6y.js";
+import { P as Progress } from "./chunks/progress-CNNevOYe.js";
+import { U as Upload } from "./chunks/index-XECaJDdA.js";
+import { F as ForwardTable } from "./chunks/Table-B97Zri6O.js";
+import { F as Form } from "./chunks/index-BUcQTrsH.js";
 import { I as Input } from "./chunks/index-vq8i8Snb.js";
-import { T as TypedInputNumber, D as DatePicker } from "./chunks/index-fHKxISrQ.js";
+import { T as TypedInputNumber, D as DatePicker } from "./chunks/index-_8mLokV3.js";
 import { S as Switch } from "./chunks/index-B-UY_eZJ.js";
-import "./chunks/index-BcvGEOpP.js";
-import "./chunks/useBreakpoint-CPqLtmmb.js";
+import "./chunks/index-CRoY-Qmr.js";
+import "./chunks/useBreakpoint-DJXkR6lG.js";
 import "./chunks/index-BDXpcJpj.js";
 const STATUS = { active: __("Active", "memberglut"), scheduled: __("Scheduled", "memberglut"), expired: __("Expired", "memberglut"), inactive: __("Inactive", "memberglut") };
 function CouponDrawer({ coupon, onClose, onSave }) {
   const [form] = Form.useForm();
   const type = Form.useWatch("type", form);
   reactExports.useEffect(() => {
-    if (coupon) form.setFieldsValue({ ...coupon, starts: coupon.starts ? dayjs(coupon.starts) : null, expires: coupon.expires ? dayjs(coupon.expires) : null, enabled: coupon.status !== "inactive" });
+    if (coupon && coupon.id) form.setFieldsValue({ ...coupon, starts: coupon.starts ? dayjs(coupon.starts) : null, expires: coupon.expires ? dayjs(coupon.expires) : null });
   }, [coupon]);
   const gen = () => form.setFieldValue("code", Math.random().toString(36).slice(2, 10).toUpperCase());
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -34,7 +33,7 @@ function CouponDrawer({ coupon, onClose, onSave }) {
       destroyOnClose: true,
       footer: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { textAlign: "right" }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: onClose, style: { marginRight: 8 }, children: __("Cancel", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", onClick: async () => onSave(await form.validateFields()), children: __("Save coupon", "memberglut") })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", onClick: async () => onSave(await form.validateFields(), form), children: __("Save coupon", "memberglut") })
       ] }),
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Form, { form, layout: "vertical", requiredMark: false, initialValues: { type: "percent", amount: 10, plans: [], max_uses: 0, per_user: 1, new_users_only: false, recurring: false, enabled: true }, children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { label: __("Code", "memberglut"), required: true, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { display: "flex", gap: 8 }, children: [
@@ -43,9 +42,9 @@ function CouponDrawer({ coupon, onClose, onSave }) {
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-form-grid", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "type", label: __("Discount", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Radio.Group, { optionType: "button", buttonStyle: "solid", options: [{ value: "percent", label: "%" }, { value: "fixed", label: __("Amount", "memberglut") }] }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "amount", label: type === "percent" ? __("Percent off", "memberglut") : __("Amount off", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 0, max: type === "percent" ? 100 : void 0, addonAfter: type === "percent" ? "%" : void 0, addonBefore: type === "fixed" ? "$" : void 0, style: { width: "100%" } }) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "amount", label: type === "percent" ? __("Percent off", "memberglut") : __("Amount off", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 0, max: type === "percent" ? 100 : void 0, addonAfter: type === "percent" ? "%" : void 0, addonBefore: type === "fixed" ? L.currency.symbol : void 0, style: { width: "100%" } }) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "plans", label: __("Plans", "memberglut"), extra: __("Empty = every paid plan.", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { mode: "multiple", options: PLANS.filter((p) => p.type === "paid").map((p) => ({ value: p.id, label: p.name })), placeholder: __("All paid plans", "memberglut") }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "plans", label: __("Plans", "memberglut"), extra: __("Empty = every paid plan.", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { mode: "multiple", options: planOptions((p) => p.type === "paid"), placeholder: __("All paid plans", "memberglut") }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "recurring", label: __("For subscriptions, apply to", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Radio.Group, { options: [{ value: false, label: __("The first payment only", "memberglut") }, { value: true, label: __("Every payment", "memberglut") }] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-form-grid", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "starts", label: __("Starts", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DatePicker, { style: { width: "100%" } }) }),
@@ -65,13 +64,30 @@ function Coupons() {
   const [loading, setLoading] = reactExports.useState(true);
   const [editing, setEditing] = reactExports.useState(null);
   reactExports.useEffect(() => {
-    getCoupons().then(setRows).finally(() => setLoading(false));
+    getCoupons().then(setRows).catch((e) => message.error(e.message)).finally(() => setLoading(false));
   }, []);
-  const save = async (v) => {
-    const c = await saveCoupon({ ...editing, ...v, code: v.code.toUpperCase(), starts: v.starts ? v.starts.format("YYYY-MM-DD") : "", expires: v.expires ? v.expires.format("YYYY-MM-DD") : "", status: v.enabled ? "active" : "inactive", uses: editing.uses || 0 });
-    setRows(editing.id ? rows.map((r) => r.id === c.id ? c : r) : [c, ...rows]);
-    setEditing(null);
-    message.success(__("Coupon saved.", "memberglut"));
+  const save = async (v, form) => {
+    try {
+      const c = await saveCoupon({ id: editing.id, ...v, code: v.code.toUpperCase(), starts: v.starts ? v.starts.format("YYYY-MM-DD") : "", expires: v.expires ? v.expires.format("YYYY-MM-DD") : "" });
+      setRows(editing.id ? rows.map((r) => r.id === c.id ? c : r) : [c, ...rows]);
+      setEditing(null);
+      message.success(__("Coupon saved.", "memberglut"));
+    } catch (e) {
+      form.setFields(Object.entries(e.fields || {}).map(([name, err]) => ({ name, errors: [err] })));
+      message.error(e.message);
+    }
+  };
+  const remove = (id) => deleteCoupon(id).then(() => {
+    setRows((rs) => rs.filter((x) => x.id !== id));
+    message.success(__("Coupon deleted.", "memberglut"));
+  }).catch((e) => message.error(e.message));
+  const importCsv = (file) => {
+    file.text().then((csv) => importCoupons(csv)).then((r) => {
+      setRows(r.coupons);
+      message.success(sprintf(__("%1$d created, %2$d updated.", "memberglut"), r.created || 0, r.updated || 0));
+      (r.errors || []).slice(0, 3).forEach((er) => message.warning(er));
+    }).catch((e) => message.error(e.message));
+    return false;
   };
   const columns = [
     {
@@ -94,7 +110,7 @@ function Coupons() {
             __("Edit", "memberglut")
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-action-sep", children: "|" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: __("Delete this coupon?", "memberglut"), okButtonProps: { danger: true }, onConfirm: () => setRows(rows.filter((x) => x.id !== r.id)), children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { className: "mg-action-delete", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: __("Delete this coupon?", "memberglut"), okButtonProps: { danger: true }, onConfirm: () => remove(r.id), children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { className: "mg-action-delete", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }),
             " ",
             __("Delete", "memberglut")
@@ -108,7 +124,7 @@ function Coupons() {
     ] }) },
     { title: __("Plans", "memberglut"), dataIndex: "plans", render: (v) => v.length ? v.map((id) => {
       var _a;
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: (_a = PLANS.find((p) => p.id === id)) == null ? void 0 : _a.name }, id);
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: ((_a = planById(id)) == null ? void 0 : _a.name) || `#${id}` }, id);
     }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: __("All paid plans", "memberglut") }) },
     { title: __("Used", "memberglut"), render: (v, r) => r.max_uses ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { width: 140 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Progress, { percent: r.uses / r.max_uses * 100, size: "small", format: () => `${r.uses}/${r.max_uses}`, strokeColor: "#e94560" }) }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       r.uses,
@@ -133,10 +149,7 @@ function Coupons() {
         title: __("Coupons", "memberglut"),
         subtitle: __("Discount codes for checkout: percent or fixed, per plan, with dates and usage limits.", "memberglut"),
         actions: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Upload, { accept: ".csv", showUploadList: false, beforeUpload: () => {
-            message.success(__("Codes imported.", "memberglut"));
-            return false;
-          }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faFileImport }), children: __("Import CSV", "memberglut") }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Upload, { accept: ".csv", showUploadList: false, beforeUpload: importCsv, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faFileImport }), children: __("Import CSV", "memberglut") }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPlus }), onClick: () => setEditing({}), children: __("New coupon", "memberglut") })
         ] })
       }

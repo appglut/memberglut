@@ -15,25 +15,7 @@ import { ChangePlanModal, ExtendModal } from '../components/MemberModals';
 import * as api from '../services/api';
 import { money, date, SUB_STATUS, GATEWAY, initials } from '../services/format';
 import { L, planOptions } from '../services/lookups';
-
-/** Async user search for the Add member modal. */
-function UserSearch({ value, onChange }) {
-  const [options, setOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const timer = useRef();
-  const search = (q) => {
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => {
-      setLoading(true);
-      api.searchUsers(q).then(setOptions).finally(() => setLoading(false));
-    }, 250);
-  };
-  useEffect(() => { search(''); }, []);
-  return (
-    <Select showSearch value={value} onChange={onChange} filterOption={false} onSearch={search} options={options}
-      notFoundContent={loading ? <Spin size="small" /> : null} placeholder={__( 'Search by name, username or email…', 'memberglut' )} />
-  );
-}
+import UserSearch from '../components/UserSearch';
 
 function AddMemberModal({ open, onClose, onSaved }) {
   const { message } = App.useApp();

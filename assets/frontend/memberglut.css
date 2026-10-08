@@ -116,3 +116,31 @@
 .mg-pricing.is-dark { --mg-border: rgba(255,255,255,.14); --mg-muted: rgba(255,255,255,.65); color: #f1f5f9; }
 .mg-pricing.is-dark .mg-plan, .mg-pricing.is-dark table { background: #0f172a; }
 @media (max-width: 782px) { .mg-pricing { grid-template-columns: 1fr; } .mg-pricing-list .mg-plan-cta { margin-left: 0; width: 100%; } }
+
+/* Checkout */
+.mg-checkout { display: grid; gap: 1em; }
+form[data-mg-form]:not([data-plan-type="paid"]) .mg-checkout { display: none; }
+.mg-checkout.no-payment .mg-gateways { display: none; }
+.mg-coupon-row { display: flex; gap: .5em; }
+.mg-coupon-row input { flex: 1; }
+.mg-button-secondary { background: transparent; color: var(--mg-accent) !important; border: 1px solid var(--mg-accent); padding: .55em 1em; }
+.mg-coupon.is-ok .mg-field-error { color: var(--mg-success); }
+.mg-summary:empty { display: none; }
+.mg-summary { border: 1px solid var(--mg-border); border-radius: var(--mg-radius); padding: .8em 1em; background: var(--mg-surface); }
+.mg-summary-table, .mg-receipt-table { width: 100%; border-collapse: collapse; margin: 0; }
+.mg-summary-table th, .mg-summary-table td, .mg-receipt-table th, .mg-receipt-table td { padding: .35em 0; border: 0; font-weight: 400; }
+.mg-summary-table th, .mg-receipt-table th { text-align: left; color: var(--mg-muted); }
+.mg-summary-table td, .mg-receipt-table td { text-align: right; }
+.mg-summary-table .mg-total th, .mg-summary-table .mg-total td, .mg-receipt-table .mg-total th, .mg-receipt-table .mg-total td { font-weight: 700; color: inherit; border-top: 1px solid var(--mg-border); padding-top: .6em; }
+.mg-summary-text { margin: .5em 0 0; font-size: .88em; color: var(--mg-muted); }
+.mg-gateway-options { display: grid; gap: .5em; }
+.mg-gateway-option { display: flex; gap: .6em; align-items: center; padding: .7em .9em; border: 1px solid var(--mg-border); border-radius: 8px; cursor: pointer; font-weight: 500; }
+.mg-gateway-option:has(input:checked) { border-color: var(--mg-accent); box-shadow: 0 0 0 1px var(--mg-accent); }
+.mg-gateway-option[hidden], .mg-gateway-note[hidden] { display: none; }
+.mg-gateway-note { font-size: .88em; color: var(--mg-muted); }
+.mg-test { color: #b45309; font-style: normal; font-size: .8em; background: #fef3c7; border-radius: 4px; padding: 0 .4em; margin-left: .4em; }
+.mg-pay-area { display: grid; gap: 1em; }
+.mg-pay-intro { margin: 0; font-weight: 600; }
+.mg-receipt { max-width: 560px; margin: 0 auto; }
+.mg-receipt-table { margin: 1em 0 1.5em; }
+.mg-bank-details { border: 1px dashed var(--mg-border); border-radius: var(--mg-radius); padding: 1em 1.2em; background: var(--mg-surface); margin: 1em 0; }
