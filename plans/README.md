@@ -29,18 +29,18 @@ Audit date: 2026-10-08 · plugin 1.1.5 · the React admin is design-only today (
 
 | # | File | Builds | Depends on | Status |
 |---|---|---|---|---|
-| 0 | [phase-00-foundations.md](phase-00-foundations.md) | schema, settings store, REST base, lookups, scheduler, logger, events, caps | — | ☐ |
-| 1 | [phase-15-legacy-migration.md](phase-15-legacy-migration.md) *(migration step only)* | 1.1.5 → new schema/options | P0 | ☐ |
-| 2 | [phase-01-global-settings.md](phase-01-global-settings.md) | persistence + validation for ~120 settings | P0 | ☐ |
-| 3 | [phase-03-roles-capabilities.md](phase-03-roles-capabilities.md) | role editor, deny caps, multi-role, rescue | P0 | ☐ |
-| 4 | [phase-02-plans.md](phase-02-plans.md) | plans list + 40-field editor | P0, P1, P3 | ☐ |
-| 5 | [phase-04-subscription-engine.md](phase-04-subscription-engine.md) | lifecycle, role sync, expiry, jobs | P2, P3 | ☐ |
-| 6 | [phase-05-emails.md](phase-05-emails.md) | mailer + 23 emails | P1, P4 | ☐ |
-| 7 | [phase-06-members.md](phase-06-members.md) | members list, member detail, bulk, broadcast | P4, P5 | ☐ |
-| 8 | [phase-07-content-restriction.md](phase-07-content-restriction.md) | rules engine, per-post, blocks, menus, shortcodes | P1–P4 | ☐ |
-| 9 | [phase-08-forms-pages-auth.md](phase-08-forms-pages-auth.md) | pages, register/login/reset, approval, wp-login, pricing | P1, P2, P4, P5 | ☐ |
-| 10 | [phase-09-checkout-payments-coupons.md](phase-09-checkout-payments-coupons.md) | Stripe, bank, PayPal, coupons, payments admin | P2, P4, P5, P8 | ☐ |
-| 11 | [phase-11-security-privacy.md](phase-11-security-privacy.md) | sessions, lockout, captcha, GDPR | P0, P8 | ☐ |
+| 0 | [phase-00-foundations.md](phase-00-foundations.md) | schema, settings store, REST base, lookups, scheduler, logger, events, caps | — |✅ |
+| 1 | [phase-15-legacy-migration.md](phase-15-legacy-migration.md) *(migration step only)* | 1.1.5 → new schema/options | P0 |◐ migrations done, cleanup pending |
+| 2 | [phase-01-global-settings.md](phase-01-global-settings.md) | persistence + validation for ~120 settings | P0 |✅ |
+| 3 | [phase-03-roles-capabilities.md](phase-03-roles-capabilities.md) | role editor, deny caps, multi-role, rescue | P0 |✅ |
+| 4 | [phase-02-plans.md](phase-02-plans.md) | plans list + 40-field editor | P0, P1, P3 |✅ |
+| 5 | [phase-04-subscription-engine.md](phase-04-subscription-engine.md) | lifecycle, role sync, expiry, jobs | P2, P3 |✅ |
+| 6 | [phase-05-emails.md](phase-05-emails.md) | mailer + 23 emails | P1, P4 |✅ |
+| 7 | [phase-06-members.md](phase-06-members.md) | members list, member detail, bulk, broadcast | P4, P5 |✅ |
+| 8 | [phase-07-content-restriction.md](phase-07-content-restriction.md) | rules engine, per-post, blocks, menus, shortcodes | P1–P4 |✅ |
+| 9 | [phase-08-forms-pages-auth.md](phase-08-forms-pages-auth.md) | pages, register/login/reset, approval, wp-login, pricing | P1, P2, P4, P5 |✅ |
+| 10 | [phase-09-checkout-payments-coupons.md](phase-09-checkout-payments-coupons.md) | Stripe, bank, PayPal, coupons, payments admin | P2, P4, P5, P8 |✅ |
+| 11 | [phase-11-security-privacy.md](phase-11-security-privacy.md) | sessions, lockout, captcha, GDPR | P0, P8 |✅ |
 | 12 | [phase-10-my-account.md](phase-10-my-account.md) | account tabs + self-service | P8, P9, P11 | ☐ |
 | 13 | [phase-12-dashboard.md](phase-12-dashboard.md) | stats, chart, checklist | P4, P7, P9 | ☐ |
 | 14 | [phase-13-data-logs.md](phase-13-data-logs.md) | export/import, logs, status, maintenance | most | ☐ |

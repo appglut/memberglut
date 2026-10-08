@@ -54,7 +54,7 @@ class MemberGlut_Form_Guard {
 			$html .= '<input type="hidden" name="mg_hp_time" value="' . esc_attr( self::sign_time() ) . '">';
 		}
 		if ( self::captcha_on( $form ) ) {
-			$html .= self::captcha_widget( $form );
+			$html .= self::captcha_markup( $form );
 		}
 		return $html;
 	}
@@ -75,7 +75,7 @@ class MemberGlut_Form_Guard {
 	 * @param string $form Form key.
 	 * @return string
 	 */
-	private static function captcha_widget( $form ) {
+	public static function captcha_markup( $form ) {
 		$provider = memberglut_setting( 'captcha_provider' );
 		$key      = self::site_key();
 		switch ( $provider ) {
@@ -130,7 +130,7 @@ class MemberGlut_Form_Guard {
 	 * @param array  $data Data.
 	 * @return true|WP_Error
 	 */
-	private static function verify_captcha( $form, $data ) {
+	public static function verify_captcha( $form, $data ) {
 		$provider = memberglut_setting( 'captcha_provider' );
 		$fields   = array( 'recaptcha' => array( 'g-recaptcha-response', 'mg_captcha' ), 'hcaptcha' => array( 'h-captcha-response' ), 'turnstile' => array( 'cf-turnstile-response' ) );
 		$token    = '';

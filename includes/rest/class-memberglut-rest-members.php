@@ -223,8 +223,7 @@ class MemberGlut_REST_Members extends MemberGlut_REST_Controller {
 				$res = MemberGlut_Auth::send_reset( $user );
 				break;
 			case 'logout-all':
-				WP_Session_Tokens::get_instance( $uid )->destroy_all();
-				memberglut_repo( 'logins' )->update_where( array( 'user_id' => $uid, 'ended_at IS NULL' => true ), array( 'ended_at' => memberglut_now() ) );
+				MemberGlut_Security::end_all_sessions( $uid );
 				memberglut_event( 'logout_all', __( 'Logged out of all devices by an admin', 'memberglut' ), array( 'user_id' => $uid, 'object_type' => 'user', 'object_id' => $uid ) );
 				$res = true;
 				break;
@@ -374,7 +373,7 @@ class MemberGlut_REST_Members extends MemberGlut_REST_Controller {
 	public function logins( WP_REST_Request $request ) {
 		$uid  = absint( $request->get_param( 'user' ) );
 		$rows = memberglut_repo( 'logins' )->query( array( 'where' => array( 'user_id' => $uid ), 'orderby' => 'id DESC', 'per_page' => 20 ) );
-		$live = array_keys( WP_Session_Tokens::get_instance( $uid )->get_all() );
+		$live = array_keys( MemberGlut_Security::sessions( $uid ) );
 		return rest_ensure_response(
 			array_map(
 				static function ( $l ) use ( $live ) {

@@ -27,20 +27,6 @@ class MemberGlut_Members {
 	public static function init() {
 		add_action( 'memberglut_broadcast_batch', array( __CLASS__, 'broadcast_batch' ) );
 		add_action( 'memberglut_bulk_batch', array( __CLASS__, 'bulk_batch' ) );
-		add_action( 'wp_login', array( __CLASS__, 'remember_login' ), 10, 2 );
-	}
-
-	/**
-	 * Store the last login time.
-	 *
-	 * @param string  $login Username.
-	 * @param WP_User $user  User.
-	 * @return void
-	 */
-	public static function remember_login( $login, $user ) {
-		if ( $user instanceof WP_User ) {
-			update_user_meta( $user->ID, 'memberglut_last_login', memberglut_now() );
-		}
 	}
 
 	/**
