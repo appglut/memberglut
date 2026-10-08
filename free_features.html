@@ -1,0 +1,1529 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MemberGlut: Free Features</title>
+<style>
+:root {
+  --bg:#f6f7f9; --card:#fff; --text:#1d2330; --muted:#5b6475; --line:#e3e6ec;
+  --accent:#4f46e5; --accent-soft:#eef0ff; --p1:#c2410c; --p1-bg:#fff1e8;
+  --p2:#1d4ed8; --p2-bg:#e8f0ff; --p3:#4b5563; --p3-bg:#f0f1f4;
+  --have:#047857; --have-bg:#e6f7f0; --partial:#a16207; --partial-bg:#fdf6e3; --note:#7c2d12; --note-bg:#fff7ed;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#11141b; --card:#1a1f29; --text:#e6e9ef; --muted:#9aa3b5; --line:#2a3140;
+    --accent:#8b8cf8; --accent-soft:#252a45; --p1:#fb923c; --p1-bg:#3a2417; --p2:#93b4ff; --p2-bg:#1d2a47;
+    --p3:#b8bfcc; --p3-bg:#262b36; --have:#34d399; --have-bg:#15302a; --partial:#facc15; --partial-bg:#332b12; --note:#fdba74; --note-bg:#2e2116;
+  }
+}
+:root[data-theme="dark"] {
+    --bg:#11141b; --card:#1a1f29; --text:#e6e9ef; --muted:#9aa3b5; --line:#2a3140;
+    --accent:#8b8cf8; --accent-soft:#252a45; --p1:#fb923c; --p1-bg:#3a2417; --p2:#93b4ff; --p2-bg:#1d2a47;
+    --p3:#b8bfcc; --p3-bg:#262b36; --have:#34d399; --have-bg:#15302a; --partial:#facc15; --partial-bg:#332b12; --note:#fdba74; --note-bg:#2e2116;
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+a { color:var(--accent); }
+.top { position:sticky; top:0; z-index:5; background:var(--card); border-bottom:1px solid var(--line); padding:12px 16px; }
+.top .row { max-width:1200px; margin:0 auto; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.top h1 { font-size:18px; margin:0 12px 0 0; }
+.top input[type=search] { flex:1 1 220px; min-width:0; padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; }
+.top select, .top button { padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--text); font:inherit; cursor:pointer; }
+.progress { font-size:13px; color:var(--muted); white-space:nowrap; }
+.bar { height:4px; background:var(--line); border-radius:4px; overflow:hidden; max-width:1200px; margin:8px auto 0; }
+.bar i { display:block; height:100%; width:0; background:var(--have); transition:width .2s; }
+.wrap { max-width:1200px; margin:0 auto; padding:20px 16px 60px; display:grid; grid-template-columns:240px 1fr; gap:24px; }
+nav.side { position:sticky; top:96px; align-self:start; max-height:calc(100vh - 110px); overflow:auto; }
+nav.side a { display:flex; justify-content:space-between; gap:8px; padding:6px 10px; border-radius:6px; text-decoration:none; color:var(--text); font-size:14px; }
+nav.side a:hover { background:var(--accent-soft); }
+nav.side a span { color:var(--muted); font-size:12px; }
+.intro { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:24px; }
+.intro p { margin:.4em 0; }
+.intro ul.legend { columns:2; padding-left:18px; margin:.5em 0; font-size:13px; color:var(--muted); }
+.intro ul.legend b { color:var(--text); display:inline-block; min-width:44px; }
+.cat h2 { font-size:20px; margin:28px 0 4px; }
+.cat h2 small { font-size:13px; color:var(--muted); font-weight:500; }
+.catdesc { color:var(--muted); margin:0 0 12px; }
+.feat { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 16px; margin:10px 0; }
+.feat.is-done { opacity:.55; }
+.feat.is-done h3 { text-decoration:line-through; }
+.feat header { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.feat h3 { font-size:16px; margin:0; flex:1 1 200px; }
+.done { display:flex; align-items:center; gap:4px; font-size:12px; color:var(--muted); cursor:pointer; }
+.prio, .mg { font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+.p1 { color:var(--p1); background:var(--p1-bg); } .p2 { color:var(--p2); background:var(--p2-bg); } .p3 { color:var(--p3); background:var(--p3-bg); }
+.mg.have { color:var(--have); background:var(--have-bg); } .mg.partial { color:var(--partial); background:var(--partial-bg); }
+.details { margin:8px 0 6px; }
+.details code, .note code { background:var(--accent-soft); padding:0 4px; border-radius:4px; font-size:13px; }
+.note { margin:6px 0; padding:6px 10px; border-radius:6px; background:var(--note-bg); color:var(--note); font-size:13px; }
+.chips { display:flex; gap:4px; flex-wrap:wrap; }
+.chip { font-size:11px; padding:1px 7px; border-radius:4px; background:var(--accent-soft); color:var(--accent); cursor:help; }
+.hidden { display:none !important; }
+@media (max-width: 820px) {
+  .wrap { grid-template-columns:1fr; }
+  nav.side { position:static; max-height:none; display:flex; flex-wrap:wrap; gap:4px; }
+  nav.side a { background:var(--card); border:1px solid var(--line); }
+  .intro ul.legend { columns:1; }
+}
+@media print { .top, nav.side, .done { display:none; } .wrap { display:block; } .feat { break-inside:avoid; } }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="row">
+    <h1>MemberGlut: Free Features</h1>
+    <input type="search" id="q" placeholder="Search 165 features (name, details, plugin code)…">
+    <select id="prio"><option value="">All priorities</option><option value="1">P1 Must have</option><option value="2">P2 Important</option><option value="3">P3 Nice to have</option></select>
+    <select id="state"><option value="">All</option><option value="todo">Not done</option><option value="done">Done</option><option value="mg">Exists in MemberGlut</option><option value="nomg">Missing in MemberGlut</option></select>
+    <button id="theme" type="button" title="Switch light/dark">◐</button>
+    <span class="progress" id="prog"></span>
+  </div>
+  <div class="bar"><i id="barfill"></i></div>
+</div>
+<div class="wrap">
+  <nav class="side"><a href="#membership-plans-levels">Membership Plans &amp; Levels<span>13</span></a><a href="#roles-capabilities">Roles &amp; Capabilities<span>12</span></a><a href="#content-restriction">Content Restriction<span>25</span></a><a href="#payments-checkout">Payments &amp; Checkout<span>18</span></a><a href="#subscription-lifecycle">Subscription Lifecycle<span>7</span></a><a href="#registration-login-forms">Registration, Login &amp; Forms<span>20</span></a><a href="#member-account-area-front-end">Member Account Area (front end)<span>8</span></a><a href="#member-management-admin">Member Management (admin)<span>9</span></a><a href="#emails-notifications">Emails &amp; Notifications<span>8</span></a><a href="#security-anti-abuse">Security &amp; Anti-abuse<span>8</span></a><a href="#redirects">Redirects<span>3</span></a><a href="#reports-analytics">Reports &amp; Analytics<span>3</span></a><a href="#shortcodes-blocks-widgets-builders">Shortcodes, Blocks, Widgets &amp; Builders<span>5</span></a><a href="#integrations-free-tier">Integrations (free tier)<span>10</span></a><a href="#developer-tools-platform">Developer, Tools &amp; Platform<span>11</span></a><a href="#compliance-i18n-compatibility">Compliance, i18n &amp; Compatibility<span>5</span></a><a href="pro_features.html" style="margin-top:12px;font-weight:600">→ Pro features</a></nav>
+  <main>
+    <div class="intro">
+      <p><strong>Free feature checklist from competitor research</strong></p>
+      <p>Features that competitors give away in their <b>free</b> versions. MemberGlut Free should match most of these to compete on wordpress.org.</p>
+<p>Researched from the readme and source code of: Members, Paid Member Subscriptions, Restrict User Access, s2Member, Simple Membership, SureMembers, Ultimate Member, User Registration &amp; Membership, ProfilePress, WP-Members, WP User Frontend, Membership for WooCommerce and WCFM Membership (installed versions, Oct 2026).</p>
+<p><b>P1</b> = must have for launch, <b>P2</b> = important, <b>P3</b> = nice to have. <b>In MemberGlut</b> = a version already exists in the current code (check how complete it is). Tick <b>Done</b> as you implement; progress is saved in this browser.</p>
+      <p>Plugin codes (hover a chip on any card to see the full name):</p>
+      <ul class="legend"><li><b>MEM</b> Members (MemberPress team)</li><li><b>PMS</b> Paid Member Subscriptions</li><li><b>RUA</b> Restrict User Access</li><li><b>S2</b> s2Member</li><li><b>SWPM</b> Simple Membership</li><li><b>SM</b> SureMembers</li><li><b>UM</b> Ultimate Member</li><li><b>URM</b> User Registration &amp; Membership</li><li><b>PP</b> ProfilePress</li><li><b>WPM</b> WP-Members</li><li><b>WPUF</b> WP User Frontend</li><li><b>MFW</b> Membership for WooCommerce (WP Swings)</li><li><b>WCFM</b> WCFM Vendor Membership</li></ul>
+    </div>
+    <section class="cat" id="membership-plans-levels">
+  <h2>Membership Plans &amp; Levels <small>13</small></h2>
+  <p class="catdesc">The core object of the plugin. Every competitor has a plan (level, access group or subscription plan) that ties together price, duration, a role and the content it unlocks.</p>
+  <article class="feat" id="membership-plans-levels-unlimited-membership-plans-levels" data-prio="1" data-mg="have" data-text="unlimited membership plans / levels create as many plans as needed (free, silver, gold…). each plan stores: name, slug, description, status (active/inactive), price, duration and the wp role to assign. use a custom table (&lt;code&gt;memberglut_plans&lt;/code&gt;) or a cpt. inactive plans stay attached to existing members but are hidden from signup forms (pms has an option to still show them in the restriction metabox). pms swpm sm rua urm pp s2 mfw wcfm wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-unlimited-membership-plans-levels"><span>Done</span></label>
+    <h3>Unlimited membership plans / levels</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Create as many plans as needed (Free, Silver, Gold…). Each plan stores: name, slug, description, status (active/inactive), price, duration and the WP role to assign. Use a custom table (<code>memberglut_plans</code>) or a CPT. Inactive plans stay attached to existing members but are hidden from signup forms (PMS has an option to still show them in the restriction metabox).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="s2Member">S2</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="WCFM Vendor Membership">WCFM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="membership-plans-levels-free-and-paid-plans-side-by-side" data-prio="1" data-mg="partial" data-text="free and paid plans side by side a price of 0 means a free plan. it skips the gateway and activates right away, optionally after email confirmation or admin approval. paid plans go through checkout. both types appear in the same plan selector on the registration form. pms swpm urm pp wcfm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-free-and-paid-plans-side-by-side"><span>Done</span></label>
+    <h3>Free and paid plans side by side</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">A price of 0 means a free plan. It skips the gateway and activates right away, optionally after email confirmation or admin approval. Paid plans go through checkout. Both types appear in the same plan selector on the registration form.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WCFM Vendor Membership">WCFM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="membership-plans-levels-flexible-duration-models" data-prio="1" data-mg="partial" data-text="flexible duration models supported durations: unlimited/lifetime, fixed length (x days/weeks/months/years), a fixed future expiry date, and annual calendar or fiscal-year memberships (swpm). store &lt;code&gt;duration&lt;/code&gt; + &lt;code&gt;duration_unit&lt;/code&gt; per plan and compute &lt;code&gt;expires_at&lt;/code&gt; per member subscription. a daily cron expires overdue subscriptions. swpm pms pp urm mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-flexible-duration-models"><span>Done</span></label>
+    <h3>Flexible duration models</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Supported durations: unlimited/lifetime, fixed length (X days/weeks/months/years), a fixed future expiry date, and annual calendar or fiscal-year memberships (SWPM). Store <code>duration</code> + <code>duration_unit</code> per plan and compute <code>expires_at</code> per member subscription. A daily cron expires overdue subscriptions.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="membership-plans-levels-plan-hierarchy-tiers-upgrade-downgrade-paths" data-prio="1" data-mg="partial" data-text="plan hierarchy / tiers (upgrade &amp; downgrade paths) plans belong to a tier group with an order (free &lt; silver &lt; gold). members can upgrade or downgrade inside the group from their account page. pms has the options &quot;allow subscription downgrades&quot; and &quot;allow subscription change&quot; (to another tier), plus &quot;apply sign-up fees to upgrades/downgrades&quot;. urm has membership groups with drag-to-reorder upgrade paths, and the upgrade type can be full amount or proration. pms urm um mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-plan-hierarchy-tiers-upgrade-downgrade-paths"><span>Done</span></label>
+    <h3>Plan hierarchy / tiers (upgrade &amp; downgrade paths)</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Plans belong to a tier group with an order (Free < Silver < Gold). Members can upgrade or downgrade inside the group from their account page. PMS has the options "Allow Subscription Downgrades" and "Allow Subscription Change" (to another tier), plus "Apply sign-up fees to upgrades/downgrades". URM has membership groups with drag-to-reorder upgrade paths, and the upgrade type can be full amount or proration.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="membership-plans-levels-membership-groups-grouped-plan-listing" data-prio="2" data-mg="none" data-text="membership groups (grouped plan listing) groups bundle related plans for the front-end pricing listing and upgrade paths, e.g. a &#x27;courses&#x27; group and a &#x27;community&#x27; group. they are rendered by a shortcode/block that shows the plans in a group as a pricing table. urm pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-membership-groups-grouped-plan-listing"><span>Done</span></label>
+    <h3>Membership groups (grouped plan listing)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Groups bundle related plans for the front-end pricing listing and upgrade paths, e.g. a 'Courses' group and a 'Community' group. They are rendered by a shortcode/block that shows the plans in a group as a pricing table.</p>
+  <div class="chips"><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="membership-plans-levels-free-trial-period" data-prio="1" data-mg="none" data-text="free trial period per-plan trial length (days/weeks/months). for recurring gateways, pass the trial to stripe/paypal. for manual plans, start the subscription in a &#x27;trialing&#x27; status and charge when the trial ends. prevent repeat trials by flagging users who already used one. pp sends a &#x27;trial ending&#x27; reminder email. pms urm pp wcfm mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-free-trial-period"><span>Done</span></label>
+    <h3>Free trial period</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Per-plan trial length (days/weeks/months). For recurring gateways, pass the trial to Stripe/PayPal. For manual plans, start the subscription in a 'trialing' status and charge when the trial ends. Prevent repeat trials by flagging users who already used one. PP sends a 'trial ending' reminder email.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WCFM Vendor Membership">WCFM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="membership-plans-levels-sign-up-setup-fee" data-prio="2" data-mg="none" data-text="sign-up / setup fee a one-time fee added to the first payment, separate from the recurring amount. pms can optionally charge it again on upgrades and downgrades. pms pp mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-sign-up-setup-fee"><span>Done</span></label>
+    <h3>Sign-up / setup fee</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">A one-time fee added to the first payment, separate from the recurring amount. PMS can optionally charge it again on upgrades and downgrades.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="membership-plans-levels-pay-in-installments-limited-billing-cycles" data-prio="2" data-mg="none" data-text="pay in installments (limited billing cycles) a recurring plan that stops after n payments. pms calls these &#x27;limit payment cycles&#x27; / &#x27;number of payments&#x27;, with a &#x27;status after last cycle&#x27; choice: keep active forever or expire. track &lt;code&gt;processed_billing_cycles&lt;/code&gt; on the subscription. pms wcfm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-pay-in-installments-limited-billing-cycles"><span>Done</span></label>
+    <h3>Pay in installments (limited billing cycles)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">A recurring plan that stops after N payments. PMS calls these 'Limit Payment Cycles' / 'Number of Payments', with a 'Status After Last Cycle' choice: keep active forever or expire. Track <code>processed_billing_cycles</code> on the subscription.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WCFM Vendor Membership">WCFM</span></div>
+</article><article class="feat" id="membership-plans-levels-duplicate-plan" data-prio="3" data-mg="none" data-text="duplicate plan clone a plan with all its settings and content rules, then edit the copy. a simple row action in the plans list. sm pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-duplicate-plan"><span>Done</span></label>
+    <h3>Duplicate plan</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Clone a plan with all its settings and content rules, then edit the copy. A simple row action in the plans list.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="membership-plans-levels-plan-based-role-assignment" data-prio="1" data-mg="have" data-text="plan-based role assignment each plan maps to a wp role (or adds a secondary role). on activation, add the role. on expiry or cancellation, remove it and fall back to the default role. if a user has several plans, keep the highest-priority role. pms um sm urm swpm wcfm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-plan-based-role-assignment"><span>Done</span></label>
+    <h3>Plan-based role assignment</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Each plan maps to a WP role (or adds a secondary role). On activation, add the role. On expiry or cancellation, remove it and fall back to the default role. If a user has several plans, keep the highest-priority role.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WCFM Vendor Membership">WCFM</span></div>
+</article><article class="feat" id="membership-plans-levels-auto-assign-plan-on-registration-default-level" data-prio="1" data-mg="partial" data-text="auto-assign plan on registration / default level setting: &#x27;new user default level/plan&#x27; is granted when any wp user registers, including registrations from other plugins. rua also has &#x27;new user default role&#x27;. sm rua urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-auto-assign-plan-on-registration-default-level"><span>Done</span></label>
+    <h3>Auto-assign plan on registration / default level</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Setting: 'New User Default Level/Plan' is granted when any WP user registers, including registrations from other plugins. RUA also has 'New User Default Role'.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="membership-plans-levels-member-count-plan-stats" data-prio="2" data-mg="have" data-text="member count &amp; plan stats show active, expired and pending member counts per plan in the list table. pms has a &lt;code&gt;[pms-count-members]&lt;/code&gt; shortcode for front-end social proof. pms sm mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-member-count-plan-stats"><span>Done</span></label>
+    <h3>Member count &amp; plan stats</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Show active, expired and pending member counts per plan in the list table. PMS has a <code>[pms-count-members]</code> shortcode for front-end social proof.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="membership-plans-levels-limit-purchase-per-plan-members-only-plans" data-prio="3" data-mg="none" data-text="limit purchase per plan / members-only plans restrict who can buy a plan, e.g. only existing members can buy an upgrade-only plan, or a plan is hidden from the pricing table (wcfm &#x27;hide from plan table&#x27;). a &#x27;featured&#x27; flag highlights a plan in the table (wcfm). mfw pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="membership-plans-levels-limit-purchase-per-plan-members-only-plans"><span>Done</span></label>
+    <h3>Limit purchase per plan / members-only plans</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Restrict who can buy a plan, e.g. only existing members can buy an upgrade-only plan, or a plan is hidden from the pricing table (WCFM 'Hide from Plan Table'). A 'Featured' flag highlights a plan in the table (WCFM).</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article>
+</section><section class="cat" id="roles-capabilities">
+  <h2>Roles &amp; Capabilities <small>12</small></h2>
+  <p class="catdesc">A role editor is a strong free differentiator (the Members plugin's whole product). MemberGlut already focuses on this.</p>
+  <article class="feat" id="roles-capabilities-role-editor-create-edit-delete-roles" data-prio="1" data-mg="have" data-text="role editor: create / edit / delete roles a ui for all wp roles with capability checkboxes grouped by type (posts, pages, media, users, plugin caps). built-in roles are protected (no deleting administrator or the default role). show a count of users per role. mem um sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-role-editor-create-edit-delete-roles"><span>Done</span></label>
+    <h3>Role editor: create / edit / delete roles</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">A UI for all WP roles with capability checkboxes grouped by type (posts, pages, media, users, plugin caps). Built-in roles are protected (no deleting administrator or the default role). Show a count of users per role.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="roles-capabilities-clone-role" data-prio="2" data-mg="partial" data-text="clone role build a new role starting from an existing role&#x27;s capabilities. mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-clone-role"><span>Done</span></label>
+    <h3>Clone role</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Build a new role starting from an existing role's capabilities.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="roles-capabilities-explicitly-deny-capabilities" data-prio="1" data-mg="none" data-text="explicitly deny capabilities a capability has three states: grant, deny or not set. deny wins over grants from other roles, which is useful with multiple roles per user. apply it in the &lt;code&gt;user_has_cap&lt;/code&gt; filter. rua applies level capabilities that override roles. mem rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-explicitly-deny-capabilities"><span>Done</span></label>
+    <h3>Explicitly deny capabilities</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">A capability has three states: grant, deny or not set. Deny wins over grants from other roles, which is useful with multiple roles per user. Apply it in the <code>user_has_cap</code> filter. RUA applies level capabilities that override roles.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="Restrict User Access">RUA</span></div>
+</article><article class="feat" id="roles-capabilities-multiple-roles-per-user" data-prio="1" data-mg="none" data-text="multiple roles per user replace the single-role dropdown on the user edit and new-user screens with checkboxes. keep the primary role first in &lt;code&gt;wp_capabilities&lt;/code&gt;. mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-multiple-roles-per-user"><span>Done</span></label>
+    <h3>Multiple roles per user</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Replace the single-role dropdown on the user edit and new-user screens with checkboxes. Keep the primary role first in <code>wp_capabilities</code>.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="roles-capabilities-custom-capabilities" data-prio="1" data-mg="have" data-text="custom capabilities admins can add arbitrary capabilities. s2member uses &#x27;custom capabilities&#x27; (&lt;code&gt;access_s2member_ccap_x&lt;/code&gt;) as sellable packages of access that sit on top of levels. mem s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-custom-capabilities"><span>Done</span></label>
+    <h3>Custom capabilities</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Admins can add arbitrary capabilities. s2Member uses 'custom capabilities' (<code>access_s2member_ccap_X</code>) as sellable packages of access that sit on top of levels.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="roles-capabilities-capability-groups-tabs-by-post-type-plugin" data-prio="2" data-mg="have" data-text="capability groups / tabs by post type &amp; plugin group capabilities by post type, taxonomy and integrated plugin (woocommerce, edd, acf, givewp, meta box). others can register their groups through a registry api (&lt;code&gt;members_register_cap_group&lt;/code&gt;). mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-capability-groups-tabs-by-post-type-plugin"><span>Done</span></label>
+    <h3>Capability groups / tabs by post type &amp; plugin</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Group capabilities by post type, taxonomy and integrated plugin (WooCommerce, EDD, ACF, GiveWP, Meta Box). Others can register their groups through a registry API (<code>members_register_cap_group</code>).</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="roles-capabilities-extra-fine-grained-core-caps" data-prio="3" data-mg="none" data-text="extra fine-grained core caps members add-ons add &lt;code&gt;create_posts&lt;/code&gt;/&lt;code&gt;create_pages&lt;/code&gt; (separate from edit), category/tag management caps, privacy/gdpr caps, and role levels for the author dropdown bug. mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-extra-fine-grained-core-caps"><span>Done</span></label>
+    <h3>Extra fine-grained core caps</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Members add-ons add <code>create_posts</code>/<code>create_pages</code> (separate from edit), category/tag management caps, privacy/GDPR caps, and role levels for the author dropdown bug.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="roles-capabilities-role-hierarchy-priority" data-prio="2" data-mg="partial" data-text="role hierarchy / priority roles get a numeric level. users can only edit or promote users with lower roles. um&#x27;s &#x27;role priority&#x27; decides which role&#x27;s settings apply when a user has several roles. mem um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-role-hierarchy-priority"><span>Done</span></label>
+    <h3>Role hierarchy / priority</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Roles get a numeric level. Users can only edit or promote users with lower roles. UM's 'Role Priority' decides which role's settings apply when a user has several roles.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="roles-capabilities-per-role-behaviour-settings" data-prio="1" data-mg="none" data-text="per-role behaviour settings ultimate member stores per role: can access wp-admin, force-hide the admin bar, can edit or delete own profile, can view other profiles (which roles), can make the profile private, registration status (auto-approve / email activation / admin review), and actions after login, logout, registration and account deletion (redirect to profile, url or wp-admin, refresh). um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-per-role-behaviour-settings"><span>Done</span></label>
+    <h3>Per-role behaviour settings</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Ultimate Member stores per role: can access wp-admin, force-hide the admin bar, can edit or delete own profile, can view other profiles (which roles), can make the profile private, registration status (auto-approve / email activation / admin review), and actions after login, logout, registration and account deletion (redirect to profile, URL or wp-admin, refresh).</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="roles-capabilities-role-import-export-with-preview" data-prio="2" data-mg="have" data-text="role import / export with preview export all or selected roles plus settings to json. on import, preview each role and choose import, skip, overwrite or rename. protected roles cannot be overwritten. mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-role-import-export-with-preview"><span>Done</span></label>
+    <h3>Role import / export with preview</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Export all or selected roles plus settings to JSON. On import, preview each role and choose import, skip, overwrite or rename. Protected roles cannot be overwritten.</p><p class="note">MemberGlut has import/export in Pro. Members gives it away free, so consider moving at least export to free.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="roles-capabilities-administrator-rescue-magic-link" data-prio="2" data-mg="none" data-text="administrator rescue (magic link) if an admin locks themselves out while editing roles, &lt;code&gt;wp-login.php?action=…_rescue&lt;/code&gt; emails a 15-minute one-time link that restores the administrator role and plugin caps. rate-limited per ip. only real administrators or super admins are eligible. mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-administrator-rescue-magic-link"><span>Done</span></label>
+    <h3>Administrator rescue (magic link)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">If an admin locks themselves out while editing roles, <code>wp-login.php?action=…_rescue</code> emails a 15-minute one-time link that restores the administrator role and plugin caps. Rate-limited per IP. Only real administrators or super admins are eligible.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="roles-capabilities-capability-change-log" data-prio="3" data-mg="have" data-text="capability change log an audit log of who changed which capability on which role, and when. mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="roles-capabilities-capability-change-log"><span>Done</span></label>
+    <h3>Capability change log</h3>
+    <span class="prio p3" title="Nice to have">P3</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">An audit log of who changed which capability on which role, and when.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article>
+</section><section class="cat" id="content-restriction">
+  <h2>Content Restriction <small>25</small></h2>
+  <p class="catdesc">Ways to lock content. This is the most heavily competed area: almost everything below is free in at least one big competitor.</p>
+  <article class="feat" id="content-restriction-per-post-page-cpt-restriction-metabox" data-prio="1" data-mg="have" data-text="per post / page / cpt restriction metabox a sidebar metabox on every public post type: who can access it (everyone / logged in / logged out / selected plans / selected roles). inline overrides: custom message, custom redirect url, a different message for logged-in non-members and for logged-out users (pms). pms um swpm sm pp wpm urm s2 mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-per-post-page-cpt-restriction-metabox"><span>Done</span></label>
+    <h3>Per post / page / CPT restriction metabox</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">A sidebar metabox on every public post type: who can access it (everyone / logged in / logged out / selected plans / selected roles). Inline overrides: custom message, custom redirect URL, a different message for logged-in non-members and for logged-out users (PMS).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="s2Member">S2</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="content-restriction-restrict-whole-site-private-site" data-prio="1" data-mg="have" data-text="restrict whole site (private site) make the entire front end and rss feed members-only, with exceptions for the login, registration and password pages and an allow-list of pages. members also has &#x27;private feed&#x27; and &#x27;rest api requires login&#x27;. mem urm sm pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-restrict-whole-site-private-site"><span>Done</span></label>
+    <h3>Restrict whole site (private site)</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Make the entire front end and RSS feed members-only, with exceptions for the login, registration and password pages and an allow-list of pages. Members also has 'private feed' and 'REST API requires login'.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="content-restriction-rule-based-global-restriction-access-rules-engine" data-prio="1" data-mg="partial" data-text="rule-based global restriction (access rules engine) a separate &#x27;access rules&#x27; list. a rule = content to protect + exclusions + who can access + action. content targets: all of a post type, specific posts, child of x, taxonomy terms, archives, author, page template, front page, blog page, search page, 404 page, the whole site. rua allows and-combinations (e.g. posts tagged premium and by author x). suremembers adds rule priority when several rules match. sm pp urm rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-rule-based-global-restriction-access-rules-engine"><span>Done</span></label>
+    <h3>Rule-based global restriction (access rules engine)</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">A separate 'Access Rules' list. A rule = content to protect + exclusions + who can access + action. Content targets: all of a post type, specific posts, child of X, taxonomy terms, archives, author, page template, front page, blog page, search page, 404 page, the whole site. RUA allows AND-combinations (e.g. posts tagged Premium AND by author X). SureMembers adds rule priority when several rules match.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Restrict User Access">RUA</span></div>
+</article><article class="feat" id="content-restriction-taxonomy-category-level-restriction" data-prio="1" data-mg="none" data-text="taxonomy / category-level restriction restrict every post in a category or tag, and the term archive itself. pms adds a restriction box on the term edit screen. s2member has category- and tag-level access restrictions by member level. pms s2 rua pp sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-taxonomy-category-level-restriction"><span>Done</span></label>
+    <h3>Taxonomy / category-level restriction</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Restrict every post in a category or tag, and the term archive itself. PMS adds a restriction box on the term edit screen. s2Member has category- and tag-level access restrictions by member level.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="s2Member">S2</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="content-restriction-url-uri-restriction-with-wildcards-regex" data-prio="1" data-mg="none" data-text="url / uri restriction (with wildcards / regex) protect anything that isn&#x27;t a post, such as custom routes or buddypress pages, by url pattern. suremembers supports regular expressions in free. s2member has &#x27;uri level access restrictions&#x27;. rua sells this as a premium add-on. sm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-url-uri-restriction-with-wildcards-regex"><span>Done</span></label>
+    <h3>URL / URI restriction (with wildcards / regex)</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Protect anything that isn't a post, such as custom routes or BuddyPress pages, by URL pattern. SureMembers supports regular expressions in free. s2Member has 'URI Level Access Restrictions'. RUA sells this as a premium add-on.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="content-restriction-partial-content-restriction-shortcode" data-prio="1" data-mg="partial" data-text="partial content restriction shortcode wraps part of a post, e.g. &lt;code&gt;[restrict plans=&quot;1,2&quot; roles=&quot;editor&quot; logged_in=&quot;1&quot; not=&quot;gold&quot;]...[/restrict]&lt;/code&gt;. support negation (rua &lt;code&gt;level=&quot;!platinum&quot;&lt;/code&gt;), showing a fallback page&#x27;s content to others (rua &lt;code&gt;page=&quot;1&quot;&lt;/code&gt;), and s2member&#x27;s nested &lt;code&gt;[s2if]&lt;/code&gt; conditionals with php-like conditions. pms um swpm sm pp wpm urm rua mem s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-partial-content-restriction-shortcode"><span>Done</span></label>
+    <h3>Partial content restriction shortcode</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Wraps part of a post, e.g. <code>[restrict plans="1,2" roles="editor" logged_in="1" not="gold"]...[/restrict]</code>. Support negation (RUA <code>level="!platinum"</code>), showing a fallback page's content to others (RUA <code>page="1"</code>), and s2Member's nested <code>[s2If]</code> conditionals with PHP-like conditions.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="content-restriction-gutenberg-block-restriction" data-prio="1" data-mg="none" data-text="gutenberg block restriction every block gets a &#x27;visibility / permissions&#x27; inspector panel: show/hide by logged-in status, role, capability or plan. also add a &#x27;content restriction&#x27; wrapper block (urm, pms start/end blocks). members does this for free; suremembers sells it as premium. mem pms pp urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-gutenberg-block-restriction"><span>Done</span></label>
+    <h3>Gutenberg block restriction</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Every block gets a 'Visibility / Permissions' inspector panel: show/hide by logged-in status, role, capability or plan. Also add a 'Content Restriction' wrapper block (URM, PMS start/end blocks). Members does this for free; SureMembers sells it as premium.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="content-restriction-page-builder-restriction-elementor-divi-beaver-bricks" data-prio="2" data-mg="none" data-text="page builder restriction (elementor, divi, beaver, bricks) restrict elementor sections and widgets, divi modules/sections and beaver builder modules by plan or login status from each builder&#x27;s own ui. pms also integrates with kadence, siteorigin and wpbakery. pms pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-page-builder-restriction-elementor-divi-beaver-bricks"><span>Done</span></label>
+    <h3>Page builder restriction (Elementor, Divi, Beaver, Bricks)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Restrict Elementor sections and widgets, Divi modules/sections and Beaver Builder modules by plan or login status from each builder's own UI. PMS also integrates with Kadence, SiteOrigin and WPBakery.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="content-restriction-teaser-excerpt-for-restricted-content" data-prio="1" data-mg="have" data-text="teaser / excerpt for restricted content instead of hiding everything, show an excerpt (n words, wpm &#x27;auto excerpt&#x27; with a custom &#x27;read more&#x27;), excerpt + message, or excerpt + global message. pp adds a &#x27;blur &amp; fade&#x27; style over the teaser. swpm pms pp wpm rua sm um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-teaser-excerpt-for-restricted-content"><span>Done</span></label>
+    <h3>Teaser / excerpt for restricted content</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Instead of hiding everything, show an excerpt (N words, WPM 'Auto Excerpt' with a custom 'read more'), excerpt + message, or excerpt + global message. PP adds a 'blur & fade' style over the teaser.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="content-restriction-restriction-message-templates-global-per-rule" data-prio="1" data-mg="have" data-text="restriction message templates (global + per rule) a global rich-text message for non-members, a different one for logged-out visitors and logged-in non-members, and per-post overrides. smart tags like &lt;code&gt;{{sign_up}}&lt;/code&gt; and &lt;code&gt;{{log_in}}&lt;/code&gt; render buttons (urm). pms um pp swpm urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-restriction-message-templates-global-per-rule"><span>Done</span></label>
+    <h3>Restriction message templates (global + per rule)</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">A global rich-text message for non-members, a different one for logged-out visitors and logged-in non-members, and per-post overrides. Smart tags like <code>{{sign_up}}</code> and <code>{{log_in}}</code> render buttons (URM).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="content-restriction-unauthorized-action-message-redirect-login-page-template" data-prio="1" data-mg="have" data-text="unauthorized action: message / redirect / login page / template what happens on denial: show a message in place of the content, redirect to a url or to the login page with a return url, show a login or registration form inline (urm &#x27;show ur form&#x27;), render a shortcode, or load a different page template for restricted posts (pms, pp &#x27;restricted page template&#x27;). pms um pp sm urm rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-unauthorized-action-message-redirect-login-page-template"><span>Done</span></label>
+    <h3>Unauthorized action: message / redirect / login page / template</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">What happens on denial: show a message in place of the content, redirect to a URL or to the login page with a return URL, show a login or registration form inline (URM 'Show UR Form'), render a shortcode, or load a different page template for restricted posts (PMS, PP 'Restricted Page Template').</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Restrict User Access">RUA</span></div>
+</article><article class="feat" id="content-restriction-hide-restricted-content-from-queries-archives-search" data-prio="1" data-mg="have" data-text="hide restricted content from queries / archives / search option to exclude restricted posts from the main query, archives, search results and widgets, or to show them with an excerpt only. um: &#x27;hide from queries&#x27;. pms: &#x27;include restricted posts in queries&#x27;. rua: &#x27;how to display content in lists&#x27;. pms um sm rua urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-hide-restricted-content-from-queries-archives-search"><span>Done</span></label>
+    <h3>Hide restricted content from queries / archives / search</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Option to exclude restricted posts from the main query, archives, search results and widgets, or to show them with an excerpt only. UM: 'Hide from queries'. PMS: 'Include Restricted Posts in Queries'. RUA: 'How to display content in lists'.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="content-restriction-rest-api-content-protection" data-prio="1" data-mg="have" data-text="rest api content protection restricted posts must not leak through &lt;code&gt;/wp-json/wp/v2/posts&lt;/code&gt;. filter &lt;code&gt;rest_prepare_{post_type}&lt;/code&gt; and the query args. rua also limits rest endpoints to least privilege. rua sm urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-rest-api-content-protection"><span>Done</span></label>
+    <h3>REST API content protection</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Restricted posts must not leak through <code>/wp-json/wp/v2/posts</code>. Filter <code>rest_prepare_{post_type}</code> and the query args. RUA also limits REST endpoints to least privilege.</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="content-restriction-restrict-comments" data-prio="2" data-mg="have" data-text="restrict comments hide or close comments on restricted posts, and an option to let only members comment anywhere. pms swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-restrict-comments"><span>Done</span></label>
+    <h3>Restrict comments</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Hide or close comments on restricted posts, and an option to let only members comment anywhere.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="content-restriction-feed-rss-protection" data-prio="2" data-mg="have" data-text="feed (rss) protection replace restricted content in feeds with an excerpt or message. members can make the whole feed private. s2member &#x27;alternative view protection&#x27; covers feeds and search. mem s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-feed-rss-protection"><span>Done</span></label>
+    <h3>Feed (RSS) protection</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Replace restricted content in feeds with an excerpt or message. Members can make the whole feed private. s2Member 'Alternative View Protection' covers feeds and search.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="content-restriction-navigation-menu-item-visibility" data-prio="1" data-mg="have" data-text="navigation menu item visibility per menu item: everyone / logged in / logged out / specific roles / specific plans. a custom walker field in appearance → menus, plus block navigation support. pms sells plan-based menu filtering as an add-on, but um, pp and sm give it free. um pp sm rua wpm pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-navigation-menu-item-visibility"><span>Done</span></label>
+    <h3>Navigation menu item visibility</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Per menu item: everyone / logged in / logged out / specific roles / specific plans. A custom walker field in Appearance → Menus, plus block navigation support. PMS sells plan-based menu filtering as an add-on, but UM, PP and SM give it free.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="content-restriction-widget-sidebar-visibility" data-prio="3" data-mg="have" data-text="widget / sidebar visibility hide widgets or entire widget areas by role or plan. rua mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-widget-sidebar-visibility"><span>Done</span></label>
+    <h3>Widget / sidebar visibility</h3>
+    <span class="prio p3" title="Nice to have">P3</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Hide widgets or entire widget areas by role or plan.</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="content-restriction-protect-attachments-galleries" data-prio="2" data-mg="none" data-text="protect attachments / galleries protect attachment pages and gallery images. real file protection (direct url) is a pro feature; see pro_features.html. swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-protect-attachments-galleries"><span>Done</span></label>
+    <h3>Protect attachments / galleries</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Protect attachment pages and gallery images. Real file protection (direct URL) is a Pro feature; see pro_features.html.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="content-restriction-login-status-access-logged-in-logged-out" data-prio="1" data-mg="have" data-text="login-status access (logged in / logged out) the simplest rule: content only for logged-in users, or only for guests (e.g. a &#x27;join now&#x27; landing page). um pms pp rua urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-login-status-access-logged-in-logged-out"><span>Done</span></label>
+    <h3>Login-status access (logged in / logged out)</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">The simplest rule: content only for logged-in users, or only for guests (e.g. a 'join now' landing page).</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="content-restriction-restrict-by-specific-users" data-prio="3" data-mg="none" data-text="restrict by specific users profilepress lets a rule allow a list of specific usernames, alongside roles and plans. pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-restrict-by-specific-users"><span>Done</span></label>
+    <h3>Restrict by specific users</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">ProfilePress lets a rule allow a list of specific usernames, alongside roles and plans.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="content-restriction-restriction-by-user-attributes-registration-date-email-domain-capability-post-count" data-prio="3" data-mg="none" data-text="restriction by user attributes (registration date, email domain, capability, post count…) urm free conditions include: membership, login status, role, user registered date (before/after/range), registration period, email domain, minimum public posts, capability, registration source and a form field value. urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-restriction-by-user-attributes-registration-date-email-domain-capability-post-count"><span>Done</span></label>
+    <h3>Restriction by user attributes (registration date, email domain, capability, post count…)</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">URM free conditions include: membership, login status, role, user registered date (before/after/range), registration period, email domain, minimum public posts, capability, registration source and a form field value.</p>
+  <div class="chips"><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="content-restriction-front-end-admin-bar-restrict-this-page-editor-status" data-prio="3" data-mg="none" data-text="front-end admin bar &#x27;restrict this page&#x27; + editor status suremembers adds an admin-bar menu to protect the current page in one click, and shows the restriction status inside the block editor. sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-front-end-admin-bar-restrict-this-page-editor-status"><span>Done</span></label>
+    <h3>Front-end admin bar &#x27;restrict this page&#x27; + editor status</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">SureMembers adds an admin-bar menu to protect the current page in one click, and shows the restriction status inside the block editor.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="content-restriction-language-based-multilingual-conditions" data-prio="3" data-mg="none" data-text="language-based / multilingual conditions restrict by language with wpml, polylang, translatepress or weglot. also make plan names translatable (wpml-config.xml). rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-language-based-multilingual-conditions"><span>Done</span></label>
+    <h3>Language-based / multilingual conditions</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Restrict by language with WPML, Polylang, TranslatePress or Weglot. Also make plan names translatable (wpml-config.xml).</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span></div>
+</article><article class="feat" id="content-restriction-restrict-buddypress-bbpress-areas" data-prio="3" data-mg="none" data-text="restrict buddypress / bbpress areas restrict forums, topics and buddypress profile sections by level. mfw can restrict the buddypress dashboard to members. rua s2 mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-restrict-buddypress-bbpress-areas"><span>Done</span></label>
+    <h3>Restrict BuddyPress / bbPress areas</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Restrict forums, topics and BuddyPress profile sections by level. MFW can restrict the BuddyPress dashboard to members.</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="s2Member">S2</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="content-restriction-lockout-safe-defaults" data-prio="1" data-mg="none" data-text="lockout-safe defaults administrators always bypass restrictions. deactivating the plugin unlocks all content, and roles are never permanently altered. rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="content-restriction-lockout-safe-defaults"><span>Done</span></label>
+    <h3>Lockout-safe defaults</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Administrators always bypass restrictions. Deactivating the plugin unlocks all content, and roles are never permanently altered.</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span></div>
+</article>
+</section><section class="cat" id="payments-checkout">
+  <h2>Payments &amp; Checkout <small>18</small></h2>
+  <p class="catdesc">Free competitors ship at least PayPal + Stripe (one-time and recurring) and bank transfer.</p>
+  <article class="feat" id="payments-checkout-stripe-one-time-recurring-sca-payment-element" data-prio="1" data-mg="none" data-text="stripe (one-time + recurring, sca, payment element) stripe connect onboarding (pms/pp) or api keys with test/live modes. use the payment element so apple pay, google pay, link, ideal, bancontact, sepa, klarna and others work without extra code. support 3d secure/sca, saved cards, and webhooks for renewals, failures, refunds and cancellations. pms swpm urm pp wcfm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-stripe-one-time-recurring-sca-payment-element"><span>Done</span></label>
+    <h3>Stripe (one-time + recurring, SCA, Payment Element)</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Stripe Connect onboarding (PMS/PP) or API keys with test/live modes. Use the Payment Element so Apple Pay, Google Pay, Link, iDEAL, Bancontact, SEPA, Klarna and others work without extra code. Support 3D Secure/SCA, saved cards, and webhooks for renewals, failures, refunds and cancellations.</p><p class="note">PP's free Stripe adds a 2% application fee that Pro removes. That is one way to monetize free payments.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WCFM Vendor Membership">WCFM</span></div>
+</article><article class="feat" id="payments-checkout-paypal-standard-checkout-api-one-time-recurring" data-prio="1" data-mg="none" data-text="paypal (standard / checkout api, one-time + recurring) paypal commerce platform / checkout (ppcp) with smart buttons and subscriptions, plus legacy paypal standard with ipn. s2member also does pdt auto-return and eot handling. handle ipn/webhook verification. pms swpm urm s2 wcfm pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-paypal-standard-checkout-api-one-time-recurring"><span>Done</span></label>
+    <h3>PayPal (Standard / Checkout API, one-time + recurring)</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">PayPal Commerce Platform / Checkout (PPCP) with Smart Buttons and subscriptions, plus legacy PayPal Standard with IPN. s2Member also does PDT auto-return and EOT handling. Handle IPN/webhook verification.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="s2Member">S2</span><span class="chip" title="WCFM Vendor Membership">WCFM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="payments-checkout-bank-transfer-manual-offline-payment" data-prio="1" data-mg="none" data-text="bank transfer / manual / offline payment checkout creates a pending payment and emails bank details. the admin marks it paid, which activates the subscription. pms: &#x27;redirect after a manual payment&#x27; and a &#x27;pending manual payment&#x27; email. pms urm pp wcfm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-bank-transfer-manual-offline-payment"><span>Done</span></label>
+    <h3>Bank transfer / manual / offline payment</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Checkout creates a pending payment and emails bank details. The admin marks it paid, which activates the subscription. PMS: 'Redirect after a manual payment' and a 'pending manual payment' email.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WCFM Vendor Membership">WCFM</span></div>
+</article><article class="feat" id="payments-checkout-braintree-one-time-payments" data-prio="3" data-mg="none" data-text="braintree one-time payments simple membership supports braintree buttons for one-time payments. swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-braintree-one-time-payments"><span>Done</span></label>
+    <h3>Braintree one-time payments</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Simple Membership supports Braintree buttons for one-time payments.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="payments-checkout-payment-buttons-shortcode-buttons-per-plan" data-prio="2" data-mg="none" data-text="payment buttons (shortcode buttons per plan) instead of a full checkout, create &#x27;buy buttons&#x27; per plan and gateway, then drop a shortcode such as &lt;code&gt;[swpm_payment_button id=..]&lt;/code&gt; or &lt;code&gt;[s2member-paypal-button]&lt;/code&gt; anywhere. swpm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-payment-buttons-shortcode-buttons-per-plan"><span>Done</span></label>
+    <h3>Payment buttons (shortcode buttons per plan)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Instead of a full checkout, create 'buy buttons' per plan and gateway, then drop a shortcode such as <code>[swpm_payment_button id=..]</code> or <code>[s2Member-PayPal-Button]</code> anywhere.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="payments-checkout-on-site-checkout-page-registration-payment-in-one-step" data-prio="1" data-mg="none" data-text="on-site checkout page / registration + payment in one step one form for account fields, plan choice, billing fields and payment method. ajax checkout with an order summary (pms &#x27;order summary&#x27;). logged-in users skip the account fields. optional billing address fields (pp checkout field manager). pms pp urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-on-site-checkout-page-registration-payment-in-one-step"><span>Done</span></label>
+    <h3>On-site checkout page / registration + payment in one step</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">One form for account fields, plan choice, billing fields and payment method. AJAX checkout with an order summary (PMS 'Order Summary'). Logged-in users skip the account fields. Optional billing address fields (PP checkout field manager).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="payments-checkout-discount-coupon-codes" data-prio="1" data-mg="none" data-text="discount / coupon codes percent or fixed amount. options: specific plans, start and expiry dates, max total uses, max uses per user, new users only, applies to the first payment or to all recurring payments, and csv bulk upload (pms). mfw sends a one-time coupon to new members. pms pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-discount-coupon-codes"><span>Done</span></label>
+    <h3>Discount / coupon codes</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Percent or fixed amount. Options: specific plans, start and expiry dates, max total uses, max uses per user, new users only, applies to the first payment or to all recurring payments, and CSV bulk upload (PMS). MFW sends a one-time coupon to new members.</p><p class="note">URM sells coupons in Pro, but PMS and PP give them free.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="payments-checkout-currency-settings-formatting" data-prio="1" data-mg="none" data-text="currency settings &amp; formatting currency, symbol position, thousand/decimal separators, number of decimals and price display format. pms wpuf pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-currency-settings-formatting"><span>Done</span></label>
+    <h3>Currency settings &amp; formatting</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Currency, symbol position, thousand/decimal separators, number of decimals and price display format.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="payments-checkout-test-sandbox-mode" data-prio="1" data-mg="none" data-text="test / sandbox mode a global test mode toggle that uses gateway sandbox keys, with a visible admin notice while it is on. pms swpm wcfm wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-test-sandbox-mode"><span>Done</span></label>
+    <h3>Test / sandbox mode</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">A global test mode toggle that uses gateway sandbox keys, with a visible admin notice while it is on.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WCFM Vendor Membership">WCFM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="payments-checkout-payment-history-transactions" data-prio="1" data-mg="none" data-text="payment history &amp; transactions an admin list of all payments (amount, gateway, status, transaction id, plan, user) with filters, search, add/edit manual payment, and a payment log per payment. members see their own history (&lt;code&gt;[pms-payment-history]&lt;/code&gt;). pms swpm urm pp wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-payment-history-transactions"><span>Done</span></label>
+    <h3>Payment history &amp; transactions</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">An admin list of all payments (amount, gateway, status, transaction ID, plan, user) with filters, search, add/edit manual payment, and a payment log per payment. Members see their own history (<code>[pms-payment-history]</code>).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="payments-checkout-refunds-from-the-dashboard" data-prio="2" data-mg="none" data-text="refunds from the dashboard refund through the gateway api from the payment screen, with a setting for whether a refund cancels access. pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-refunds-from-the-dashboard"><span>Done</span></label>
+    <h3>Refunds from the dashboard</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Refund through the gateway API from the payment screen, with a setting for whether a refund cancels access.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="payments-checkout-failed-payment-retry-dunning" data-prio="1" data-mg="none" data-text="failed payment retry (dunning) retry failed renewals: max retries, retry interval, and the subscription status during retries. send a &#x27;payment failed&#x27; email with a link to update the card. pms wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-failed-payment-retry-dunning"><span>Done</span></label>
+    <h3>Failed payment retry (dunning)</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Retry failed renewals: max retries, retry interval, and the subscription status during retries. Send a 'payment failed' email with a link to update the card.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="payments-checkout-renewals-via-action-scheduler" data-prio="2" data-mg="none" data-text="renewals via action scheduler process scheduled renewals and expirations with action scheduler (hourly) instead of a daily wp-cron, which scales better. admin view of scheduled payments and next run. pms um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-renewals-via-action-scheduler"><span>Done</span></label>
+    <h3>Renewals via Action Scheduler</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Process scheduled renewals and expirations with Action Scheduler (hourly) instead of a daily wp-cron, which scales better. Admin view of scheduled payments and next run.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="payments-checkout-payment-notification-forwarding-ipn-relay" data-prio="3" data-mg="none" data-text="payment notification forwarding (ipn relay) forward gateway notifications to external urls. s2member has api notification urls for signup, registration, payment, modification, cancellation, eot/deletion and refund/reversal. swpm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-payment-notification-forwarding-ipn-relay"><span>Done</span></label>
+    <h3>Payment notification forwarding (IPN relay)</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Forward gateway notifications to external URLs. s2Member has API notification URLs for signup, registration, payment, modification, cancellation, EOT/deletion and refund/reversal.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="payments-checkout-customers-orders-screens" data-prio="2" data-mg="none" data-text="customers &amp; orders screens profilepress keeps separate orders, subscriptions and customers screens with customer lifetime value and order history, like an e-commerce backend. pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-customers-orders-screens"><span>Done</span></label>
+    <h3>Customers &amp; orders screens</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">ProfilePress keeps separate Orders, Subscriptions and Customers screens with customer lifetime value and order history, like an e-commerce backend.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="payments-checkout-sell-digital-products-downloads" data-prio="3" data-mg="none" data-text="sell digital products / downloads profilepress plans can include downloadable files with download limits and download logs. this is useful for selling e-books alongside memberships. pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-sell-digital-products-downloads"><span>Done</span></label>
+    <h3>Sell digital products / downloads</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">ProfilePress plans can include downloadable files with download limits and download logs. This is useful for selling e-books alongside memberships.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="payments-checkout-tax-eu-vat" data-prio="2" data-mg="none" data-text="tax / eu vat tax rates by country and state, eu vat with vies validation and reverse charge. profilepress ships &lt;code&gt;eu-vat-rates.json&lt;/code&gt;. pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-tax-eu-vat"><span>Done</span></label>
+    <h3>Tax / EU VAT</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Tax rates by country and state, EU VAT with VIES validation and reverse charge. ProfilePress ships <code>eu-vat-rates.json</code>.</p><p class="note">Free in ProfilePress, but Pro in PMS, URM and WPUF. Decide which tier this belongs in.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="payments-checkout-pay-per-post-posting-packs" data-prio="3" data-mg="none" data-text="pay-per-post / posting packs wpuf sells subscription packs that limit how many posts of each post type a member can submit, with post expiration and a fallback pay-per-post charge. wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="payments-checkout-pay-per-post-posting-packs"><span>Done</span></label>
+    <h3>Pay-per-post / posting packs</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">WPUF sells subscription packs that limit how many posts of each post type a member can submit, with post expiration and a fallback pay-per-post charge.</p>
+  <div class="chips"><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article>
+</section><section class="cat" id="subscription-lifecycle">
+  <h2>Subscription Lifecycle <small>7</small></h2>
+  <p class="catdesc">What happens to a membership after purchase. These states and actions drive emails, roles and access.</p>
+  <article class="feat" id="subscription-lifecycle-subscription-statuses" data-prio="1" data-mg="partial" data-text="subscription statuses at least: pending, active, trialing, canceled (access until period end), expired, abandoned, on-hold/retrying. each transition fires an action hook, e.g. &lt;code&gt;memberglut_subscription_status_changed&lt;/code&gt;. pms urm pp swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-subscription-statuses"><span>Done</span></label>
+    <h3>Subscription statuses</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">At least: pending, active, trialing, canceled (access until period end), expired, abandoned, on-hold/retrying. Each transition fires an action hook, e.g. <code>memberglut_subscription_status_changed</code>.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="subscription-lifecycle-member-self-service-renew-cancel-abandon-change-plan" data-prio="1" data-mg="none" data-text="member self-service: renew, cancel, abandon, change plan from the account page: renew (before expiry, with a &#x27;show renew button x days before&#x27; setting), cancel (stop auto-renew), abandon (delete subscription), upgrade/downgrade. each action can be disabled globally (pms has a toggle per action). pms mfw swpm wcfm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-member-self-service-renew-cancel-abandon-change-plan"><span>Done</span></label>
+    <h3>Member self-service: renew, cancel, abandon, change plan</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">From the account page: Renew (before expiry, with a 'show renew button X days before' setting), Cancel (stop auto-renew), Abandon (delete subscription), Upgrade/Downgrade. Each action can be disabled globally (PMS has a toggle per action).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WCFM Vendor Membership">WCFM</span></div>
+</article><article class="feat" id="subscription-lifecycle-automatic-expiration-demotion" data-prio="1" data-mg="partial" data-text="automatic expiration &amp; demotion a cron (suremembers &#x27;expiration sweep&#x27;) expires overdue subscriptions on time, removes the role and fires hooks. s2member&#x27;s eot (end of term) can demote to a lower level or delete the account. s2 sm swpm pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-automatic-expiration-demotion"><span>Done</span></label>
+    <h3>Automatic expiration &amp; demotion</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">A cron (SureMembers 'expiration sweep') expires overdue subscriptions on time, removes the role and fires hooks. s2Member's EOT (end of term) can demote to a lower level or delete the account.</p>
+  <div class="chips"><span class="chip" title="s2Member">S2</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="subscription-lifecycle-admin-grant-revoke-edit-expiry-manually" data-prio="1" data-mg="have" data-text="admin: grant / revoke / edit expiry manually from the members list or the wp user profile: add a plan, change the start or expiry date, or cancel. suremembers also logs every grant and revoke event (access log). sm pms swpm um rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-admin-grant-revoke-edit-expiry-manually"><span>Done</span></label>
+    <h3>Admin: grant / revoke / edit expiry manually</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">From the members list or the WP user profile: add a plan, change the start or expiry date, or cancel. SureMembers also logs every grant and revoke event (access log).</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Restrict User Access">RUA</span></div>
+</article><article class="feat" id="subscription-lifecycle-multiple-active-plans-per-user" data-prio="2" data-mg="none" data-text="multiple active plans per user rua and sm let users hold several levels at once, and urm has an &#x27;allow multiple memberships&#x27; setting. pms sells this as a pro add-on (one plan per group). rua sm urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-multiple-active-plans-per-user"><span>Done</span></label>
+    <h3>Multiple active plans per user</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">RUA and SM let users hold several levels at once, and URM has an 'Allow multiple memberships' setting. PMS sells this as a Pro add-on (one plan per group).</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="subscription-lifecycle-prevent-repeat-trial-duplicate-purchase" data-prio="2" data-mg="none" data-text="prevent repeat trial / duplicate purchase block buying the same active plan twice, and block a second free trial. pms pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-prevent-repeat-trial-duplicate-purchase"><span>Done</span></label>
+    <h3>Prevent repeat trial / duplicate purchase</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Block buying the same active plan twice, and block a second free trial.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="subscription-lifecycle-membership-expiry-display" data-prio="2" data-mg="none" data-text="membership expiry display a shortcode for the expiry date (&lt;code&gt;[swpm_show_expiry_date]&lt;/code&gt;) and an option to always show the expiration date. uses the wp date format. swpm pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="subscription-lifecycle-membership-expiry-display"><span>Done</span></label>
+    <h3>Membership expiry display</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">A shortcode for the expiry date (<code>[swpm_show_expiry_date]</code>) and an option to always show the expiration date. Uses the WP date format.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article>
+</section><section class="cat" id="registration-login-forms">
+  <h2>Registration, Login &amp; Forms <small>20</small></h2>
+  <p class="catdesc">Front-end account forms. UM, PP, URM and WPUF use a drag-and-drop builder; PMS and SWPM have fixed forms.</p>
+  <article class="feat" id="registration-login-forms-front-end-registration-form" data-prio="1" data-mg="have" data-text="front-end registration form a shortcode and block that render registration with plan selection. multiple forms (one per plan or role). ajax submission with inline errors (urm). option to auto-login after registration. pms swpm um urm pp wpm wpuf s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-front-end-registration-form"><span>Done</span></label>
+    <h3>Front-end registration form</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">A shortcode and block that render registration with plan selection. Multiple forms (one per plan or role). AJAX submission with inline errors (URM). Option to auto-login after registration.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="registration-login-forms-front-end-login-form" data-prio="1" data-mg="have" data-text="front-end login form username or email + password, remember me, lost-password link, and redirect after login. a mini login / login-logout link shortcode (swpm &lt;code&gt;[swpm_mini_login]&lt;/code&gt;, wpm &lt;code&gt;[wpmem_loginout]&lt;/code&gt;). password visibility toggle (swpm). pms swpm um urm pp wpm wpuf mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-front-end-login-form"><span>Done</span></label>
+    <h3>Front-end login form</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Username or email + password, remember me, lost-password link, and redirect after login. A mini login / login-logout link shortcode (SWPM <code>[swpm_mini_login]</code>, WPM <code>[wpmem_loginout]</code>). Password visibility toggle (SWPM).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="registration-login-forms-password-reset-recover-form" data-prio="1" data-mg="none" data-text="password reset / recover form a front-end lost-password + reset form with a customizable reset email. password strength meter (pms &#x27;minimum password length/strength&#x27;). pms swpm um urm pp wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-password-reset-recover-form"><span>Done</span></label>
+    <h3>Password reset / recover form</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">A front-end lost-password + reset form with a customizable reset email. Password strength meter (PMS 'Minimum Password Length/Strength').</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="registration-login-forms-edit-profile-form" data-prio="1" data-mg="none" data-text="edit profile form members edit their name, email (with confirmation of the email change: urm email), password and custom fields from the front end. pms swpm um urm pp wpm wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-edit-profile-form"><span>Done</span></label>
+    <h3>Edit profile form</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Members edit their name, email (with confirmation of the email change: URM email), password and custom fields from the front end.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="registration-login-forms-drag-and-drop-form-builder" data-prio="1" data-mg="none" data-text="drag-and-drop form builder a visual builder for registration, login and profile forms: rows and columns, field settings (label, placeholder, required, validation, visibility), and pre-built templates. free field types (um): text, textarea, number, select, multiselect, radio, checkbox, date, time, url, phone, file, image, rating, divider, spacing, shortcode, oembed, google map, social urls (facebook, x, linkedin, instagram, youtube, tiktok, discord, telegram, whatsapp…), country and languages. um urm pp wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-drag-and-drop-form-builder"><span>Done</span></label>
+    <h3>Drag-and-drop form builder</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">A visual builder for registration, login and profile forms: rows and columns, field settings (label, placeholder, required, validation, visibility), and pre-built templates. Free field types (UM): text, textarea, number, select, multiselect, radio, checkbox, date, time, URL, phone, file, image, rating, divider, spacing, shortcode, oEmbed, Google Map, social URLs (Facebook, X, LinkedIn, Instagram, YouTube, TikTok, Discord, Telegram, WhatsApp…), country and languages.</p><p class="note">SWPM and PP sell the form builder / custom fields as add-ons. UM, URM and WPUF give a builder free, but limit the field count.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="registration-login-forms-conditional-logic-on-fields" data-prio="2" data-mg="none" data-text="conditional logic on fields show or hide a field based on another field&#x27;s value. ultimate member gives this free; urm, wpuf and pp charge for it. um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-conditional-logic-on-fields"><span>Done</span></label>
+    <h3>Conditional logic on fields</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Show or hide a field based on another field's value. Ultimate Member gives this free; URM, WPUF and PP charge for it.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="registration-login-forms-custom-registration-profile-fields" data-prio="1" data-mg="none" data-text="custom registration / profile fields store extra user meta (phone, company…). show it in the admin user profile, export it, and use it in emails as merge tags. s2member and wp-members have this in free. um wpm s2 urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-custom-registration-profile-fields"><span>Done</span></label>
+    <h3>Custom registration / profile fields</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Store extra user meta (phone, company…). Show it in the admin user profile, export it, and use it in emails as merge tags. s2Member and WP-Members have this in free.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="s2Member">S2</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="registration-login-forms-user-role-chosen-in-form-role-per-form" data-prio="2" data-mg="none" data-text="user role chosen in form / role per form each form assigns a role, or lets the user pick from an allowed list (pp &lt;code&gt;[reg-select-role]&lt;/code&gt;). um urm pp wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-user-role-chosen-in-form-role-per-form"><span>Done</span></label>
+    <h3>User role chosen in form / role per form</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Each form assigns a role, or lets the user pick from an allowed list (PP <code>[reg-select-role]</code>).</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="registration-login-forms-approval-methods-auto-email-verification-admin-approval" data-prio="1" data-mg="none" data-text="approval methods: auto / email verification / admin approval per form or role: auto-approve, require email activation link (log in after activation), or hold for admin review with approve/reject actions and matching emails. swpm also has manual approval and email activation for free memberships. um urm swpm wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-approval-methods-auto-email-verification-admin-approval"><span>Done</span></label>
+    <h3>Approval methods: auto / email verification / admin approval</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Per form or role: auto-approve, require email activation link (log in after activation), or hold for admin review with approve/reject actions and matching emails. SWPM also has manual approval and email activation for free memberships.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="registration-login-forms-terms-privacy-policy-checkbox" data-prio="1" data-mg="none" data-text="terms &amp; privacy policy checkbox required agreement checkboxes on registration linking to the t&amp;c and privacy pages. store the consent timestamp for gdpr. swpm wpm urm um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-terms-privacy-policy-checkbox"><span>Done</span></label>
+    <h3>Terms &amp; privacy policy checkbox</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Required agreement checkboxes on registration linking to the T&C and privacy pages. Store the consent timestamp for GDPR.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="registration-login-forms-auto-login-after-registration" data-prio="1" data-mg="none" data-text="auto-login after registration log the user in immediately after a successful (free) registration or payment. pms wpuf pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-auto-login-after-registration"><span>Done</span></label>
+    <h3>Auto-login after registration</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Log the user in immediately after a successful (free) registration or payment.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="registration-login-forms-replace-default-wp-login-register-lost-password-pages" data-prio="1" data-mg="have" data-text="replace default wp login/register/lost-password pages redirect &lt;code&gt;wp-login.php&lt;/code&gt;, &lt;code&gt;?action=register&lt;/code&gt; and &lt;code&gt;lostpassword&lt;/code&gt; to the front-end pages. filter &lt;code&gt;login_url&lt;/code&gt;, &lt;code&gt;register_url&lt;/code&gt; and &lt;code&gt;lostpassword_url&lt;/code&gt;. pms pp sm wpuf um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-replace-default-wp-login-register-lost-password-pages"><span>Done</span></label>
+    <h3>Replace default WP login/register/lost-password pages</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Redirect <code>wp-login.php</code>, <code>?action=register</code> and <code>lostpassword</code> to the front-end pages. Filter <code>login_url</code>, <code>register_url</code> and <code>lostpassword_url</code>.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="registration-login-forms-custom-login-url-hide-wp-login-php" data-prio="2" data-mg="have" data-text="custom login url (hide wp-login.php) serve login at &lt;code&gt;/my-login&lt;/code&gt; and redirect the default wordpress login page. sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-custom-login-url-hide-wp-login-php"><span>Done</span></label>
+    <h3>Custom login URL (hide wp-login.php)</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Serve login at <code>/my-login</code> and redirect the default WordPress login page.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="registration-login-forms-login-page-customizer-branding" data-prio="2" data-mg="none" data-text="login page customizer (branding) style wp-login.php: logo, logo size, colors, background image, transparent form, button colors. s2member has &#x27;login/registration design&#x27;. sm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-login-page-customizer-branding"><span>Done</span></label>
+    <h3>Login page customizer (branding)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Style wp-login.php: logo, logo size, colors, background image, transparent form, button colors. s2Member has 'Login/Registration Design'.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="registration-login-forms-pre-built-pages-on-install-setup-wizard" data-prio="1" data-mg="none" data-text="pre-built pages on install / setup wizard one click creates register, login, account, lost/reset password, pricing and thank-you pages with shortcodes/blocks, and saves them in settings. pms and sm have onboarding wizards with a setup checklist. urm pms wpuf sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-pre-built-pages-on-install-setup-wizard"><span>Done</span></label>
+    <h3>Pre-built pages on install / setup wizard</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">One click creates Register, Login, Account, Lost/Reset Password, Pricing and Thank-You pages with shortcodes/blocks, and saves them in settings. PMS and SM have onboarding wizards with a setup checklist.</p>
+  <div class="chips"><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="registration-login-forms-email-whitelist-blacklist-on-registration" data-prio="2" data-mg="none" data-text="email whitelist / blacklist on registration allow registration only from specific emails or domains, or block specific emails or domains. swpm pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-email-whitelist-blacklist-on-registration"><span>Done</span></label>
+    <h3>Email whitelist / blacklist on registration</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Allow registration only from specific emails or domains, or block specific emails or domains.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="registration-login-forms-thank-you-page" data-prio="2" data-mg="none" data-text="thank-you page a post-checkout confirmation page with order details. shortcode &lt;code&gt;[swpm_thank_you_page_registration]&lt;/code&gt;; pp &lt;code&gt;[profilepress-receipt]&lt;/code&gt;. urm swpm pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-thank-you-page"><span>Done</span></label>
+    <h3>Thank-you page</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">A post-checkout confirmation page with order details. Shortcode <code>[swpm_thank_you_page_registration]</code>; PP <code>[profilepress-receipt]</code>.</p>
+  <div class="chips"><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="registration-login-forms-hide-registration-option" data-prio="3" data-mg="none" data-text="hide registration option disable public sign-up (invite-only sites). swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-hide-registration-option"><span>Done</span></label>
+    <h3>Hide registration option</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Disable public sign-up (invite-only sites).</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="registration-login-forms-account-deletion-by-member" data-prio="2" data-mg="none" data-text="account deletion by member members delete their own account (password confirmation), with a gdpr delete button (pms). swpm um pms pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-account-deletion-by-member"><span>Done</span></label>
+    <h3>Account deletion by member</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Members delete their own account (password confirmation), with a GDPR delete button (PMS).</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="registration-login-forms-frontend-post-submission-ugc-forms" data-prio="3" data-mg="none" data-text="frontend post submission / ugc forms wp user frontend: front-end post forms for any cpt, guest posting, editing own posts, featured images, and posting restricted by role or subscription. it belongs with membership as a &#x27;members can submit content&#x27; feature. not core for memberglut, but a possible differentiator later. wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="registration-login-forms-frontend-post-submission-ugc-forms"><span>Done</span></label>
+    <h3>Frontend post submission / UGC forms</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">WP User Frontend: front-end post forms for any CPT, guest posting, editing own posts, featured images, and posting restricted by role or subscription. It belongs with membership as a 'members can submit content' feature. Not core for MemberGlut, but a possible differentiator later.</p>
+  <div class="chips"><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article>
+</section><section class="cat" id="member-account-area-front-end">
+  <h2>Member Account Area (front end) <small>8</small></h2>
+  <p class="catdesc">A members' dashboard is expected in every modern plugin.</p>
+  <article class="feat" id="member-account-area-front-end-my-account-page" data-prio="1" data-mg="none" data-text="my account page one shortcode/block with tabs: dashboard, edit profile, change password, subscriptions (status, expiry, actions), payment history, login activity (pp), delete account. tabs should be extendable through a filter. pms urm pp um wpuf mfw wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-my-account-page"><span>Done</span></label>
+    <h3>My Account page</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">One shortcode/block with tabs: Dashboard, Edit Profile, Change Password, Subscriptions (status, expiry, actions), Payment History, Login Activity (PP), Delete Account. Tabs should be extendable through a filter.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="member-account-area-front-end-subscription-details-actions-in-account" data-prio="1" data-mg="none" data-text="subscription details &amp; actions in account show each plan with status, start/expiry, next payment, and renew/cancel/upgrade buttons. show the stripe or paypal subscription cancel link (swpm &lt;code&gt;[swpm_stripe_subscription_cancel_link]&lt;/code&gt;). pms swpm mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-subscription-details-actions-in-account"><span>Done</span></label>
+    <h3>Subscription details &amp; actions in account</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Show each plan with status, start/expiry, next payment, and renew/cancel/upgrade buttons. Show the Stripe or PayPal subscription cancel link (SWPM <code>[swpm_stripe_subscription_cancel_link]</code>).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="member-account-area-front-end-update-payment-method" data-prio="2" data-mg="none" data-text="update payment method let members update their card for recurring stripe subscriptions, using a setupintent. pms pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-update-payment-method"><span>Done</span></label>
+    <h3>Update payment method</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Let members update their card for recurring Stripe subscriptions, using a SetupIntent.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="member-account-area-front-end-front-end-user-profiles-public" data-prio="2" data-mg="none" data-text="front-end user profiles (public) public profile pages at &lt;code&gt;/user/username&lt;/code&gt; with avatar, cover photo, bio, custom fields and the author&#x27;s posts and comments (um). privacy: users can make their profile private (um per role). um pp wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-front-end-user-profiles-public"><span>Done</span></label>
+    <h3>Front-end user profiles (public)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Public profile pages at <code>/user/username</code> with avatar, cover photo, bio, custom fields and the author's posts and comments (UM). Privacy: users can make their profile private (UM per role).</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="member-account-area-front-end-member-directory-basic" data-prio="2" data-mg="none" data-text="member directory (basic) a searchable list of members with filters, sort, pagination, roles to include, grid or list view, and who can see the directory (um). suremembers has &lt;code&gt;[suremembers_list_members]&lt;/code&gt; by membership. um pp sm wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-member-directory-basic"><span>Done</span></label>
+    <h3>Member directory (basic)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">A searchable list of members with filters, sort, pagination, roles to include, grid or list view, and who can see the directory (UM). SureMembers has <code>[suremembers_list_members]</code> by membership.</p><p class="note">URM and SWPM sell directories in Pro.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="member-account-area-front-end-avatar-cover-photo-upload" data-prio="2" data-mg="none" data-text="avatar &amp; cover photo upload local avatar upload replacing gravatar (profilepress started as wp user avatar), plus a cover image. um pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-avatar-cover-photo-upload"><span>Done</span></label>
+    <h3>Avatar &amp; cover photo upload</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Local avatar upload replacing Gravatar (ProfilePress started as WP User Avatar), plus a cover image.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="member-account-area-front-end-login-activity-login-notifications" data-prio="3" data-mg="none" data-text="login activity / login notifications recent logins (ip, device, time) in the account page, and an email alert on new-device login. pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-login-activity-login-notifications"><span>Done</span></label>
+    <h3>Login activity / login notifications</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Recent logins (IP, device, time) in the account page, and an email alert on new-device login.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="member-account-area-front-end-members-dashboard-woocommerce-my-account-tab" data-prio="2" data-mg="none" data-text="members dashboard (woocommerce my account tab) for woocommerce stores: add a &#x27;membership&#x27; tab to wc my account showing active plans, discounts earned and subscriptions. mfw pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-account-area-front-end-members-dashboard-woocommerce-my-account-tab"><span>Done</span></label>
+    <h3>Members dashboard (WooCommerce My Account tab)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">For WooCommerce stores: add a 'Membership' tab to WC My Account showing active plans, discounts earned and subscriptions.</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article>
+</section><section class="cat" id="member-management-admin">
+  <h2>Member Management (admin) <small>9</small></h2>
+  <p class="catdesc">Back-office screens for admins.</p>
+  <article class="feat" id="member-management-admin-members-list-table" data-prio="1" data-mg="have" data-text="members list table columns: user, plan(s), status, start, expiry, gateway. filters by plan, status and role, plus search. bulk actions: activate, expire, delete, change plan, send email. swpm filters by account status and level. pms swpm sm urm um pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-members-list-table"><span>Done</span></label>
+    <h3>Members list table</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Columns: user, plan(s), status, start, expiry, gateway. Filters by plan, status and role, plus search. Bulk actions: activate, expire, delete, change plan, send email. SWPM filters by account status and level.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="member-management-admin-add-edit-member-manually" data-prio="1" data-mg="have" data-text="add / edit member manually create a member (new or existing wp user) and assign a plan, dates and status without payment. pms has bulk &#x27;add new&#x27; for many users at once. pms swpm sm urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-add-edit-member-manually"><span>Done</span></label>
+    <h3>Add / edit member manually</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Create a member (new or existing WP user) and assign a plan, dates and status without payment. PMS has bulk 'add new' for many users at once.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="member-management-admin-membership-column-in-wp-users-list" data-prio="2" data-mg="none" data-text="membership column in wp users list show plan and status in &lt;code&gt;users.php&lt;/code&gt;, with sortable columns and a filter by plan. mfw um wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-membership-column-in-wp-users-list"><span>Done</span></label>
+    <h3>Membership column in WP Users list</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Show plan and status in <code>users.php</code>, with sortable columns and a filter by plan.</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="member-management-admin-approve-reject-pending-users" data-prio="1" data-mg="none" data-text="approve / reject pending users bulk approve or reject from the users list, with an email on each decision. um urm swpm wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-approve-reject-pending-users"><span>Done</span></label>
+    <h3>Approve / reject pending users</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Bulk approve or reject from the users list, with an email on each decision.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="member-management-admin-private-admin-notes-on-members" data-prio="3" data-mg="none" data-text="private admin notes on members admins can save notes on a member profile, visible only to admins. swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-private-admin-notes-on-members"><span>Done</span></label>
+    <h3>Private admin notes on members</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Admins can save notes on a member profile, visible only to admins.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="member-management-admin-email-members-broadcast" data-prio="2" data-mg="none" data-text="email members (broadcast) send an email to all members of a level, filtered by account status (swpm &#x27;email all members by membership level&#x27;). swpm mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-email-members-broadcast"><span>Done</span></label>
+    <h3>Email members (broadcast)</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Send an email to all members of a level, filtered by account status (SWPM 'Email all members by membership level').</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="member-management-admin-import-wp-users-as-members" data-prio="2" data-mg="none" data-text="import wp users as members convert existing wp users into members of a plan in bulk. swpm can auto-create member accounts for new wp users. swpm sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-import-wp-users-as-members"><span>Done</span></label>
+    <h3>Import WP users as members</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Convert existing WP users into members of a plan in bulk. SWPM can auto-create member accounts for new WP users.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="member-management-admin-export-members-payments-to-csv" data-prio="1" data-mg="none" data-text="export members &amp; payments to csv export members (with custom fields) and payments for excel or accounting. mfw also imports members and plans from csv. pms mfw wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-export-members-payments-to-csv"><span>Done</span></label>
+    <h3>Export members &amp; payments to CSV</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Export members (with custom fields) and payments for Excel or accounting. MFW also imports members and plans from CSV.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="member-management-admin-access-activity-log" data-prio="2" data-mg="partial" data-text="access / activity log log grants, revokes, logins and status changes per user. swpm has login event tracking. sm swpm um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="member-management-admin-access-activity-log"><span>Done</span></label>
+    <h3>Access / activity log</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Log grants, revokes, logins and status changes per user. SWPM has login event tracking.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article>
+</section><section class="cat" id="emails-notifications">
+  <h2>Emails &amp; Notifications <small>8</small></h2>
+  <p class="catdesc">Transactional emails are table stakes. Every plugin ships an editable set with merge tags.</p>
+  <article class="feat" id="emails-notifications-member-emails-register-activate-renew-cancel-expire-payment-failed-pending-manual-payment-password-reset" data-prio="1" data-mg="none" data-text="member emails: register, activate, renew, cancel, expire, payment failed, pending manual payment, password reset each email has an enable toggle, subject and rich body. pms list: register, activate subscription, cancel/abandon, expired, renew, payment failed, pending manual payment, reset password. um adds welcome, account activation, pending review, approved, rejected, deactivated, deleted, password changed, account updated. urm adds profile details changed and confirm email change. pms um urm swpm pp wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-member-emails-register-activate-renew-cancel-expire-payment-failed-pending-manual-payment-password-reset"><span>Done</span></label>
+    <h3>Member emails: register, activate, renew, cancel, expire, payment failed, pending manual payment, password reset</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Each email has an enable toggle, subject and rich body. PMS list: Register, Activate Subscription, Cancel/Abandon, Expired, Renew, Payment Failed, Pending Manual Payment, Reset Password. UM adds Welcome, Account Activation, Pending Review, Approved, Rejected, Deactivated, Deleted, Password Changed, Account Updated. URM adds Profile Details Changed and Confirm Email Change.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="emails-notifications-admin-notification-emails" data-prio="1" data-mg="none" data-text="admin notification emails copies to the admin on new registration, new subscription, cancellation, expiration and account awaiting review. allow multiple admin recipients. pms um urm wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-admin-notification-emails"><span>Done</span></label>
+    <h3>Admin notification emails</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Copies to the admin on new registration, new subscription, cancellation, expiration and account awaiting review. Allow multiple admin recipients.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="emails-notifications-merge-tags-smart-tags" data-prio="1" data-mg="none" data-text="merge tags / smart tags pms tags: &lt;code&gt;{{display_name}} {{first_name}} {{last_name}} {{username}} {{user_email}} {{subscription_name}} {{subscription_price}} {{subscription_duration}} {{subscription_start_date}} {{subscription_expiration_date}} {{subscription_status}} {{payment_id}} {{total_payment_amount}} {{order_breakdown}} {{reset_link}} {{site_name}} {{site_url}} {{account_page_url}}&lt;/code&gt; plus custom field tags. pms swpm urm um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-merge-tags-smart-tags"><span>Done</span></label>
+    <h3>Merge tags / smart tags</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">PMS tags: <code>{{display_name}} {{first_name}} {{last_name}} {{username}} {{user_email}} {{subscription_name}} {{subscription_price}} {{subscription_duration}} {{subscription_start_date}} {{subscription_expiration_date}} {{subscription_status}} {{payment_id}} {{total_payment_amount}} {{order_breakdown}} {{reset_link}} {{site_name}} {{site_url}} {{account_page_url}}</code> plus custom field tags.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="emails-notifications-from-name-from-email-email-template" data-prio="1" data-mg="none" data-text="from name / from email / email template global sender settings and a simple html wrapper (logo, footer). suremembers can use the woocommerce email template. pms um sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-from-name-from-email-email-template"><span>Done</span></label>
+    <h3>From name / from email / email template</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Global sender settings and a simple HTML wrapper (logo, footer). SureMembers can use the WooCommerce email template.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="emails-notifications-expiration-renewal-reminder-emails" data-prio="2" data-mg="none" data-text="expiration &amp; renewal reminder emails profilepress free has expiration reminder, renewal reminder, trial ending reminder and after-expired notifications. swpm has renewal and auto-renewal notifications. pp swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-expiration-renewal-reminder-emails"><span>Done</span></label>
+    <h3>Expiration &amp; renewal reminder emails</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">ProfilePress free has Expiration Reminder, Renewal Reminder, Trial Ending Reminder and After-Expired notifications. SWPM has renewal and auto-renewal notifications.</p><p class="note">PMS sells 'Email Reminders' as an add-on; PP gives the basics free.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="emails-notifications-receipt-emails" data-prio="2" data-mg="none" data-text="receipt emails new order receipt and renewal receipt to the customer, and a new order notification to the admin. pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-receipt-emails"><span>Done</span></label>
+    <h3>Receipt emails</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">New order receipt and renewal receipt to the customer, and a new order notification to the admin.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="emails-notifications-sms-whatsapp-notifications" data-prio="3" data-mg="none" data-text="sms / whatsapp notifications wp swings (free) sends offers to members via twilio sms and the whatsapp cloud api (access token, phone id, templates). mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-sms-whatsapp-notifications"><span>Done</span></label>
+    <h3>SMS / WhatsApp notifications</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">WP Swings (free) sends offers to members via Twilio SMS and the WhatsApp Cloud API (Access Token, Phone ID, templates).</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="emails-notifications-suspicious-activity-email" data-prio="3" data-mg="none" data-text="suspicious activity email um &#x27;security: suspicious account activity&#x27; email to the admin. um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="emails-notifications-suspicious-activity-email"><span>Done</span></label>
+    <h3>Suspicious activity email</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">UM 'Security: Suspicious Account Activity' email to the admin.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span></div>
+</article>
+</section><section class="cat" id="security-anti-abuse">
+  <h2>Security &amp; Anti-abuse <small>8</small></h2>
+  <p class="catdesc">Account-sharing and spam controls appear in free versions across the board.</p>
+  <article class="feat" id="security-anti-abuse-prevent-account-sharing-concurrent-login-limit" data-prio="1" data-mg="none" data-text="prevent account sharing (concurrent login limit) limit active sessions per user (swpm &#x27;active login limit&#x27;). new logins either kick old sessions or are blocked. s2member also has unique-ip restrictions (max ips per user per period). pms swpm s2 pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-prevent-account-sharing-concurrent-login-limit"><span>Done</span></label>
+    <h3>Prevent account sharing (concurrent login limit)</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Limit active sessions per user (SWPM 'Active Login Limit'). New logins either kick old sessions or are blocked. s2Member also has unique-IP restrictions (max IPs per user per period).</p><p class="note">SureMembers sells per-role session limits as premium.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="s2Member">S2</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="security-anti-abuse-brute-force-failed-login-limit" data-prio="1" data-mg="none" data-text="brute-force / failed login limit lock an account or ip after n failed attempts for a set time (s2member &#x27;brute force ip/login restrictions&#x27;). swpm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-brute-force-failed-login-limit"><span>Done</span></label>
+    <h3>Brute-force / failed login limit</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Lock an account or IP after N failed attempts for a set time (s2Member 'Brute Force IP/Login Restrictions').</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="security-anti-abuse-recaptcha-v2-v3" data-prio="1" data-mg="none" data-text="recaptcha v2 / v3 on registration, login and password reset. wp-members also supports hcaptcha and really simple captcha in free. wpuf has cloudflare turnstile free. pms swpm um wpuf wpm mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-recaptcha-v2-v3"><span>Done</span></label>
+    <h3>reCAPTCHA v2 / v3</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">On registration, login and password reset. WP-Members also supports hCaptcha and Really Simple CAPTCHA in free. WPUF has Cloudflare Turnstile free.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="security-anti-abuse-honeypot-field" data-prio="2" data-mg="none" data-text="honeypot field hidden honeypot on the registration form to catch spambots without a captcha. pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-honeypot-field"><span>Done</span></label>
+    <h3>Honeypot field</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Hidden honeypot on the registration form to catch spambots without a captcha.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="security-anti-abuse-strong-password-enforcement" data-prio="2" data-mg="none" data-text="strong password enforcement minimum length and strength (zxcvbn meter). swpm pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-strong-password-enforcement"><span>Done</span></label>
+    <h3>Strong password enforcement</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Minimum length and strength (zxcvbn meter).</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="security-anti-abuse-auto-logout-on-browser-close" data-prio="3" data-mg="none" data-text="auto-logout on browser close session cookies that expire when the browser closes. swpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-auto-logout-on-browser-close"><span>Done</span></label>
+    <h3>Auto-logout on browser close</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Session cookies that expire when the browser closes.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span></div>
+</article><article class="feat" id="security-anti-abuse-restrict-wp-admin-access-hide-admin-bar-by-role" data-prio="1" data-mg="have" data-text="restrict wp-admin access &amp; hide admin bar by role block non-admins from &lt;code&gt;/wp-admin&lt;/code&gt; (allow admin-ajax), redirect them to the account page, and hide the admin bar per role or plan. mem pms sm um pp rua swpm wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-restrict-wp-admin-access-hide-admin-bar-by-role"><span>Done</span></label>
+    <h3>Restrict wp-admin access &amp; hide admin bar by role</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Block non-admins from <code>/wp-admin</code> (allow admin-ajax), redirect them to the account page, and hide the admin bar per role or plan.</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="security-anti-abuse-security-badge" data-prio="3" data-mg="none" data-text="security badge s2member&#x27;s site trust badge shortcode. low priority. s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="security-anti-abuse-security-badge"><span>Done</span></label>
+    <h3>Security badge</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">s2Member's site trust badge shortcode. Low priority.</p>
+  <div class="chips"><span class="chip" title="s2Member">S2</span></div>
+</article>
+</section><section class="cat" id="redirects">
+  <h2>Redirects <small>3</small></h2>
+  <p class="catdesc">Redirect rules are free everywhere.</p>
+  <article class="feat" id="redirects-redirect-after-login-logout-registration" data-prio="1" data-mg="partial" data-text="redirect after login / logout / registration global, per role (um, pp) or per plan (pp). respect &lt;code&gt;redirect_to&lt;/code&gt; when present. swpm um pms sm pp wpuf urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="redirects-redirect-after-login-logout-registration"><span>Done</span></label>
+    <h3>Redirect after login / logout / registration</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Global, per role (UM, PP) or per plan (PP). Respect <code>redirect_to</code> when present.</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="redirects-non-member-redirect-url" data-prio="1" data-mg="have" data-text="non-member redirect url a global redirect for unauthorized access, with per-post overrides. pms um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="redirects-non-member-redirect-url"><span>Done</span></label>
+    <h3>Non-member redirect URL</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">A global redirect for unauthorized access, with per-post overrides.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article><article class="feat" id="redirects-redirect-logged-in-users-away-from-login-register-pages" data-prio="2" data-mg="none" data-text="redirect logged-in users away from login/register pages shortcodes &lt;code&gt;[pp-redirect-logged-in-users]&lt;/code&gt; / &lt;code&gt;[pp-redirect-non-logged-in-users]&lt;/code&gt;. pp um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="redirects-redirect-logged-in-users-away-from-login-register-pages"><span>Done</span></label>
+    <h3>Redirect logged-in users away from login/register pages</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Shortcodes <code>[pp-redirect-logged-in-users]</code> / <code>[pp-redirect-non-logged-in-users]</code>.</p>
+  <div class="chips"><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article>
+</section><section class="cat" id="reports-analytics">
+  <h2>Reports &amp; Analytics <small>3</small></h2>
+  <p class="catdesc">Simple dashboards are free; detailed reports are usually paid.</p>
+  <article class="feat" id="reports-analytics-dashboard-overview" data-prio="1" data-mg="have" data-text="dashboard overview cards for revenue (this month/last month/year), new members, active members, cancellations and upcoming expirations, plus a recent payments list. pms adds a &#x27;website health&#x27; checklist and scheduled payments status. pms sm urm pp mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="reports-analytics-dashboard-overview"><span>Done</span></label>
+    <h3>Dashboard overview</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Cards for revenue (this month/last month/year), new members, active members, cancellations and upcoming expirations, plus a recent payments list. PMS adds a 'Website Health' checklist and scheduled payments status.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="reports-analytics-analytics-tab-with-member-growth" data-prio="2" data-mg="none" data-text="analytics tab with member growth suremembers free: new member counts and growth trends, upcoming expirations, recent activity, a per-membership snapshot, and member sources (surecart, woocommerce, manual, learndash…). sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="reports-analytics-analytics-tab-with-member-growth"><span>Done</span></label>
+    <h3>Analytics tab with member growth</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">SureMembers free: new member counts and growth trends, upcoming expirations, recent activity, a per-membership snapshot, and member sources (SureCart, WooCommerce, manual, LearnDash…).</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="reports-analytics-revenue-sales-report-with-date-filter-export" data-prio="2" data-mg="none" data-text="revenue / sales report with date filter &amp; export sales and earnings charts by period, with csv export. pp reports cover earnings, refunds, sales and download logs. pms pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="reports-analytics-revenue-sales-report-with-date-filter-export"><span>Done</span></label>
+    <h3>Revenue / sales report with date filter &amp; export</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Sales and earnings charts by period, with CSV export. PP reports cover earnings, refunds, sales and download logs.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="ProfilePress">PP</span></div>
+</article>
+</section><section class="cat" id="shortcodes-blocks-widgets-builders">
+  <h2>Shortcodes, Blocks, Widgets &amp; Builders <small>5</small></h2>
+  <p class="catdesc">Every screen must be placeable in any theme or builder.</p>
+  <article class="feat" id="shortcodes-blocks-widgets-builders-complete-shortcode-set" data-prio="1" data-mg="partial" data-text="complete shortcode set minimum set (pms): &lt;code&gt;register, subscriptions, account, edit-profile, login, logout, recover-password, restrict, payment-history, action, count-members&lt;/code&gt;. also useful: logged_in / logged_out wrappers, field output (wpm &lt;code&gt;[wpmem_field]&lt;/code&gt;), plan details (mfw &lt;code&gt;[wps_membership_price]&lt;/code&gt;), member list, expiry date, user memberships list (wpm). pms swpm um pp wpm urm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="shortcodes-blocks-widgets-builders-complete-shortcode-set"><span>Done</span></label>
+    <h3>Complete shortcode set</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Minimum set (PMS): <code>register, subscriptions, account, edit-profile, login, logout, recover-password, restrict, payment-history, action, count-members</code>. Also useful: logged_in / logged_out wrappers, field output (WPM <code>[wpmem_field]</code>), plan details (MFW <code>[wps_membership_price]</code>), member list, expiry date, user memberships list (WPM).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="ProfilePress">PP</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="User Registration &amp; Membership">URM</span></div>
+</article><article class="feat" id="shortcodes-blocks-widgets-builders-gutenberg-blocks" data-prio="1" data-mg="none" data-text="gutenberg blocks blocks for register, login, account, edit profile, password reset, payment history, membership listing/pricing, buy-now button, login/logout menu item, thank you, and content restriction wrapper. urm ships 10+ blocks. pms urm um wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="shortcodes-blocks-widgets-builders-gutenberg-blocks"><span>Done</span></label>
+    <h3>Gutenberg blocks</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Blocks for register, login, account, edit profile, password reset, payment history, membership listing/pricing, buy-now button, login/logout menu item, thank you, and content restriction wrapper. URM ships 10+ blocks.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="shortcodes-blocks-widgets-builders-pricing-table-plan-listing" data-prio="1" data-mg="none" data-text="pricing table / plan listing a pricing table block/shortcode with design presets (pms pricing-table designs; mfw &#x27;simple&#x27; and &#x27;comparison&#x27; templates, plus dark mode). urm pms mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="shortcodes-blocks-widgets-builders-pricing-table-plan-listing"><span>Done</span></label>
+    <h3>Pricing table / plan listing</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">A pricing table block/shortcode with design presets (PMS pricing-table designs; MFW 'Simple' and 'Comparison' templates, plus dark mode).</p>
+  <div class="chips"><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="shortcodes-blocks-widgets-builders-elementor-widgets" data-prio="2" data-mg="none" data-text="elementor widgets native elementor widgets (account, subscription, forms) and restriction controls on every widget. pms wpuf pp">
+  <header>
+    <label class="done"><input type="checkbox" data-id="shortcodes-blocks-widgets-builders-elementor-widgets"><span>Done</span></label>
+    <h3>Elementor widgets</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Native Elementor widgets (account, subscription, forms) and restriction controls on every widget.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="ProfilePress">PP</span></div>
+</article><article class="feat" id="shortcodes-blocks-widgets-builders-classic-widgets" data-prio="3" data-mg="partial" data-text="classic widgets login widget, users widget (members), member search widget (um). mem wpm um">
+  <header>
+    <label class="done"><input type="checkbox" data-id="shortcodes-blocks-widgets-builders-classic-widgets"><span>Done</span></label>
+    <h3>Classic widgets</h3>
+    <span class="prio p3" title="Nice to have">P3</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">Login widget, users widget (Members), member search widget (UM).</p>
+  <div class="chips"><span class="chip" title="Members (MemberPress team)">MEM</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="Ultimate Member">UM</span></div>
+</article>
+</section><section class="cat" id="integrations-free-tier">
+  <h2>Integrations (free tier) <small>10</small></h2>
+  <p class="catdesc">Integrations the competition includes for free.</p>
+  <article class="feat" id="integrations-free-tier-woocommerce-members-only-products-store-discounts" data-prio="1" data-mg="none" data-text="woocommerce: members-only products, store &amp; discounts restrict viewing or purchasing of products and the whole shop by plan. member-only prices or discounts per product or per plan, a cart-total discount, free shipping for members (mfw), a max purchase quantity per member, members-only coupons (sm), and selling plans as wc products through wc checkout (pms). grant access on wc order or subscription status changes (sm, rua). pms mfw sm rua">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-woocommerce-members-only-products-store-discounts"><span>Done</span></label>
+    <h3>WooCommerce: members-only products, store &amp; discounts</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Restrict viewing or purchasing of products and the whole shop by plan. Member-only prices or discounts per product or per plan, a cart-total discount, free shipping for members (MFW), a max purchase quantity per member, members-only coupons (SM), and selling plans as WC products through WC checkout (PMS). Grant access on WC order or subscription status changes (SM, RUA).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Restrict User Access">RUA</span></div>
+</article><article class="feat" id="integrations-free-tier-woocommerce-checkout-my-account-fields" data-prio="3" data-mg="none" data-text="woocommerce checkout/my account fields add membership registration fields to the wc checkout and my account registration (wp-members). wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-woocommerce-checkout-my-account-fields"><span>Done</span></label>
+    <h3>WooCommerce checkout/My Account fields</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Add membership registration fields to the WC checkout and My Account registration (WP-Members).</p>
+  <div class="chips"><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="integrations-free-tier-lms-learndash-tutor-lms-masteriyo" data-prio="2" data-mg="none" data-text="lms: learndash, tutor lms, masteriyo protect courses and lessons by plan, and enroll members in courses on purchase. suremembers free: learndash and tutorlms. urm free: masteriyo. pms free: tutor lms and learndash (basic). sm pms urm mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-lms-learndash-tutor-lms-masteriyo"><span>Done</span></label>
+    <h3>LMS: LearnDash, Tutor LMS, Masteriyo</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Protect courses and lessons by plan, and enroll members in courses on purchase. SureMembers free: LearnDash and TutorLMS. URM free: Masteriyo. PMS free: Tutor LMS and LearnDash (basic).</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="User Registration &amp; Membership">URM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article><article class="feat" id="integrations-free-tier-bbpress-buddypress-buddyboss" data-prio="2" data-mg="none" data-text="bbpress &amp; buddypress / buddyboss restrict forums, sync member types, assign a membership on buddyboss activation (sm), add members to a bp group (mfw). rua s2 mfw sm pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-bbpress-buddypress-buddyboss"><span>Done</span></label>
+    <h3>bbPress &amp; BuddyPress / BuddyBoss</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Restrict forums, sync member types, assign a membership on BuddyBoss activation (SM), add members to a BP group (MFW).</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="s2Member">S2</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="SureMembers">SM</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="integrations-free-tier-edd-givewp-pods-meta-box-acf" data-prio="3" data-mg="none" data-text="edd, givewp, pods, meta box, acf rua grants levels on edd purchase or givewp donation. members exposes edd, givewp, acf, meta box and woocommerce caps in its role editor. rua mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-edd-givewp-pods-meta-box-acf"><span>Done</span></label>
+    <h3>EDD, GiveWP, Pods, Meta Box, ACF</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">RUA grants levels on EDD purchase or GiveWP donation. Members exposes EDD, GiveWP, ACF, Meta Box and WooCommerce caps in its role editor.</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="integrations-free-tier-mailchimp-basic-aweber-getresponse" data-prio="2" data-mg="none" data-text="mailchimp (basic) / aweber / getresponse s2member free has list subscription on signup with double opt-in and automatic unsubscribe on eot. most others sell these, so they are listed in pro. s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-mailchimp-basic-aweber-getresponse"><span>Done</span></label>
+    <h3>Mailchimp (basic) / AWeber / GetResponse</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">s2Member free has list subscription on signup with double opt-in and automatic unsubscribe on EOT. Most others sell these, so they are listed in Pro.</p>
+  <div class="chips"><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="integrations-free-tier-affiliate-tracking-codes" data-prio="3" data-mg="none" data-text="affiliate tracking codes s2member: tracking codes on signup and modification for idevaffiliate and shareasale. s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-affiliate-tracking-codes"><span>Done</span></label>
+    <h3>Affiliate tracking codes</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">s2Member: tracking codes on signup and modification for iDevAffiliate and ShareASale.</p>
+  <div class="chips"><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="integrations-free-tier-surecart-sureforms-payment-plugin-bridges" data-prio="3" data-mg="none" data-text="surecart / sureforms / payment-plugin bridges suremembers grants or revokes memberships on purchase, refund or cancel in surecart and sureforms. a generic &#x27;grant plan on x event&#x27; bridge pattern applies here. sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-surecart-sureforms-payment-plugin-bridges"><span>Done</span></label>
+    <h3>SureCart / SureForms / payment-plugin bridges</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">SureMembers grants or revokes memberships on purchase, refund or cancel in SureCart and SureForms. A generic 'grant plan on X event' bridge pattern applies here.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="integrations-free-tier-n8n-webhook-on-submission" data-prio="3" data-mg="none" data-text="n8n / webhook on submission wpuf free sends post-form submissions to n8n. suremembers has webhook endpoints. wpuf sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-n8n-webhook-on-submission"><span>Done</span></label>
+    <h3>n8n / webhook on submission</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">WPUF free sends post-form submissions to n8n. SureMembers has webhook endpoints.</p>
+  <div class="chips"><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="integrations-free-tier-multi-vendor-marketplaces-vendor-memberships" data-prio="3" data-mg="none" data-text="multi-vendor marketplaces (vendor memberships) membership plans for vendors (wcfm, dokan, wc vendors): commission per level, capability groups per level, product limits, and pay-before-adding-product. wcfm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="integrations-free-tier-multi-vendor-marketplaces-vendor-memberships"><span>Done</span></label>
+    <h3>Multi-vendor marketplaces (vendor memberships)</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Membership plans for vendors (WCFM, Dokan, WC Vendors): commission per level, capability groups per level, product limits, and pay-before-adding-product.</p>
+  <div class="chips"><span class="chip" title="WCFM Vendor Membership">WCFM</span></div>
+</article>
+</section><section class="cat" id="developer-tools-platform">
+  <h2>Developer, Tools &amp; Platform <small>11</small></h2>
+  <p class="catdesc">These keep the plugin trustworthy and extensible.</p>
+  <article class="feat" id="developer-tools-platform-hooks-filters-everywhere" data-prio="1" data-mg="have" data-text="hooks &amp; filters everywhere action and filter hooks on every lifecycle event (registration, activation, expiry, payment, access check). wp-members documents 120+ hooks; um publishes hook docs. um wpm swpm pms s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-hooks-filters-everywhere"><span>Done</span></label>
+    <h3>Hooks &amp; filters everywhere</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Action and filter hooks on every lifecycle event (registration, activation, expiry, payment, access check). WP-Members documents 120+ hooks; UM publishes hook docs.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="developer-tools-platform-php-api-for-members-levels" data-prio="1" data-mg="partial" data-text="php api for members &amp; levels e.g. &lt;code&gt;memberglut_get_user()-&gt;add_plan($id)&lt;/code&gt;, &lt;code&gt;has_plan()&lt;/code&gt;, &lt;code&gt;get_plans()&lt;/code&gt;, and query, create or update members (swpm api). s2member exposes php constants and js globals. rua swpm wpm s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-php-api-for-members-levels"><span>Done</span></label>
+    <h3>PHP API for members &amp; levels</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg partial" title="MemberGlut has only part of this">Partial in MG</span>
+  </header>
+  <p class="details">e.g. <code>memberglut_get_user()->add_plan($id)</code>, <code>has_plan()</code>, <code>get_plans()</code>, and query, create or update members (SWPM API). s2Member exposes PHP constants and JS globals.</p>
+  <div class="chips"><span class="chip" title="Restrict User Access">RUA</span><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="WP-Members">WPM</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="developer-tools-platform-rest-api-endpoints" data-prio="2" data-mg="none" data-text="rest api endpoints authenticated endpoints for plans, members and subscriptions (mfw &#x27;api settings&#x27; with a consumer secret; sm routers for members, users, analytics and settings). mfw sm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-rest-api-endpoints"><span>Done</span></label>
+    <h3>REST API endpoints</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Authenticated endpoints for plans, members and subscriptions (MFW 'API settings' with a consumer secret; SM routers for members, users, analytics and settings).</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="SureMembers">SM</span></div>
+</article><article class="feat" id="developer-tools-platform-wp-cli-commands" data-prio="3" data-mg="none" data-text="wp-cli commands list and grant memberships and run abilities from the cli. sm wpm">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-wp-cli-commands"><span>Done</span></label>
+    <h3>WP-CLI commands</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">List and grant memberships and run abilities from the CLI.</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="WP-Members">WPM</span></div>
+</article><article class="feat" id="developer-tools-platform-ai-mcp-abilities" data-prio="3" data-mg="none" data-text="ai / mcp abilities suremembers registers wordpress abilities api abilities (create, read, update and delete memberships, grant and revoke) and an optional mcp server. read-only by default, with edit and delete as opt-in toggles. wpuf has an ai form generator (openai, gemini, anthropic). sm wpuf">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-ai-mcp-abilities"><span>Done</span></label>
+    <h3>AI / MCP abilities</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">SureMembers registers WordPress Abilities API abilities (create, read, update and delete memberships, grant and revoke) and an optional MCP server. Read-only by default, with edit and delete as opt-in toggles. WPUF has an AI form generator (OpenAI, Gemini, Anthropic).</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="WP User Frontend">WPUF</span></div>
+</article><article class="feat" id="developer-tools-platform-settings-import-export-reset" data-prio="2" data-mg="have" data-text="settings import / export &amp; reset export and import plugin settings, and reset all settings and data (swpm). swpm pms mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-settings-import-export-reset"><span>Done</span></label>
+    <h3>Settings import / export &amp; reset</h3>
+    <span class="prio p2" title="Important">P2</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Export and import plugin settings, and reset all settings and data (SWPM).</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="developer-tools-platform-uninstall-data-option" data-prio="2" data-mg="none" data-text="uninstall data option a &#x27;delete data at uninstall&#x27; toggle. keep data by default. mfw pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-uninstall-data-option"><span>Done</span></label>
+    <h3>Uninstall data option</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">A 'Delete data at uninstall' toggle. Keep data by default.</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="developer-tools-platform-performance-load-assets-only-where-needed" data-prio="2" data-mg="none" data-text="performance: load assets only where needed load css and js only on pages that use the plugin&#x27;s shortcodes or blocks (pms &#x27;load scripts only on specific pages&#x27;). exclude member pages from cache (um). pms wpuf s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-performance-load-assets-only-where-needed"><span>Done</span></label>
+    <h3>Performance: load assets only where needed</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Load CSS and JS only on pages that use the plugin's shortcodes or blocks (PMS 'Load Scripts only on specific pages'). Exclude member pages from cache (UM).</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="WP User Frontend">WPUF</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="developer-tools-platform-labels-string-editor" data-prio="3" data-mg="none" data-text="labels / string editor pms free &#x27;labels edit&#x27; module changes any front-end string without a translation plugin. pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-labels-string-editor"><span>Done</span></label>
+    <h3>Labels / string editor</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">PMS free 'Labels Edit' module changes any front-end string without a translation plugin.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article><article class="feat" id="developer-tools-platform-debug-logging" data-prio="2" data-mg="none" data-text="debug logging log payment and ipn events to a file, viewable in the admin (s2member logs viewer). swpm pms s2">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-debug-logging"><span>Done</span></label>
+    <h3>Debug logging</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Log payment and IPN events to a file, viewable in the admin (s2Member Logs Viewer).</p>
+  <div class="chips"><span class="chip" title="Simple Membership">SWPM</span><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="s2Member">S2</span></div>
+</article><article class="feat" id="developer-tools-platform-site-health-system-info" data-prio="3" data-mg="none" data-text="site health &amp; system info add plugin info to tools → site health and a system status page. um mfw">
+  <header>
+    <label class="done"><input type="checkbox" data-id="developer-tools-platform-site-health-system-info"><span>Done</span></label>
+    <h3>Site Health &amp; system info</h3>
+    <span class="prio p3" title="Nice to have">P3</span>
+  </header>
+  <p class="details">Add plugin info to Tools → Site Health and a system status page.</p>
+  <div class="chips"><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span></div>
+</article>
+</section><section class="cat" id="compliance-i18n-compatibility">
+  <h2>Compliance, i18n &amp; Compatibility <small>5</small></h2>
+  <p class="catdesc">Non-functional requirements that reviewers and customers check.</p>
+  <article class="feat" id="compliance-i18n-compatibility-gdpr-tools" data-prio="1" data-mg="none" data-text="gdpr tools register with wp personal data export and erase, a consent checkbox on forms, a delete-account button, and &#x27;gdpr for logged-in users&#x27; (pms). members adds privacy caps. pms um mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="compliance-i18n-compatibility-gdpr-tools"><span>Done</span></label>
+    <h3>GDPR tools</h3>
+    <span class="prio p1" title="Must have">P1</span>
+  </header>
+  <p class="details">Register with WP personal data export and erase, a consent checkbox on forms, a delete-account button, and 'GDPR for logged-in users' (PMS). Members adds privacy caps.</p>
+  <div class="chips"><span class="chip" title="Paid Member Subscriptions">PMS</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="compliance-i18n-compatibility-translation-ready-wpml-polylang-config" data-prio="1" data-mg="have" data-text="translation-ready + wpml/polylang config a .pot file, a &lt;code&gt;wpml-config.xml&lt;/code&gt; for plan names and messages, and rtl css. all">
+  <header>
+    <label class="done"><input type="checkbox" data-id="compliance-i18n-compatibility-translation-ready-wpml-polylang-config"><span>Done</span></label>
+    <h3>Translation-ready + WPML/Polylang config</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">A .pot file, a <code>wpml-config.xml</code> for plan names and messages, and RTL CSS.</p>
+  <div class="chips"><span class="chip" title="ALL">ALL</span></div>
+</article><article class="feat" id="compliance-i18n-compatibility-multisite-support" data-prio="2" data-mg="none" data-text="multisite support network activation, with per-site roles and capability restrictions for sub-site admins (members). sm um mem">
+  <header>
+    <label class="done"><input type="checkbox" data-id="compliance-i18n-compatibility-multisite-support"><span>Done</span></label>
+    <h3>Multisite support</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Network activation, with per-site roles and capability restrictions for sub-site admins (Members).</p>
+  <div class="chips"><span class="chip" title="SureMembers">SM</span><span class="chip" title="Ultimate Member">UM</span><span class="chip" title="Members (MemberPress team)">MEM</span></div>
+</article><article class="feat" id="compliance-i18n-compatibility-theme-builder-compatibility" data-prio="1" data-mg="have" data-text="theme &amp; builder compatibility templates overridable from the theme (&lt;code&gt;yourtheme/memberglut/*.php&lt;/code&gt;, as swpm and um do). responsive, light css with an option to disable plugin css (pms &#x27;load css&#x27;). all">
+  <header>
+    <label class="done"><input type="checkbox" data-id="compliance-i18n-compatibility-theme-builder-compatibility"><span>Done</span></label>
+    <h3>Theme &amp; builder compatibility</h3>
+    <span class="prio p1" title="Must have">P1</span><span class="mg have" title="A version of this already exists in MemberGlut code. Check how complete it is.">In MemberGlut</span>
+  </header>
+  <p class="details">Templates overridable from the theme (<code>yourtheme/memberglut/*.php</code>, as SWPM and UM do). Responsive, light CSS with an option to disable plugin CSS (PMS 'Load CSS').</p>
+  <div class="chips"><span class="chip" title="ALL">ALL</span></div>
+</article><article class="feat" id="compliance-i18n-compatibility-woocommerce-hpos-compatibility" data-prio="2" data-mg="none" data-text="woocommerce hpos compatibility declare hpos compatibility if any wc integration exists. mfw pms">
+  <header>
+    <label class="done"><input type="checkbox" data-id="compliance-i18n-compatibility-woocommerce-hpos-compatibility"><span>Done</span></label>
+    <h3>WooCommerce HPOS compatibility</h3>
+    <span class="prio p2" title="Important">P2</span>
+  </header>
+  <p class="details">Declare HPOS compatibility if any WC integration exists.</p>
+  <div class="chips"><span class="chip" title="Membership for WooCommerce (WP Swings)">MFW</span><span class="chip" title="Paid Member Subscriptions">PMS</span></div>
+</article>
+</section>
+  </main>
+</div>
+<script>
+(function(){
+  var KEY = "memberglut_free_features_done";
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { state = {}; }
+  var feats = Array.prototype.slice.call(document.querySelectorAll(".feat"));
+  var boxes = document.querySelectorAll(".done input");
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e) {} }
+  function progress() {
+    var d = feats.filter(function(f){ return f.classList.contains("is-done"); }).length;
+    document.getElementById("prog").textContent = d + " / " + feats.length + " done";
+    document.getElementById("barfill").style.width = (feats.length ? d / feats.length * 100 : 0) + "%";
+  }
+  boxes.forEach(function(b){
+    var card = b.closest(".feat");
+    if (state[b.dataset.id]) { b.checked = true; card.classList.add("is-done"); }
+    b.addEventListener("change", function(){
+      state[b.dataset.id] = b.checked; if (!b.checked) delete state[b.dataset.id];
+      card.classList.toggle("is-done", b.checked); save(); progress(); filter();
+    });
+  });
+  var q = document.getElementById("q"), pr = document.getElementById("prio"), st = document.getElementById("state");
+  function filter() {
+    var t = q.value.trim().toLowerCase(), p = pr.value, s = st.value;
+    feats.forEach(function(f){
+      var ok = (!t || f.dataset.text.indexOf(t) > -1) && (!p || f.dataset.prio === p);
+      if (ok && s) {
+        var done = f.classList.contains("is-done"), mg = f.dataset.mg !== "none";
+        ok = (s === "done" && done) || (s === "todo" && !done) || (s === "mg" && mg) || (s === "nomg" && !mg);
+      }
+      f.classList.toggle("hidden", !ok);
+    });
+    document.querySelectorAll(".cat").forEach(function(c){
+      c.classList.toggle("hidden", !c.querySelector(".feat:not(.hidden)"));
+    });
+  }
+  [q, pr, st].forEach(function(el){ el.addEventListener("input", filter); });
+  document.getElementById("theme").addEventListener("click", function(){
+    var r = document.documentElement, cur = r.getAttribute("data-theme");
+    var dark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    r.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+  progress();
+})();
+</script>
+</body>
+</html>

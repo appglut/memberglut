@@ -1,0 +1,1058 @@
+/* MemberGlut Admin Styles */
+
+/* Dashboard Styles */
+.memberglut-dashboard {
+    margin: 20px 0;
+}
+
+.memberglut-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.memberglut-stat-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.memberglut-stat-card .stat-icon {
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    background: #f0f6fc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memberglut-stat-card .stat-content h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.memberglut-stat-card .stat-content p {
+    margin: 5px 0 0 0;
+    color: #646970;
+    font-size: 14px;
+}
+
+.memberglut-dashboard-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+.memberglut-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.memberglut-card h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #1d2327;
+    font-size: 18px;
+}
+
+.memberglut-quick-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Pro Card */
+.memberglut-pro-card {
+    border-left: 4px solid #f18500;
+}
+
+.memberglut-pro-features {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.memberglut-pro-features li {
+    padding: 5px 0;
+    color: #646970;
+}
+
+/* System Info Table */
+.memberglut-system-info {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.memberglut-system-info td {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.memberglut-system-info td:first-child {
+    font-weight: 600;
+    width: 50%;
+}
+
+/* Roles Page */
+.memberglut-roles-page {
+    margin: 20px 0;
+}
+
+.memberglut-limitation-notice {
+    background: #fef7f0;
+    border: 1px solid #f18500;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.memberglut-limitation-notice p {
+    margin: 0;
+    color: #d63638;
+}
+
+.memberglut-capabilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.memberglut-capability-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px;
+}
+
+.memberglut-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.memberglut-role-card {
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    background: #fff;
+}
+
+.memberglut-role-card.custom-role {
+    border-left: 4px solid #2271b1;
+}
+
+.memberglut-role-card.default-role {
+    border-left: 4px solid #646970;
+}
+
+.memberglut-role-card .role-header h3 {
+    margin: 0 0 5px 0;
+    color: #1d2327;
+    font-size: 16px;
+}
+
+.memberglut-role-card .role-slug {
+    color: #646970;
+    font-size: 12px;
+    font-family: monospace;
+    background: #f6f7f7;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.memberglut-role-card .role-capabilities {
+    margin: 15px 0;
+}
+
+.memberglut-role-card .role-capabilities-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.memberglut-role-card .capabilities-count {
+    color: #646970;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.memberglut-role-card .toggle-capabilities {
+    background: none;
+    border: none;
+    color: #2271b1;
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.memberglut-role-card .toggle-capabilities:hover {
+    color: #135e96;
+}
+
+.memberglut-role-card .role-capabilities-list {
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #f0f0f1;
+    border-radius: 4px;
+    padding: 10px;
+    background: #fafafa;
+}
+
+.memberglut-role-card .role-capabilities-list.expanded {
+    display: block;
+}
+
+.memberglut-role-card .role-capabilities ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.memberglut-role-card .role-capabilities li {
+    padding: 3px 0;
+    color: #646970;
+    font-size: 12px;
+}
+
+.memberglut-role-card .role-capabilities li:before {
+    content: "✓ ";
+    color: #00a32a;
+    font-weight: bold;
+    margin-right: 3px;
+}
+
+.memberglut-role-card .role-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f1;
+}
+
+/* Members Page */
+.memberglut-members-page {
+    margin: 20px 0;
+}
+
+.memberglut-role-badge {
+    background: #2271b1;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    margin-right: 5px;
+}
+
+.memberglut-status-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.memberglut-status-badge.active {
+    background: #d7ede4;
+    color: #00a32a;
+}
+
+.memberglut-status-badge.inactive {
+    background: #f6f7f7;
+    color: #646970;
+}
+
+/* Modal Styles */
+.memberglut-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memberglut-modal-content {
+    background: #fff;
+    border-radius: 4px;
+    padding: 0;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.memberglut-modal-header {
+    padding: 20px 20px 0 20px;
+    border-bottom: 1px solid #f0f0f1;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.memberglut-modal-header h2 {
+    margin: 0;
+}
+
+.memberglut-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #646970;
+    padding: 0;
+    width: 58px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.memberglut-modal-close:hover {
+    color: #d63638;
+}
+
+.memberglut-modal form {
+    padding: 0 20px 20px 20px;
+}
+
+/* Pro Page */
+.memberglut-pro-page {
+    margin: 20px 0;
+}
+
+.memberglut-pro-hero {
+    text-align: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 40px 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.memberglut-pro-hero h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+
+.memberglut-pro-hero p {
+    margin: 0;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.memberglut-comparison-table {
+    margin: 30px 0;
+}
+
+.memberglut-comparison-table .limited {
+    color: #f18500;
+    font-weight: 600;
+}
+
+.memberglut-comparison-table .unlimited {
+    color: #00a32a;
+    font-weight: 600;
+}
+
+.memberglut-comparison-table .included {
+    color: #00a32a;
+    font-weight: 600;
+}
+
+.memberglut-comparison-table .not-included {
+    color: #d63638;
+}
+
+.memberglut-pro-cta {
+    text-align: center;
+    background: #f8f9fa;
+    padding: 40px 20px;
+    border-radius: 8px;
+    border: 2px dashed #c3c4c7;
+}
+
+.memberglut-pro-cta h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.memberglut-pro-cta p {
+    margin: 0 0 20px 0;
+    color: #646970;
+}
+
+/* Settings Page */
+.memberglut-settings-page {
+    margin: 20px 0;
+}
+
+/* Form Styles */
+.memberglut-form {
+    margin: 20px 0;
+}
+
+.memberglut-form .form-table th {
+    width: 200px;
+}
+
+/* Restriction Meta Box */
+.memberglut-restriction-meta {
+    margin: 10px 0;
+}
+
+.memberglut-restriction-meta .memberglut-roles-list {
+    margin: 10px 0;
+}
+
+.memberglut-restriction-meta .memberglut-roles-list label {
+    display: block;
+    margin: 5px 0;
+}
+
+/* Activity List */
+.memberglut-activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.memberglut-activity-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.memberglut-activity-list li:last-child {
+    border-bottom: none;
+}
+
+.memberglut-activity-list small {
+    color: #646970;
+}
+
+/* Loading and Notice Styles */
+.memberglut-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.memberglut-notice {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.memberglut-notice.success {
+    background: #d7ede4;
+    color: #00a32a;
+    border: 1px solid #00a32a;
+}
+
+.memberglut-notice.error {
+    background: #fcf0f1;
+    color: #d63638;
+    border: 1px solid #d63638;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .memberglut-dashboard-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .memberglut-stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    
+    .memberglut-roles-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .memberglut-capabilities-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .memberglut-quick-actions {
+        flex-direction: column;
+    }
+    
+    .memberglut-modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+}
+
+/* Pro Feature Placeholders */
+.memberglut-pro-placeholder {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.memberglut-pro-placeholder::before {
+    content: "PRO";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.memberglut-pro-placeholder-content h3 {
+    margin: 0 0 10px 0;
+    color: #fff;
+    font-size: 18px;
+}
+
+.memberglut-pro-placeholder-content p {
+    margin: 0 0 15px 0;
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+}
+
+.memberglut-pro-placeholder .memberglut-btn {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.memberglut-pro-placeholder .memberglut-btn:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+}
+
+.memberglut-pro-placeholder-banner {
+    padding: 15px 20px;
+    margin: 10px 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.memberglut-pro-placeholder-banner .memberglut-pro-placeholder-content {
+    flex: 1;
+}
+
+.memberglut-pro-placeholder-banner h3 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.memberglut-pro-placeholder-banner p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.memberglut-pro-placeholder-banner .memberglut-btn {
+    margin-left: 15px;
+    white-space: nowrap;
+}
+
+.memberglut-pro-placeholder-inline {
+    background: rgba(102, 126, 234, 0.1);
+    border: 2px dashed #667eea;
+    color: #667eea;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.memberglut-pro-placeholder-inline::before {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.memberglut-pro-placeholder-inline h3 {
+    color: #667eea;
+    font-size: 16px;
+}
+
+.memberglut-pro-placeholder-inline p {
+    color: #5a6c7d;
+}
+
+.memberglut-pro-placeholder-inline .memberglut-btn {
+    background: #667eea;
+    color: #fff;
+    border: none;
+}
+
+.memberglut-pro-placeholder-inline .memberglut-btn:hover {
+    background: #5a67d8;
+}
+
+/* Extensions Page */
+.memberglut-extensions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.memberglut-extension-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.memberglut-extension-card:hover {
+    border-color: #2271b1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.memberglut-extension-card.pro-feature {
+    border-left: 4px solid #667eea;
+}
+
+.memberglut-extension-card.active-feature {
+    border-left: 4px solid #00a32a;
+}
+
+.memberglut-extension-card h3 {
+    margin: 0 0 10px 0;
+    color: #1d2327;
+    font-size: 16px;
+}
+
+.memberglut-extension-card p {
+    color: #646970;
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.memberglut-extension-card .extension-status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.memberglut-extension-card .extension-status.active {
+    background: #d7ede4;
+    color: #00a32a;
+}
+
+.memberglut-extension-card .extension-status.pro {
+    background: #e0e7ff;
+    color: #667eea;
+}
+
+.memberglut-extension-card .extension-status.free {
+    background: #e6f3ff;
+    color: #0073aa;
+}
+
+.memberglut-extension-card .extension-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Pro Benefits Grid */
+.memberglut-pro-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.memberglut-pro-benefit {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.memberglut-pro-benefit h3 {
+    margin: 15px 0 10px 0;
+    color: #1d2327;
+    font-size: 16px;
+}
+
+.memberglut-pro-benefit p {
+    margin: 0;
+    color: #646970;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Membership Plans Page */
+.memberglut-plans-page {
+    margin: 20px 0;
+}
+
+.memberglut-plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.memberglut-plan-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-left-width: 4px;
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.memberglut-plan-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.memberglut-plan-card .plan-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.memberglut-plan-card .plan-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f6f7f7;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.memberglut-plan-card .plan-icon .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.memberglut-plan-card .plan-title {
+    flex: 1;
+    min-width: 0;
+}
+
+.memberglut-plan-card .plan-title h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #1d2327;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.memberglut-plan-card .plan-slug {
+    color: #646970;
+    font-size: 11px;
+    font-family: monospace;
+    background: #f6f7f7;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.memberglut-plan-card .plan-status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.memberglut-plan-card .plan-status.active {
+    background: #d7ede4;
+    color: #00a32a;
+}
+
+.memberglut-plan-card .plan-status.inactive {
+    background: #f6f7f7;
+    color: #646970;
+}
+
+.memberglut-plan-card .plan-description {
+    color: #646970;
+    font-size: 14px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.memberglut-plan-card .plan-price {
+    margin-bottom: 15px;
+}
+
+.memberglut-plan-card .price-amount {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.memberglut-plan-card .price-cycle {
+    color: #646970;
+    font-size: 14px;
+}
+
+.memberglut-plan-card .price-free {
+    font-size: 24px;
+    font-weight: 700;
+    color: #00a32a;
+}
+
+.memberglut-plan-card .plan-features {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.memberglut-plan-card .plan-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.memberglut-plan-card .plan-features li {
+    padding: 6px 0;
+    color: #646970;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.memberglut-plan-card .plan-features li:first-child {
+    padding-top: 0;
+}
+
+.memberglut-plan-card .plan-features li:last-child {
+    padding-bottom: 0;
+}
+
+.memberglut-plan-card .plan-features .dashicons {
+    color: #00a32a;
+    flex-shrink: 0;
+}
+
+.memberglut-plan-card .plan-stats {
+    display: flex;
+    gap: 20px;
+    padding: 12px 0;
+    border-top: 1px solid #f0f0f1;
+    border-bottom: 1px solid #f0f0f1;
+    margin-bottom: 15px;
+}
+
+.memberglut-plan-card .plan-stats .stat-item {
+    font-size: 12px;
+    color: #646970;
+}
+
+.memberglut-plan-card .plan-stats .stat-item strong {
+    color: #1d2327;
+    font-weight: 600;
+}
+
+.memberglut-plan-card .plan-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Features Management Modal */
+.memberglut-add-feature-form {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f1;
+}
+
+.memberglut-add-feature-form h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #1d2327;
+}
+
+.memberglut-features-list h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #1d2327;
+}
+
+.memberglut-feature-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+.memberglut-feature-item:hover {
+    background: #f0f1f1;
+}
+
+.memberglut-feature-item-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.memberglut-feature-item .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #2271b1;
+}
+
+.memberglut-modal-body {
+    padding: 20px;
+}
+
+/* Plan Pricing Display */
+.memberglut-pricing-display {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.memberglut-pricing-display .currency {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.memberglut-pricing-display .amount {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.memberglut-pricing-display .cycle {
+    font-size: 14px;
+    color: #646970;
+}
+
+/* Billing Cycle Badge */
+.memberglut-billing-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: #e6f3ff;
+    color: #0073aa;
+    margin-left: 8px;
+}
+
+/* Responsive Design for Plans */
+@media (max-width: 1200px) {
+    .memberglut-plans-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .memberglut-plans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .memberglut-plan-card .plan-header {
+        flex-wrap: wrap;
+    }
+
+    .memberglut-plan-card .plan-status {
+        order: 3;
+        width: 100%;
+        text-align: center;
+        margin-top: 8px;
+    }
+}
+
+/* Documentation Modal Styles */
+.memberglut-docs-tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.memberglut-docs-tab {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.memberglut-docs-tab.active {
+    border-bottom-color: #007cba;
+    color: #007cba;
+}
+
+.memberglut-docs-content {
+    display: none;
+}
+
+.memberglut-docs-content.active {
+    display: block;
+}
+
+.memberglut-code-block {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 10px 0;
+    overflow-x: auto;
+}
+
+.memberglut-code-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.memberglut-code-block code {
+    background: none;
+    padding: 0;
+}

@@ -1,0 +1,609 @@
+# WordPress Plugin Approval Checklist - Common Rejection Issues
+
+## Purpose
+This document serves as a pre-submission checklist for WordPress plugins. If your plugin contains ANY of the issues below with code patterns shown, it will likely be **REJECTED** by the WordPress.org plugin review team.
+
+---
+
+## 🔴 CRITICAL ISSUES - Immediate Rejection
+
+### 1. Trialware and Locked Features (Guideline 5)
+
+**Why plugins are rejected:** Plugins must be 100% free and fully functional. You CANNOT lock features behind license keys, payments, or upgrade prompts.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: License check that disables features
+if ( ! $this->check_license() ) {
+    return; // Feature locked
+}
+
+// BAD: Trial period restriction
+if ( time() > $trial_end_date ) {
+    disable_feature(); // Time-locked functionality
+}
+
+// BAD: Usage quota limits
+if ( get_usage_count() > 10 ) {
+    show_upgrade_notice(); // Quota-limited feature
+}
+
+// BAD: Conditional feature rendering based on "pro" status
+if ( is_pro_active() ) {
+    render_pro_feature();
+} else {
+    render_upgrade_button(); // Feature exists but is disabled
+}
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Point to separate plugin (external code)
+if ( ! class_exists( 'ProFeature_Plugin' ) ) {
+    echo '<p>This feature requires the separate Pro plugin.</p>';
+    return;
+}
+
+// GOOD: All features in the plugin are fully functional
+render_feature(); // Always works
+```
+
+**Key Rule:** If the code for a feature exists in your plugin, it must work. No "upgrade to unlock" for built-in features.
+
+---
+
+### 2. PHP Syntax Errors
+
+**Why plugins are rejected:** Any syntax error, no matter how minor, will cause rejection.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Unmatched bracket
+$array = [1, 2, 3, ]; // Extra comma after closing bracket in array declaration context
+
+// BAD: Missing semicolon
+echo "Hello"
+$var = "test"; // Missing semicolon above
+
+// BAD: Mismatched braces
+function test() {
+    if ( $condition ) {
+        echo "yes";
+// Missing closing brace
+```
+
+#### ✅ HOW TO CHECK:
+
+```bash
+# Run PHP syntax check before submission
+find . -name "*.php" -exec php -l {} \;
+
+# Or use WP-CLI
+wp plugin verify-checksums your-plugin
+```
+
+---
+
+### 3. Unsafe SQL Calls (SQL Injection Risk)
+
+**Why plugins are rejected:** Direct database queries without proper preparation are security vulnerabilities.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Direct variable interpolation
+$wpdb->query( "SELECT * FROM {$wpdb->prefix}my_table WHERE id = $user_id" );
+
+// BAD: Unprepared queries with sprintf
+$results = $wpdb->get_results(
+    sprintf( "SELECT * FROM `%s`", $escaped_table )
+);
+
+// BAD: $_POST values directly in query
+$wpdb->query( "INSERT INTO table (name) VALUES ('" . $_POST['name'] . "')" );
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Using wpdb::prepare()
+$results = $wpdb->get_results(
+    $wpdb->prepare(
+        "SELECT * FROM {$wpdb->prefix}my_table WHERE id = %d",
+        $user_id
+    )
+);
+
+// GOOD: With placeholders
+$wpdb->query(
+    $wpdb->prepare(
+        "INSERT INTO table (name) VALUES (%s)",
+        sanitize_text_field( $_POST['name'] )
+    )
+);
+```
+
+---
+
+## 🔴 HIGH PRIORITY SECURITY ISSUES
+
+### 4. Missing Nonce Verification (CSRF Protection)
+
+**Why plugins are rejected:** AJAX/form actions without nonce checks allow CSRF attacks.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: No nonce check in AJAX handler
+add_action( 'wp_ajax_my_action', 'handle_ajax' );
+function handle_ajax() {
+    $data = $_POST['data']; // Directly using POST without nonce verification
+    update_option( 'my_option', $data );
+}
+
+// BAD: Form without nonce
+function render_form() {
+    echo '<form method="post">';
+    echo '<input name="submit">';
+    echo '</form>';
+}
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: AJAX with nonce verification
+add_action( 'wp_ajax_my_plugin_action', 'my_plugin_handler' );
+function my_plugin_handler() {
+    // Verify nonce
+    if ( ! isset( $_POST['my_nonce'] )
+        || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['my_nonce'] ) ), 'my_plugin_action' )
+    ) {
+        wp_send_json_error( 'Invalid security token' );
+    }
+
+    // Check permissions
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_send_json_error( 'Insufficient permissions' );
+    }
+
+    // Process data
+    if ( isset( $_POST['data'] ) ) {
+        update_option( 'my_plugin_option', sanitize_text_field( $_POST['data'] ) );
+    }
+}
+
+// GOOD: Form with nonce field
+function render_form() {
+    echo '<form method="post">';
+    wp_nonce_field( 'my_form_action', 'my_nonce' );
+    echo '<input name="my_field">';
+    echo '</form>';
+}
+```
+
+---
+
+### 5. Improper Output Escaping (XSS Risk)
+
+**Why plugins are rejected:** Unescaped output can lead to XSS vulnerabilities.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Unescaped variable in HTML
+echo "<div class='$user_class'>$user_content</div>";
+
+// BAD: Direct echo of database value
+echo get_option( 'my_plugin_setting' );
+
+// BAD: Unescaped URL
+echo "<a href='$url'>Link</a>";
+
+// BAD: Unescaped attribute
+echo "<input value='$input_value'>";
+
+// BAD: wp_add_inline_script/style without escaping
+wp_add_inline_script( 'my-script', $javascript_variable ); // $javascript_variable not escaped
+wp_add_inline_style( 'my-style', $dynamic_css ); // $dynamic_css not escaped
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Escape based on context
+echo '<div class="' . esc_attr( $user_class ) . '">' . esc_html( $user_content ) . '</div>';
+
+// GOOD: Escape options
+echo esc_html( get_option( 'my_plugin_setting' ) );
+
+// GOOD: Escape URLs
+echo '<a href="' . esc_url( $url ) . '">Link</a>';
+
+// GOOD: Escape attributes
+echo '<input value="' . esc_attr( $input_value ) . '">';
+
+// GOOD: For HTML output (when you need to allow HTML)
+echo wp_kses_post( $html_content );
+// Or with allowed tags
+echo wp_kses( $html_content, array( 'a' => array( 'href' => true ), 'strong' => array() ) );
+
+// GOOD: Inline scripts/styles need careful handling
+// For dynamic CSS - use wp_strip_all_tags() if it's CSS only
+wp_add_inline_style( 'my-style', wp_strip_all_tags( $dynamic_css ) );
+
+// For inline script data - use wp_json_encode
+wp_add_inline_script( 'my-script', 'const data = ' . wp_json_encode( $data_array ) );
+```
+
+---
+
+### 6. Improper Input Sanitization
+
+**Why plugins are rejected:** User input must be sanitized before processing.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Direct use of $_POST
+$post_id = $_POST['post_id'];
+update_post_meta( $post_id, 'key', $_POST['value'] );
+
+// BAD: No sanitization
+$email = $_GET['email'];
+wp_mail( $email, $subject, $message );
+
+// BAD: Returning unsanitized user input
+wp_send_json_error( $_POST ); // Raw POST data sent to client
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Sanitize based on expected type
+$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+$value = isset( $_POST['value'] ) ? sanitize_text_field( $_POST['value'] ) : '';
+update_post_meta( $post_id, 'key', $value );
+
+// GOOD: Email sanitization
+$email = isset( $_GET['email'] ) ? sanitize_email( $_GET['email'] ) : '';
+if ( is_email( $email ) ) {
+    wp_mail( $email, $subject, $message );
+}
+
+// GOOD: Sanitize before returning
+$sanitized_data = array_map( 'sanitize_text_field', $_POST );
+wp_send_json_error( $sanitized_data );
+```
+
+---
+
+## 🔴 CODE QUALITY ISSUES
+
+### 7. Improper Script/Style Enqueuing
+
+**Why plugins are rejected:** Direct output of `<script>` and `<style>` tags causes performance and compatibility issues.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Direct script tags in HTML
+echo '<script src="https://example.com/script.js"></script>';
+
+// BAD: Direct style tags
+echo '<style>.my-class { color: red; }</style>';
+
+// BAD: Inline scripts in random locations
+function my_function() {
+    echo '<script>alert("hello");</script>';
+}
+
+// BAD: Multiple style tags scattered throughout
+echo '<style type="text/css">' . $dynamic_css . '</style>';
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Enqueue scripts properly
+function my_plugin_enqueue_scripts() {
+    wp_enqueue_script(
+        'my-plugin-script',
+        plugins_url( 'js/script.js', __FILE__ ),
+        array( 'jquery' ),
+        '1.0.0',
+        true
+    );
+}
+add_action( 'wp_enqueue_scripts', 'my_plugin_enqueue_scripts' );
+
+// GOOD: Enqueue styles
+function my_plugin_enqueue_styles() {
+    wp_enqueue_style(
+        'my-plugin-style',
+        plugins_url( 'css/style.css', __FILE__ ),
+        array(),
+        '1.0.0'
+    );
+}
+add_action( 'wp_enqueue_scripts', 'my_plugin_enqueue_styles' );
+
+// GOOD: Inline scripts
+wp_add_inline_script( 'my-plugin-script', 'const myData = ' . wp_json_encode( $data ) );
+
+// GOOD: Inline styles
+wp_add_inline_style( 'my-plugin-style', '.my-class { color: red; }' );
+
+// GOOD: For admin
+add_action( 'admin_enqueue_scripts', 'my_plugin_admin_scripts' );
+```
+
+---
+
+### 8. Generic/Poor Prefixing
+
+**Why plugins are rejected:** With 100,000+ plugins, generic names cause conflicts. Must use unique 4+ character prefixes.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Common/generic names
+function save_data() { } // Too generic
+class Settings { } // Too generic
+add_action( 'wp_ajax_update', 'handler' ); // No prefix
+add_shortcode( 'button', 'shortcode_handler' ); // Common word
+
+// BAD: Short prefixes (< 4 characters)
+function abc_save() { } // Too short
+define( 'XYZ_VERSION', '1.0' ); // Too short
+
+// BAD: Reserved prefixes
+function wp_my_function() { } // wp_ reserved
+function __init() { } // __ reserved
+
+// BAD: No prefix on options
+update_option( 'my_setting', $value ); // No unique prefix
+add_option( 'plugin_data', $data ); // Too generic
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Unique 4+ character prefix (example: "myplg")
+function myplg_save_data() { }
+class Myplg_Settings { }
+add_action( 'wp_ajax_myplg_update', 'myplg_handler' );
+add_shortcode( 'myplg_button', 'myplg_shortcode_handler' );
+define( 'MYPLG_VERSION', '1.0.0' );
+
+// GOOD: Prefixed options
+update_option( 'myplg_setting', $value );
+add_option( 'myplg_data', $data );
+
+// GOOD: Prefixed everything
+namespace My_Plugin\Namespace;
+class My_Plugin_Frontend {
+    const OPTION_NAME = 'myplg_frontend_settings';
+}
+```
+
+**Common prefixes that are REJECTED:** `enable`, `save`, `add`, `remove`, `load`, `get`, `set`, `update`, `delete`
+
+---
+
+### 9. Remote File Loading (External Dependencies)
+
+**Why plugins are rejected:** Loading CSS/JS/fonts from external servers creates dependencies and privacy issues.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Loading CSS from Google
+wp_enqueue_style( 'google-fonts', 'https://fonts.googleapis.com/css?family=Roboto' );
+
+// BAD: Loading jQuery from CDN
+wp_enqueue_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js' );
+
+// BAD: Loading icons from external server
+wp_enqueue_style( 'font-awesome', 'https://example.com/fontawesome.css' );
+
+// BAD: Commented out but still present
+//wp_enqueue_script('external-script', '//cdn.example.com/script.js');
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Bundle assets locally
+wp_enqueue_style(
+    'my-plugin-fonts',
+    plugins_url( 'assets/fonts/roboto.css', __FILE__ )
+);
+wp_enqueue_script(
+    'my-plugin-script',
+    plugins_url( 'assets/js/script.js', __FILE__ )
+);
+
+// EXCEPTION: Allowed for service-based plugins
+// If plugin IS a service (spam filtering, etc.), document in readme
+```
+
+---
+
+## 🔴 OTHER COMMON ISSUES
+
+### 10. Dynamic Class Instantiation
+
+**Why plugins are rejected:** Instantiating classes from user-controlled data is a security risk.
+
+#### ❌ REJECTED CODE EXAMPLES:
+
+```php
+// BAD: Class from user input without validation
+$class_name = $_POST['template_class'];
+new $class_name();
+
+// BAD: Class from database without allowlist
+$template = get_option( 'my_template' );
+new $template['class']();
+```
+
+#### ✅ ACCEPTED APPROACH:
+
+```php
+// GOOD: Use allowlist of allowed classes
+$allowed_classes = array( 'Template_One', 'Template_Two', 'Template_Three' );
+$class_name = get_option( 'my_template_class' );
+if ( in_array( $class_name, $allowed_classes, true ) ) {
+    new $class_name();
+} else {
+    // Handle invalid class
+    wp_die( 'Invalid template class' );
+}
+```
+
+---
+
+### 11. Sensitive Files in Plugin
+
+**Why plugins are rejected:** Backup files, logs, and database dumps should not be in the plugin.
+
+#### ❌ Files That Cause Rejection:
+
+```
+/my-plugin/
+    /backup.sql
+    /debug.log
+    /main.js.backup
+    /.env
+    /config.php.bak
+    /database.sql
+    /error.log
+```
+
+#### ✅ BEFORE SUBMISSION:
+
+```bash
+# Remove backup files
+find . -name "*.backup" -delete
+find . -name "*.bak" -delete
+find . -name "*.log" -delete
+find . -name "*.sql" -delete
+find . -name ".env*" -delete
+
+# Check gitignore
+echo "*.backup" >> .gitignore
+echo "*.bak" >> .gitignore
+echo "*.log" >> .gitignore
+```
+
+---
+
+## 📋 PRE-SUBMISSION CHECKLIST
+
+Run through this checklist before EVERY submission:
+
+### Security
+- [ ] All `$_POST`, `$_GET`, `$_REQUEST` values are sanitized
+- [ ] All AJAX handlers verify nonces
+- [ ] All user capabilities checked with `current_user_can()`
+- [ ] All database queries use `$wpdb->prepare()`
+- [ ] All output is escaped (`esc_*()` functions)
+- [ ] No dynamic class instantiation without allowlist
+
+### Code Quality
+- [ ] No PHP syntax errors (run `php -l` on all files)
+- [ ] All scripts/styles enqueued properly (no direct `<script>` or `<style>` tags)
+- [ ] All functions/classes use unique 4+ character prefix
+- [ ] No generic names (`save_`, `add_`, `get_`)
+- [ ] No reserved prefixes (`wp_`, `__`)
+
+### Compliance
+- [ ] No trialware or locked features
+- [ ] All features fully functional
+- [ ] No license checks for built-in features
+- [ ] External assets bundled locally (no remote loading)
+- [ ] Sensitive files removed (backups, logs, .sql files)
+
+### Testing
+- [ ] Tested on clean WordPress install
+- [ ] `WP_DEBUG` set to `true` with no errors
+- [ ] Tested with popular themes
+- [ ] No PHP warnings or notices
+- [ ] Plugin Check plugin passes
+
+### Tools to Run Before Submission
+
+```bash
+# PHP Syntax Check
+find . -name "*.php" -exec php -l {} \;
+
+# WordPress Plugin Check (install plugin first)
+wp plugin check .
+
+# PHPCS with WordPress standards
+vendor/bin/phpcs --standard=WordPress .
+
+# Search for common issues
+grep -r "echo \$" . --include="*.php" | grep -v "esc_" | grep -v "wp_"
+grep -r "new \$" . --include="*.php"
+grep -r "\$_POST\|\$_GET\|\$_REQUEST" . --include="*.php" | grep -v "sanitize" | grep -v "esc_"
+```
+
+---
+
+## 🚨 AUTOMATIC REJECTION TRIGGERS
+
+If ANY of these are found, your plugin will be rejected:
+
+1. **License checks** for built-in features
+2. **Locked/disabled features** requiring payment
+3. **Remote CSS/JS loading** (non-service plugins)
+4. **Missing nonce verification** on AJAX handlers
+5. **Unescaped user input** in output
+6. **Unprepared SQL queries**
+7. **PHP syntax errors**
+8. **Generic/common prefixes** (< 4 chars or common words)
+9. **Backup files** in distribution
+10. **Dynamic class instantiation** without allowlist
+
+---
+
+## FINAL NOTES
+
+1. **The plugin review team checks EVERYTHING** - not just the examples provided in feedback
+2. **If the same issue appears multiple times**, fix ALL instances
+3. **Testing is mandatory** - untested code will be rejected
+4. **Read the guidelines** at https://developer.wordpress.org/plugins/wordpress-org/
+5. **Use Plugin Check** plugin before submission
+
+## Quick Reference - Escaping Functions
+
+| Context | Function | Example |
+|---------|----------|---------|
+| URLs | `esc_url()` | `esc_url( $url )` |
+| HTML Attributes | `esc_attr()` | `esc_attr( $class )` |
+| HTML Text | `esc_html()` | `esc_html( $text )` |
+| JavaScript | `esc_js()` | `esc_js( $value )` |
+| SQL | `$wpdb->prepare()` | `$wpdb->prepare( "Query %s", $var )` |
+| Allowed HTML | `wp_kses_post()` | `wp_kses_post( $content )` |
+
+## Quick Reference - Sanitizing Functions
+
+| Input Type | Function |
+|-----------|----------|
+| Plain text | `sanitize_text_field()` |
+| Email | `sanitize_email()` |
+| URL | `esc_url_raw()` |
+| Key/Slug | `sanitize_key()` |
+| Integer | `absint()` |
+| Filename | `sanitize_file_name()` |
+| HTML | `wp_kses()` / `wp_kses_post()` |
+
+---
+
+Last Updated: 2026-07-02
+Source: WordPress Plugin Review Team Feedback

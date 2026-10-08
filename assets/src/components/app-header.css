@@ -1,0 +1,110 @@
+/* Three-bar menu button (left of every header) and its side menu */
+.mg-hamburger {
+  display: inline-flex; flex-direction: column; justify-content: center; gap: 4px;
+  width: 38px; height: 38px; padding: 0 10px; border: 0; border-radius: 8px;
+  background: rgba(255,255,255,0.08); cursor: pointer; transition: background .15s;
+  flex: none;
+}
+.mg-hamburger:hover { background: rgba(255,255,255,0.16); }
+.mg-hamburger:focus-visible { outline: 2px solid #e94560; outline-offset: 2px; }
+.mg-hamburger span { display: block; height: 2px; width: 100%; border-radius: 2px; background: #fff; }
+
+.mg-drawer-logo { height: 30px; width: auto; display: block; }
+.mg-nav-drawer .ant-drawer-close { color: rgba(255,255,255,0.75); }
+.mg-nav-drawer .ant-drawer-close:hover, .mg-nav-drawer .ant-drawer-close:focus-visible { color: #fff; background: rgba(255,255,255,0.16); }
+.mg-nav-list { display: flex; flex-direction: column; gap: 2px; padding: 4px 12px; }
+.mg-nav-list a, .mg-nav-foot a {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px;
+  color: #334155; text-decoration: none; font-size: 14px; font-weight: 500; transition: background .12s, color .12s;
+}
+.mg-nav-list a:hover, .mg-nav-foot a:hover { background: #f8fafc; color: #0f172a; }
+.mg-nav-list a.active { background: #fff1f3; color: #e94560; font-weight: 600; }
+.mg-nav-list .ic, .mg-nav-foot .ic {
+  width: 30px; height: 30px; border-radius: 8px; background: #f1f5f9; color: #64748b;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 13px; flex: none;
+}
+.mg-nav-list a.active .ic { background: #e94560; color: #fff; }
+.mg-nav-foot { margin: 10px 12px 0; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+
+/* ── Links inside FormGlut screens ───────────────────────────────────
+   WordPress paints links blue (hover / focus / press) and purple (visited) and adds a blue ring
+   around the link until the next page loads. Replace that with this plugin's colours. */
+#memberglut-root a,
+.mg-nav-drawer a {
+  outline: none;
+  box-shadow: none;
+  text-decoration: none;
+}
+#memberglut-root a:focus,
+#memberglut-root a:active,
+.mg-nav-drawer a:focus,
+.mg-nav-drawer a:active {
+  outline: none;
+  box-shadow: none;
+}
+/* Keyboard users still get a visible ring, in the plugin colour. */
+#memberglut-root a:focus-visible,
+.mg-nav-drawer a:focus-visible {
+  outline: 2px solid rgba(233, 69, 96, 0.6);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Links without a class: keep the surrounding colour, brand colour on hover / press. */
+#memberglut-root a:where(:not([class])) { color: inherit; }
+#memberglut-root a:where(:not([class])):hover,
+#memberglut-root a:where(:not([class])):active { color: #e94560; }
+
+/* Dark header: tabs, back links */
+#memberglut-root .mg-header-nav a,
+#memberglut-root .mg-editor-tab,
+#memberglut-root .mg-editor-back,
+#memberglut-root .mg-header-back { color: rgba(255, 255, 255, 0.7); }
+#memberglut-root .mg-header-nav a:hover,
+#memberglut-root .mg-header-nav a:focus,
+#memberglut-root .mg-header-nav a:active,
+#memberglut-root .mg-header-nav a:visited:hover,
+#memberglut-root .mg-editor-tab:hover,
+#memberglut-root .mg-editor-tab:focus,
+#memberglut-root .mg-editor-tab:active,
+#memberglut-root .mg-editor-back:hover,
+#memberglut-root .mg-editor-back:focus,
+#memberglut-root .mg-editor-back:active,
+#memberglut-root .mg-header-back:hover,
+#memberglut-root .mg-header-back:focus,
+#memberglut-root .mg-header-back:active { color: #fff; }
+#memberglut-root .mg-header-nav a.active,
+#memberglut-root .mg-editor-tab.active { color: #fff; background: #e94560; }
+
+/* Side menu */
+.mg-nav-drawer .mg-nav-list a,
+.mg-nav-drawer .mg-nav-foot a { color: #334155; }
+.mg-nav-drawer .mg-nav-list a:hover,
+.mg-nav-drawer .mg-nav-list a:focus,
+.mg-nav-drawer .mg-nav-list a:active,
+.mg-nav-drawer .mg-nav-foot a:hover,
+.mg-nav-drawer .mg-nav-foot a:focus,
+.mg-nav-drawer .mg-nav-foot a:active { color: #0f172a; }
+.mg-nav-drawer .mg-nav-list a.active,
+.mg-nav-drawer .mg-nav-list a.active:hover,
+.mg-nav-drawer .mg-nav-list a.active:focus,
+.mg-nav-drawer .mg-nav-list a.active:active { color: #e94560; }
+
+/* Row actions and other text links in tables / cards: brand colour on hover and press */
+#memberglut-root .mg-row-actions a:hover,
+#memberglut-root .mg-row-actions a:focus,
+#memberglut-root .mg-row-actions a:active,
+#memberglut-root .mg-table-wrap a:hover,
+#memberglut-root .mg-table-wrap a:focus,
+#memberglut-root .mg-table-wrap a:active { color: #e94560; }
+#memberglut-root .mg-row-actions a.mg-action-delete:hover,
+#memberglut-root .mg-row-actions a.mg-action-delete:focus,
+#memberglut-root .mg-row-actions a.mg-action-delete:active { color: #dc2626; }
+
+/* Softer default colour for row action links */
+#memberglut-root .mg-row-actions a:link,
+#memberglut-root .mg-row-actions a:visited { color: #75849a; }
+#memberglut-root .mg-row-actions a.mg-action-delete:link,
+#memberglut-root .mg-row-actions a.mg-action-delete:visited { color: #ef6464; }
+#memberglut-root .mg-row-actions a:hover { color: #e94560; }
+#memberglut-root .mg-row-actions a.mg-action-delete:hover { color: #dc2626; }

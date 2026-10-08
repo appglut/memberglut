@@ -1,0 +1,8 @@
+> Legend: **§2.x** = cross-section rule in [01-dependency-map.md](01-dependency-map.md) · **00-overview §0.x/§1.x** = audit/architecture · numbered headings like “7.3” are local to the phase file · **D#** = decision in [02-decisions.md](02-decisions.md) · **Pn** = `phase-NN-*.md` · Option keys are listed in [appendix-a-option-registry.md](appendix-a-option-registry.md).
+
+# Appendix C — Hooks to fire
+
+**Actions:** `memberglut_init` (exists), `memberglut_activate` (exists), `memberglut_settings_updated`, `memberglut_plan_saved`, `memberglut_plan_deleted`, `memberglut_subscription_created`, `memberglut_subscription_status_changed`, `memberglut_subscription_activated`, `memberglut_subscription_renewed`, `memberglut_subscription_canceled`, `memberglut_subscription_expired`, `memberglut_subscription_plan_changed`, `memberglut_payment_completed`, `memberglut_payment_failed`, `memberglut_payment_refunded`, `memberglut_member_approved`, `memberglut_member_rejected`, `memberglut_user_registered`, `memberglut_access_denied`, `memberglut_rule_saved`, `memberglut_role_saved`, `memberglut_email_sent`, `memberglut_webhook_received`.
+
+**Filters:** `memberglut_access_decision`, `memberglut_user_bypasses_restrictions`, `memberglut_rule_targets`, `memberglut_restriction_message` (exists in example), `memberglut_teaser`, `memberglut_order_summary`, `memberglut_plan_change_amount`, `memberglut_gateways`, `memberglut_coupon_is_valid`, `memberglut_registration_forms`, `memberglut_field_types`, `memberglut_registration_validate`, `memberglut_account_tabs`, `memberglut_email_tags`, `memberglut_email_triggers`, `memberglut_capability_groups` (exists), `memberglut_redirect_url`, `memberglut_admin_pages`, `memberglut_template_path`, `memberglut_member_export_columns`.
+
