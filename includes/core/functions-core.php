@@ -248,13 +248,13 @@ function memberglut_page_id( $slot ) {
 }
 
 /**
- * Whether the current user bypasses every restriction (administrators).
+ * Whether a user bypasses every restriction (administrators).
  *
- * @param int $user_id User ID (default current).
+ * @param int|null $user_id User ID; null = current user, 0 = a logged-out visitor.
  * @return bool
  */
-function memberglut_user_bypasses_restrictions( $user_id = 0 ) {
-	$user_id = $user_id ? $user_id : get_current_user_id();
+function memberglut_user_bypasses_restrictions( $user_id = null ) {
+	$user_id = null === $user_id ? get_current_user_id() : (int) $user_id;
 	$bypass  = $user_id && user_can( $user_id, 'manage_options' );
 	return (bool) apply_filters( 'memberglut_user_bypasses_restrictions', $bypass, $user_id );
 }
@@ -334,7 +334,9 @@ function memberglut_clear_cache() {
 	global $wpdb;
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Deleting our own transients.
 	$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( '_transient_memberglut_' ) . '%', $wpdb->esc_like( '_transient_timeout_memberglut_' ) . '%' ) );
-	wp_cache_set( 'memberglut_cache_version', microtime( true ), 'memberglut' );
+	if ( class_exists( 'MemberGlut_Access_Cache' ) ) {
+		MemberGlut_Access_Cache::bump();
+	}
 	if ( function_exists( 'wp_cache_flush_group' ) && wp_cache_supports( 'flush_group' ) ) {
 		wp_cache_flush_group( 'memberglut' );
 	}

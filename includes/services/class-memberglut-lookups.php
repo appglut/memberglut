@@ -43,6 +43,11 @@ class MemberGlut_Lookups {
 					'name' => get_bloginfo( 'name' ),
 				),
 				'signup_base'   => memberglut_page_url( 'register' ),
+				'settings_global' => array(
+					'action'   => memberglut_setting( 'restrict_action' ),
+					'teaser'   => memberglut_setting( 'teaser' ),
+					'in_lists' => memberglut_setting( 'hide_in_lists' ),
+				),
 				'can'           => self::current_caps(),
 			)
 		);

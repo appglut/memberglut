@@ -1,6 +1,6 @@
-import { bN as faShieldHalved, b5 as faCreditCard, bF as faRectangleList, b$ as faUserLock, bC as faPeopleGroup, ba as faEnvelopesBulk, bD as faPlug, aQ as faBell, aX as faChartLine, cU as jsxRuntimeExports, P as Page, d7 as reactExports, q as FontAwesomeIcon, b6 as faCrown, a8 as __, c as Button, bP as faStar, bu as faMagnifyingGlass, aY as faCheck, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
+import { bO as faShieldHalved, b6 as faCreditCard, bG as faRectangleList, c0 as faUserLock, bD as faPeopleGroup, bb as faEnvelopesBulk, bE as faPlug, aQ as faBell, aY as faChartLine, cV as jsxRuntimeExports, P as Page, d8 as reactExports, q as FontAwesomeIcon, b7 as faCrown, a8 as __, c as Button, bQ as faStar, bv as faMagnifyingGlass, aZ as faCheck, aD as createRoot } from "./chunks/Page-BUA-PWqe.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { I as Input } from "./chunks/index-B1n7UfX_.js";
+import { I as Input } from "./chunks/index-C2zsmztB.js";
 const PRO_GROUPS = [
   {
     key: "protection",

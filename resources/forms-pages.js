@@ -1,20 +1,20 @@
-import { a8 as __, bg as faFileLines, c1 as faUserPlus, bI as faRightToBracket, bo as faIdCard, bR as faTableColumns, b3 as faCode, cU as jsxRuntimeExports, b as App, c as Button, q as FontAwesomeIcon, c8 as faWandMagicSparkles, aY as faCheck, aL as faArrowUpRightFromSquare, d7 as reactExports, aK as faArrowUp, aH as faArrowDown, bt as faLock, bV as faTrashCan, bE as faPlus, P as Page, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
+import { a8 as __, bh as faFileLines, c2 as faUserPlus, bJ as faRightToBracket, bp as faIdCard, bS as faTableColumns, b4 as faCode, cV as jsxRuntimeExports, b as App, c as Button, q as FontAwesomeIcon, c9 as faWandMagicSparkles, aZ as faCheck, aL as faArrowUpRightFromSquare, d8 as reactExports, aK as faArrowUp, aH as faArrowDown, bu as faLock, bW as faTrashCan, bF as faPlus, P as Page, aD as createRoot } from "./chunks/Page-BUA-PWqe.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-Bd9zSiBf.js";
-import { S as Select, T as Tooltip, W as getFormsConfig, aq as saveFormsConfig } from "./chunks/api-Bis6erdL.js";
-import { a as PLANS, P as PAGES } from "./chunks/demoData-DGZGffIB.js";
-import { T as Tag } from "./chunks/index-DIYjU850.js";
-import { F as Form } from "./chunks/index-sZSO_VI9.js";
-import { I as Input } from "./chunks/index-B1n7UfX_.js";
-import { S as Switch } from "./chunks/index-Dfx4LXY8.js";
-import { M as Modal } from "./chunks/index-C1Nz3hrP.js";
-import { S as Spin } from "./chunks/index-CIIETatw.js";
-import "./chunks/dayjs.min-Cgo1VKL0.js";
-import "./chunks/index-DF-oAOW3.js";
-import "./chunks/index-BgGiENMb.js";
-import "./chunks/index-wYjIfrAo.js";
-import "./chunks/index-DEtLiZPs.js";
-import "./chunks/useBreakpoint-D8Ns16_a.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-B6tbNAXN.js";
+import { S as Select, T as Tooltip, Y as getFormsConfig, au as saveFormsConfig } from "./chunks/api-BM7DBw7H.js";
+import { a as PLANS, P as PAGES } from "./chunks/demoData-BFbSHzdU.js";
+import { T as Tag } from "./chunks/index-DB9Yoa9e.js";
+import { F as Form } from "./chunks/index-BVdNfLbm.js";
+import { I as Input } from "./chunks/index-C2zsmztB.js";
+import { S as Switch } from "./chunks/index-DGAtssNh.js";
+import { M as Modal } from "./chunks/index-C5EZBHzb.js";
+import { S as Spin } from "./chunks/index-B04I5vrr.js";
+import "./chunks/dayjs.min-Bm93or1s.js";
+import "./chunks/index-DiRpu2og.js";
+import "./chunks/index-sggwWRB7.js";
+import "./chunks/index-C8TTcjuW.js";
+import "./chunks/index-BeGMKRU0.js";
+import "./chunks/useBreakpoint-CSmdvqeW.js";
 const PAGE_SLOTS = [
   ["page_register", __("Registration & checkout", "memberglut"), "[memberglut_register]", __("Account fields, plan choice and payment.", "memberglut")],
   ["page_login", __("Login", "memberglut"), "[memberglut_login]", __("Replaces wp-login.php when that option is on.", "memberglut")],

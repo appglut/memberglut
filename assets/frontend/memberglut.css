@@ -1,0 +1,25 @@
+/* MemberGlut front end. Colours inherit from the theme where possible; --mg-accent can be overridden. */
+:root {
+	--mg-accent: #e94560;
+	--mg-accent-contrast: #fff;
+	--mg-border: rgba(0, 0, 0, .12);
+	--mg-muted: rgba(0, 0, 0, .6);
+	--mg-surface: rgba(0, 0, 0, .03);
+	--mg-radius: 10px;
+	--mg-success: #047857;
+	--mg-error: #b91c1c;
+}
+
+/* Restricted content */
+.memberglut-restricted { margin: 1.5em 0; }
+.memberglut-teaser { position: relative; }
+.memberglut-teaser.is-fade { max-height: 14em; overflow: hidden; }
+.memberglut-teaser.is-fade::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 7em; background: linear-gradient(to bottom, transparent, var(--wp--preset--color--base, #fff)); pointer-events: none; }
+.memberglut-paywall { border: 1px solid var(--mg-border); border-radius: var(--mg-radius); padding: 1.6em 1.8em; background: var(--mg-surface); text-align: center; }
+.memberglut-paywall-icon { display: inline-flex; width: 44px; height: 44px; border-radius: 50%; align-items: center; justify-content: center; background: var(--mg-accent); color: var(--mg-accent-contrast); margin-bottom: .6em; }
+.memberglut-paywall-message h3 { margin: 0 0 .4em; font-size: 1.25em; }
+.memberglut-paywall-message p { margin: 0 0 .6em; }
+.memberglut-paywall-message a { color: var(--mg-accent); font-weight: 600; }
+.memberglut-paywall-form { max-width: 380px; margin: 1.2em auto 0; text-align: left; }
+.memberglut-locked-note a { font-weight: 600; color: var(--mg-accent); }
+.memberglut-restrict-fallback { padding: .8em 1em; border-left: 3px solid var(--mg-accent); background: var(--mg-surface); border-radius: 4px; }

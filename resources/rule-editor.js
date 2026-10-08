@@ -1,18 +1,18 @@
-import { a8 as __, bO as faSliders, bN as faShieldHalved, br as faLayerGroup, c4 as faUserTag, bI as faRightToBracket, c2 as faUserSecret, bY as faUserCheck, bv as faMessage, aJ as faArrowRightFromBracket, bU as faTags, bd as faEyeSlash, c7 as faVial, cU as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, c9 as faXmark, bE as faPlus, d7 as reactExports, P as Page, b as App, d5 as queryArg, aZ as faChevronLeft, cV as link, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
+import { a8 as __, bP as faSliders, bO as faShieldHalved, bs as faLayerGroup, c5 as faUserTag, bJ as faRightToBracket, c3 as faUserSecret, bZ as faUserCheck, bw as faMessage, aJ as faArrowRightFromBracket, bV as faTags, be as faEyeSlash, c8 as faVial, cV as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, ca as faXmark, bF as faPlus, d8 as reactExports, P as Page, b as App, d6 as queryArg, a_ as faChevronLeft, cW as link, aD as createRoot } from "./chunks/Page-BUA-PWqe.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel } from "./chunks/SettingsPanel-Bd9zSiBf.js";
-import { S as Select, h as Space, a7 as getRule, av as saveRule } from "./chunks/api-Bis6erdL.js";
-import { P as PAGES, a as PLANS, R as ROLES } from "./chunks/demoData-DGZGffIB.js";
-import { I as Input } from "./chunks/index-B1n7UfX_.js";
-import { A as Alert } from "./chunks/index-Dxdfeq7i.js";
-import { S as Spin } from "./chunks/index-CIIETatw.js";
-import "./chunks/dayjs.min-Cgo1VKL0.js";
-import "./chunks/index-DF-oAOW3.js";
-import "./chunks/index-DIYjU850.js";
-import "./chunks/index-BgGiENMb.js";
-import "./chunks/index-wYjIfrAo.js";
-import "./chunks/index-DEtLiZPs.js";
-import "./chunks/index-Dfx4LXY8.js";
+import { S as SettingsPanel } from "./chunks/SettingsPanel-B6tbNAXN.js";
+import { S as Select, aD as searchUsers, h as Space, aC as searchTerms, aB as searchPosts, aM as testRule, aa as getRule, az as saveRule } from "./chunks/api-BM7DBw7H.js";
+import { b as planOptions, c as roleOptions, L, p as pageOptions } from "./chunks/lookups-DOjv_COY.js";
+import { I as Input } from "./chunks/index-C2zsmztB.js";
+import { A as Alert } from "./chunks/index-B-TTpDsc.js";
+import { S as Spin } from "./chunks/index-B04I5vrr.js";
+import "./chunks/dayjs.min-Bm93or1s.js";
+import "./chunks/index-DiRpu2og.js";
+import "./chunks/index-DB9Yoa9e.js";
+import "./chunks/index-sggwWRB7.js";
+import "./chunks/index-C8TTcjuW.js";
+import "./chunks/index-BeGMKRU0.js";
+import "./chunks/index-DGAtssNh.js";
 const TARGETS = [
   { value: "site", label: __("Whole site", "memberglut") },
   { value: "post_type", label: __("All of a post type", "memberglut") },
@@ -25,9 +25,6 @@ const TARGETS = [
   { value: "template", label: __("Page template", "memberglut") },
   { value: "url", label: __("URL pattern", "memberglut") }
 ];
-const POST_TYPES = [{ value: "post", label: __("Posts", "memberglut") }, { value: "page", label: __("Pages", "memberglut") }, { value: "course", label: "Courses" }, { value: "lesson", label: "Lessons" }, { value: "download", label: "Downloads" }];
-const POSTS = ["Ultimate Productivity Guide", "Live Q&A — March recording", "Members Lounge", "Course intro (free)", "Downloads", "Members Area"].map((t) => ({ value: t, label: t }));
-const TERMS = ["Premium", "Tutorials", "Interviews", "News"].map((t) => ({ value: t, label: t }));
 const ARCHIVES = [
   { value: "front", label: __("Front page", "memberglut") },
   { value: "blog", label: __("Blog page", "memberglut") },
@@ -36,29 +33,68 @@ const ARCHIVES = [
   { value: "author_archive", label: __("Author archives", "memberglut") },
   { value: "pt_archive", label: __("Post type archives", "memberglut") }
 ];
+const LABELS = { posts: {}, terms: {}, authors: {} };
+function AsyncSelect({ value = [], onChange, fetcher, kind, placeholder }) {
+  const [options, setOptions] = reactExports.useState([]);
+  const [loading, setLoading] = reactExports.useState(false);
+  const timer = reactExports.useRef();
+  const run = (q) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setLoading(true);
+      fetcher(q).then((list) => {
+        list.forEach((o) => {
+          LABELS[kind][o.value] = o.label;
+        });
+        setOptions(list);
+      }).finally(() => setLoading(false));
+    }, 250);
+  };
+  reactExports.useEffect(() => {
+    run("");
+  }, [fetcher]);
+  const selected = (value || []).map((v) => ({ value: v, label: LABELS[kind][v] || `#${v}` }));
+  const merged = [...selected, ...options.filter((o) => !(value || []).includes(o.value))];
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Select,
+    {
+      mode: "multiple",
+      value,
+      onChange,
+      filterOption: false,
+      onSearch: run,
+      options: merged,
+      notFoundContent: loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "small" }) : null,
+      placeholder,
+      style: { width: "100%" }
+    }
+  );
+}
 function TargetList({ value = [], onChange, addLabel, empty }) {
   const set = (i, patch) => onChange(value.map((t, j) => j === i ? { ...t, ...patch } : t));
   const control = (t, i) => {
     switch (t.type) {
       case "site":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: __("Everything except login, registration and password pages.", "memberglut") });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: __("Everything except the login, registration, password, pricing, account and thank-you pages, and Global Settings › public pages.", "memberglut") });
       case "post_type":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.post_type, onChange: (v) => set(i, { post_type: v }), options: POST_TYPES, placeholder: __("Post type", "memberglut"), style: { width: "100%" } });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.post_type, onChange: (v) => set(i, { post_type: v }), options: L.post_types, placeholder: __("Post type", "memberglut"), style: { width: "100%" } });
       case "pages":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AsyncSelect, { kind: "posts", value: t.posts, onChange: (v) => set(i, { posts: v }), fetcher: (q) => searchPosts(q, "page"), placeholder: __("Search pages…", "memberglut") });
       case "posts":
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AsyncSelect, { kind: "posts", value: t.posts, onChange: (v) => set(i, { posts: v }), fetcher: (q) => searchPosts(q, "any"), placeholder: __("Search titles…", "memberglut") });
       case "children":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { mode: "multiple", value: t.posts || [], onChange: (v) => set(i, { posts: v }), options: POSTS, placeholder: __("Search titles…", "memberglut"), style: { width: "100%" } });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AsyncSelect, { kind: "posts", value: t.posts, onChange: (v) => set(i, { posts: v }), fetcher: (q) => searchPosts(q, "page"), placeholder: __("Parent pages…", "memberglut") });
       case "taxonomy":
         return /* @__PURE__ */ jsxRuntimeExports.jsxs(Space.Compact, { style: { width: "100%" }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.taxonomy || "category", onChange: (v) => set(i, { taxonomy: v }), options: [{ value: "category", label: __("Category", "memberglut") }, { value: "post_tag", label: __("Tag", "memberglut") }, { value: "course_cat", label: "Course category" }], style: { width: 150 } }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { mode: "multiple", value: t.terms || [], onChange: (v) => set(i, { terms: v }), options: TERMS, placeholder: __("Terms", "memberglut"), style: { flex: 1 } })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.taxonomy || "category", onChange: (v) => set(i, { taxonomy: v, terms: [] }), options: L.taxonomies, style: { width: 170 } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1 }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AsyncSelect, { kind: "terms", value: t.terms, onChange: (v) => set(i, { terms: v }), fetcher: (q) => searchTerms(t.taxonomy || "category", q), placeholder: __("Terms", "memberglut") }, t.taxonomy || "category") })
         ] });
       case "archive":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { mode: "multiple", value: t.archives || [], onChange: (v) => set(i, { archives: v }), options: ARCHIVES, style: { width: "100%" } });
       case "author":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { mode: "multiple", value: t.authors || [], onChange: (v) => set(i, { authors: v }), options: [{ value: "admin", label: "admin" }, { value: "editor", label: "editor" }], style: { width: "100%" } });
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(AsyncSelect, { kind: "authors", value: t.authors, onChange: (v) => set(i, { authors: v }), fetcher: (q) => searchUsers(q), placeholder: __("Search authors…", "memberglut") });
       case "template":
-        return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.template, onChange: (v) => set(i, { template: v }), options: [{ value: "full-width", label: "Full width" }, { value: "landing", label: "Landing" }], style: { width: "100%" } });
+        return L.templates.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.template, onChange: (v) => set(i, { template: v }), options: L.templates, placeholder: __("Template", "memberglut"), style: { width: "100%" } }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: __("Your theme has no custom page templates.", "memberglut") });
       case "url":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: t.pattern, onChange: (e) => set(i, { pattern: e.target.value }), placeholder: "/members/*  or  ^/course/[0-9]+/$" });
       default:
@@ -69,7 +105,7 @@ function TargetList({ value = [], onChange, addLabel, empty }) {
     value.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-note", style: { marginTop: 0 }, children: empty }),
     value.map((t, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-target-row", children: [
       i > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-or", children: __("OR", "memberglut") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.type, onChange: (v) => set(i, { type: v }), options: TARGETS, style: { width: 230 } }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.type, onChange: (v) => set(i, { type: v, posts: [], terms: [], authors: [], archives: [] }), options: TARGETS, style: { width: 230 } }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-target-value", children: control(t, i) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "text", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faXmark }), onClick: () => onChange(value.filter((x, j) => j !== i)) })
     ] }, i)),
@@ -78,22 +114,45 @@ function TargetList({ value = [], onChange, addLabel, empty }) {
 }
 function AccessTester({ values }) {
   const [user, setUser] = reactExports.useState("guest");
-  const [url, setUrl] = reactExports.useState("/premium/how-to-start/");
+  const [users, setUsers] = reactExports.useState([]);
+  const [url, setUrl] = reactExports.useState("");
   const [result, setResult] = reactExports.useState(null);
-  const check = () => {
-    const allowed = user === "admin" || user === "gold" && values.who === "plans" && values.plans.includes(3);
-    setResult(allowed ? { type: "success", text: __("Allowed: this user can see the content.", "memberglut") } : { type: "warning", text: sprintf(__("Blocked by “%s”. The visitor sees: %s.", "memberglut"), values.title || __("this rule", "memberglut"), values.action) });
+  const [checking, setChecking] = reactExports.useState(false);
+  const timer = reactExports.useRef();
+  const search = (q) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => searchUsers(q).then(setUsers), 250);
+  };
+  reactExports.useEffect(() => {
+    search("");
+  }, []);
+  const check = async () => {
+    setChecking(true);
+    try {
+      const r = await testRule({ rule: values, user, url });
+      setResult({ type: r.allowed ? "success" : "warning", text: r.text });
+    } catch (e) {
+      setResult({ type: "error", text: e.message });
+    } finally {
+      setChecking(false);
+    }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-block", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-tester", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: user, onChange: setUser, style: { width: 240 }, options: [
-        { value: "guest", label: __("A logged-out visitor", "memberglut") },
-        { value: "free", label: "aisha0 (Free)" },
-        { value: "gold", label: "yusuf3 (Gold)" },
-        { value: "admin", label: "admin (Administrator)" }
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: url, onChange: (e) => setUrl(e.target.value), addonBefore: __("URL", "memberglut") }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", onClick: check, children: __("Check", "memberglut") })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Select,
+        {
+          showSearch: true,
+          filterOption: false,
+          onSearch: search,
+          value: user,
+          onChange: setUser,
+          style: { width: 260 },
+          options: [{ value: "guest", label: __("A logged-out visitor", "memberglut") }, ...users]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: url, onChange: (e) => setUrl(e.target.value), onPressEnter: check, addonBefore: __("URL", "memberglut"), placeholder: `${L.site.url}…` }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", loading: checking, disabled: !url, onClick: check, children: __("Check", "memberglut") })
     ] }),
     result && /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { style: { marginTop: 14 }, showIcon: true, type: result.type, message: result.text })
   ] });
@@ -110,14 +169,14 @@ const NEW_RULE = {
   plans: [],
   roles: [],
   users: [],
-  logged_in_note: "",
   action: "inherit",
-  redirect: "",
+  redirect: 0,
   custom_message: false,
   message: "",
   teaser: "inherit",
   in_lists: "inherit"
 };
+const GLOBAL_ACTION = { message: __("Show a message", "memberglut"), login: __("Show login form", "memberglut"), redirect: __("Redirect", "memberglut"), pricing: __("Pricing page", "memberglut") };
 const SECTIONS = [
   {
     key: "rule",
@@ -127,7 +186,7 @@ const SECTIONS = [
     fields: [
       { key: "title", type: "text", label: __("Rule name", "memberglut"), placeholder: __("e.g. Premium articles", "memberglut") },
       { key: "status", type: "radio", label: __("Status", "memberglut"), options: [{ value: "active", label: __("Active", "memberglut") }, { value: "inactive", label: __("Inactive", "memberglut") }] },
-      { key: "priority", type: "number", label: __("Priority", "memberglut"), tip: __("When two rules match the same content, the higher number decides.", "memberglut"), min: 0, max: 999 },
+      { key: "priority", type: "number", label: __("Priority", "memberglut"), tip: __("When two rules match the same content, the higher number decides. Settings made on a post itself always win.", "memberglut"), min: 0, max: 999 },
       { key: "note", type: "textarea", label: __("Admin note", "memberglut"), rows: 2 }
     ]
   },
@@ -136,13 +195,16 @@ const SECTIONS = [
     title: __("Content to protect", "memberglut"),
     icon: faShieldHalved,
     desc: __("Matches any of the items below.", "memberglut"),
-    renderTop: ({ values, update }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    errorKeys: ["protect", "exclude"],
+    renderTop: ({ values, update, errors }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(TargetList, { value: values.protect, onChange: (v) => update("protect", v), addLabel: __("Add content", "memberglut"), empty: __("Nothing selected yet.", "memberglut") }),
+      errors.protect && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-error", children: errors.protect }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-subhead", style: { marginTop: 26 }, children: [
         __("Except", "memberglut"),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Leave these open even though they match above, e.g. a free first lesson.", "memberglut") })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(TargetList, { value: values.exclude, onChange: (v) => update("exclude", v), addLabel: __("Add exception", "memberglut"), empty: __("No exceptions.", "memberglut") })
+      /* @__PURE__ */ jsxRuntimeExports.jsx(TargetList, { value: values.exclude, onChange: (v) => update("exclude", v), addLabel: __("Add exception", "memberglut"), empty: __("No exceptions.", "memberglut") }),
+      errors.exclude && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-error", children: errors.exclude })
     ] }),
     fields: [
       { key: "include_children", type: "switch", label: __("Include child pages", "memberglut"), tip: __("Child pages of a protected page are protected too.", "memberglut") }
@@ -159,14 +221,14 @@ const SECTIONS = [
         type: "cards",
         label: __("Allow", "memberglut"),
         options: [
-          { value: "plans", label: __("Members of plans", "memberglut"), icon: faLayerGroup, desc: __("Active or trialing members.", "memberglut") },
+          { value: "plans", label: __("Members of plans", "memberglut"), icon: faLayerGroup, desc: __("Active, trialing or canceled-but-not-ended members.", "memberglut") },
           { value: "roles", label: __("User roles", "memberglut"), icon: faUserTag, desc: __("Any user with one of the roles.", "memberglut") },
           { value: "logged_in", label: __("Logged-in users", "memberglut"), icon: faRightToBracket, desc: __("Any account, no plan needed.", "memberglut") },
           { value: "logged_out", label: __("Logged-out visitors", "memberglut"), icon: faUserSecret, desc: __("e.g. a “join now” landing page.", "memberglut") }
         ]
       },
-      { key: "plans", type: "multiselect", label: __("Plans", "memberglut"), options: PLANS.map((p) => ({ value: p.id, label: p.name })), show: (v) => v.who === "plans" },
-      { key: "roles", type: "multiselect", label: __("Roles", "memberglut"), options: ROLES.map((r) => ({ value: r.slug, label: r.name })), show: (v) => v.who === "roles" },
+      { key: "plans", type: "multiselect", label: __("Plans", "memberglut"), options: planOptions(), show: (v) => v.who === "plans" },
+      { key: "roles", type: "multiselect", label: __("Roles", "memberglut"), options: roleOptions(), show: (v) => v.who === "roles" },
       { key: "users", type: "tags", label: __("Also allow these users", "memberglut"), tip: __("Usernames that always have access, whatever their plan.", "memberglut"), placeholder: "username", show: (v) => v.who !== "logged_out" }
     ]
   },
@@ -181,18 +243,18 @@ const SECTIONS = [
         type: "cards",
         label: __("Action", "memberglut"),
         options: [
-          { value: "inherit", label: __("Use global setting", "memberglut"), icon: faSliders },
+          { value: "inherit", label: __("Use global setting", "memberglut"), icon: faSliders, desc: GLOBAL_ACTION[(L.settings_global || {}).action] },
           { value: "message", label: __("Show a message", "memberglut"), icon: faMessage },
           { value: "login", label: __("Show login form", "memberglut"), icon: faRightToBracket },
           { value: "redirect", label: __("Redirect", "memberglut"), icon: faArrowRightFromBracket },
-          { value: "pricing", label: __("Pricing page", "memberglut"), icon: faTags }
+          { value: "pricing", label: __("Pricing page", "memberglut"), icon: faTags, desc: __("Returns here after joining.", "memberglut") }
         ]
       },
-      { key: "redirect", type: "select", label: __("Redirect to", "memberglut"), options: PAGES, show: (v) => v.action === "redirect" },
-      { key: "custom_message", type: "switch", label: __("Custom message for this rule", "memberglut"), show: (v) => ["message", "login", "inherit"].includes(v.action) },
-      { key: "message", type: "editor", label: __("Message", "memberglut"), tip: __("Tags: {login_link}, {register_link}, {pricing_link}, {plans}.", "memberglut"), show: (v) => v.custom_message && ["message", "login", "inherit"].includes(v.action) },
+      { key: "redirect", type: "select", label: __("Redirect to", "memberglut"), options: pageOptions(), show: (v) => v.action === "redirect" },
+      { key: "custom_message", type: "switch", label: __("Custom message for this rule", "memberglut"), tip: __("Replaces both global messages (visitors and logged-in users).", "memberglut"), show: (v) => ["message", "login", "inherit"].includes(v.action) },
+      { key: "message", type: "editor", label: __("Message", "memberglut"), tip: __("HTML allowed. Tags: {login_link}, {register_link}, {pricing_link}, {post_title}, {plans}.", "memberglut"), show: (v) => v.custom_message && ["message", "login", "inherit"].includes(v.action) },
       { key: "teaser", type: "select", label: __("Teaser", "memberglut"), options: [{ value: "inherit", label: __("Use global setting", "memberglut") }, { value: "none", label: __("None", "memberglut") }, { value: "excerpt", label: __("Excerpt", "memberglut") }, { value: "fade", label: __("Excerpt with fade", "memberglut") }], show: (v) => v.action !== "redirect" && v.action !== "pricing" },
-      { key: "in_lists", type: "select", label: __("In blog, archives & search", "memberglut"), options: [{ value: "inherit", label: __("Use global setting", "memberglut") }, { value: "show_excerpt", label: __("Show with teaser only", "memberglut") }, { value: "hide", label: __("Hide", "memberglut") }] }
+      { key: "in_lists", type: "select", label: __("In blog, archives & search", "memberglut"), options: [{ value: "inherit", label: __("Use global setting", "memberglut") }, { value: "show_excerpt", label: __("Show with teaser only", "memberglut") }, { value: "hide", label: __("Hide", "memberglut") }, { value: "show", label: __("Show normally (still locked on the post)", "memberglut") }] }
     ]
   },
   {
@@ -205,33 +267,41 @@ const SECTIONS = [
 ];
 function RuleEditor() {
   const { message } = App.useApp();
-  const id = queryArg("id");
-  const plan = queryArg("plan");
-  const [values, setValues] = reactExports.useState({ ...NEW_RULE, plans: plan ? [Number(plan)] : [] });
+  const id = Number(queryArg("id")) || 0;
+  const plan = Number(queryArg("plan")) || 0;
+  const [values, setValues] = reactExports.useState({ ...NEW_RULE, plans: plan ? [plan] : [] });
   const [loading, setLoading] = reactExports.useState(!!id);
   const [saving, setSaving] = reactExports.useState(false);
+  const [errors, setErrors] = reactExports.useState({});
   reactExports.useEffect(() => {
     if (!id) return;
     getRule(id).then((r) => {
-      if (r) setValues({ ...NEW_RULE, ...r, who: r.access.who, plans: r.access.plans, roles: r.access.roles });
-    }).finally(() => setLoading(false));
-  }, [id]);
+      ["posts", "terms", "authors"].forEach((k) => Object.assign(LABELS[k], (r.labels || {})[k] || {}));
+      setValues({ ...NEW_RULE, ...r });
+    }).catch((e) => message.error(e.message)).finally(() => setLoading(false));
+  }, []);
   const save = async (v) => {
-    if (!v.title.trim()) {
-      message.error(__("Give the rule a name.", "memberglut"));
-      return false;
-    }
-    if (!v.protect.length) {
-      message.error(__("Choose the content to protect.", "memberglut"));
-      return false;
-    }
     setSaving(true);
-    await saveRule(v);
-    setSaving(false);
-    message.success(__("Rule saved.", "memberglut"));
-    return true;
+    try {
+      const saved = await saveRule({ ...v, id: id || void 0 });
+      setErrors({});
+      message.success(__("Rule saved.", "memberglut"));
+      if (!id) {
+        window.location.href = link("rule_editor", { id: saved.id });
+      } else {
+        setValues({ ...NEW_RULE, ...saved });
+      }
+      return true;
+    } catch (e) {
+      setErrors(e.fields || {});
+      message.error(e.message);
+      return false;
+    } finally {
+      setSaving(false);
+    }
   };
   if (loading) return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-loading", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "large" }) });
+  const sections = SECTIONS.map((s) => s.renderTop ? { ...s, renderTop: (ctx) => s.renderTop({ ...ctx, errors }) } : s);
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     SettingsPanel,
     {
@@ -242,12 +312,13 @@ function RuleEditor() {
       ] }) },
       title: id ? sprintf(__("Edit rule: %s", "memberglut"), values.title) : __("New content rule", "memberglut"),
       subtitle: __("Choose what to protect, who may see it, and what everyone else gets.", "memberglut"),
-      sections: SECTIONS,
-      initialSection: id ? "rule" : "protect",
+      sections,
+      initialSection: queryArg("tab") || (id ? "rule" : "protect"),
       values,
       setValues,
       onSave: save,
       saving,
+      errors,
       saveLabel: __("Save rule", "memberglut")
     }
   );
