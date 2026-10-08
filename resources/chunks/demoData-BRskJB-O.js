@@ -1,4 +1,4 @@
-import { d as dayjs } from "./dayjs.min-Bm93or1s.js";
+import { d as dayjs } from "./lookups-DN25OZmC.js";
 const d = (days) => dayjs().subtract(days, "day").format("YYYY-MM-DD HH:mm:ss");
 const f = (days) => dayjs().add(days, "day").format("YYYY-MM-DD HH:mm:ss");
 const PLANS = [
@@ -82,19 +82,6 @@ const CAP_GROUPS = [
 ({
   administrator: Object.fromEntries(CAP_GROUPS.flatMap((g) => g.caps).map((c) => [c, "grant"]))
 });
-const PAGES = [
-  { value: 11, label: "Register" },
-  { value: 12, label: "Login" },
-  { value: 13, label: "My Account" },
-  { value: 14, label: "Lost Password" },
-  { value: 15, label: "Pricing" },
-  { value: 16, label: "Thank You" },
-  { value: 17, label: "Members Area" },
-  { value: 18, label: "Downloads" },
-  { value: 2, label: "Sample Page" },
-  { value: 3, label: "Privacy Policy" },
-  { value: 19, label: "Terms & Conditions" }
-];
 const ACTIVITY = [
   { id: 1, type: "grant", text: "Aisha Rahman joined Silver", date: d(0) },
   { id: 2, type: "payment", text: "Payment #5003 of $89.00 received from Yusuf Ahmed (Stripe)", date: d(0) },
@@ -121,7 +108,6 @@ Array.from({ length: 24 }, (_, i) => ({
 export {
   ACTIVITY as A,
   MEMBERS as M,
-  PAGES as P,
-  ROLES as R,
-  PLANS as a
+  PLANS as P,
+  ROLES as R
 };

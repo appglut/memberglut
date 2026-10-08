@@ -23,3 +23,96 @@
 .memberglut-paywall-form { max-width: 380px; margin: 1.2em auto 0; text-align: left; }
 .memberglut-locked-note a { font-weight: 600; color: var(--mg-accent); }
 .memberglut-restrict-fallback { padding: .8em 1em; border-left: 3px solid var(--mg-accent); background: var(--mg-surface); border-radius: 4px; }
+
+/* Notices */
+.mg-notices:empty { display: none; }
+.mg-notice { padding: .8em 1em; border-radius: 8px; margin: 0 0 1em; border: 1px solid var(--mg-border); background: var(--mg-surface); }
+.mg-notice-success { border-color: rgba(4,120,87,.35); background: rgba(4,120,87,.07); color: var(--mg-success); }
+.mg-notice-error { border-color: rgba(185,28,28,.35); background: rgba(185,28,28,.06); color: var(--mg-error); }
+.mg-notice a { color: inherit; font-weight: 600; text-decoration: underline; }
+
+/* Forms */
+.mg-form-wrap { max-width: 560px; margin: 0 auto 2em; }
+.mg-form-wrap.mg-login, .mg-form-wrap.mg-lost, .mg-form-wrap.mg-reset { max-width: 420px; }
+.mg-form-title { margin: 0 0 .8em; }
+.mg-form { display: grid; gap: 1em; }
+.mg-form.is-busy { opacity: .75; }
+.mg-fields { display: grid; gap: 1em; }
+.mg-field { display: grid; gap: .35em; }
+.mg-field > label, .mg-field .mg-label { font-weight: 600; font-size: .95em; }
+.mg-field input[type="text"], .mg-field input[type="email"], .mg-field input[type="password"], .mg-field input[type="url"], .mg-field input[type="tel"], .mg-field input[type="number"], .mg-field input[type="date"], .mg-field select, .mg-field textarea {
+	width: 100%; box-sizing: border-box; padding: .65em .8em; border: 1px solid var(--mg-border); border-radius: 8px; font: inherit; background: var(--wp--preset--color--base, #fff); color: inherit;
+}
+.mg-field input:focus, .mg-field select:focus, .mg-field textarea:focus { outline: 2px solid var(--mg-accent); outline-offset: 0; border-color: transparent; }
+.mg-field.has-error input, .mg-field.has-error select, .mg-field.has-error textarea { border-color: var(--mg-error); }
+.mg-field-error { color: var(--mg-error); font-size: .85em; }
+.mg-field-error:empty { display: none; }
+.mg-req { color: var(--mg-error); }
+.mg-help { color: var(--mg-muted); font-size: .85em; display: block; }
+.mg-choices { display: flex; flex-wrap: wrap; gap: .4em 1.2em; }
+.mg-choices label, .mg-check { display: inline-flex; gap: .45em; align-items: flex-start; font-weight: 400; }
+.mg-password { position: relative; display: block; }
+.mg-password input { padding-right: 2.6em !important; }
+.mg-password-toggle { position: absolute; right: .35em; top: 50%; transform: translateY(-50%); border: 0; background: transparent; color: var(--mg-muted); cursor: pointer; padding: .35em; line-height: 0; }
+.mg-password-toggle.is-on { color: var(--mg-accent); }
+.mg-strength { display: flex; align-items: center; gap: .6em; font-size: .85em; color: var(--mg-muted); }
+.mg-strength-bar { flex: 1; height: 5px; border-radius: 3px; background: var(--mg-border); overflow: hidden; }
+.mg-strength-bar i { display: block; height: 100%; width: 0; transition: width .2s, background .2s; }
+.mg-strength[data-score="0"] i, .mg-strength[data-score="1"] i { width: 20%; background: #dc2626; }
+.mg-strength[data-score="2"] i { width: 45%; background: #f59e0b; }
+.mg-strength[data-score="3"] i { width: 75%; background: #84cc16; }
+.mg-strength[data-score="4"] i { width: 100%; background: #16a34a; }
+.mg-row { display: flex; justify-content: space-between; align-items: center; gap: 1em; flex-wrap: wrap; font-size: .95em; }
+.mg-actions { margin-top: .3em; }
+.mg-button, .mg-form .mg-submit { display: inline-flex; align-items: center; justify-content: center; gap: .4em; padding: .75em 1.4em; border-radius: 8px; border: 0; background: var(--mg-accent); color: var(--mg-accent-contrast) !important; font: inherit; font-weight: 600; text-decoration: none !important; cursor: pointer; }
+.mg-form .mg-submit { width: 100%; }
+.mg-button:hover { filter: brightness(1.05); }
+.mg-button.is-disabled, .mg-button:disabled { background: var(--mg-border); color: var(--mg-muted) !important; cursor: not-allowed; filter: none; }
+.mg-button.is-current { background: transparent; color: var(--mg-accent) !important; border: 1px solid var(--mg-accent); }
+.mg-switch { text-align: center; margin: .5em 0 0; font-size: .95em; }
+.mg-switch a, .mg-lost-link, .mg-change-plan { color: var(--mg-accent); }
+.mg-hp { position: absolute !important; left: -9999px !important; width: 1px; height: 1px; overflow: hidden; }
+.mg-captcha { margin: .2em 0; }
+
+/* Plan picker */
+.mg-plan-options { display: grid; gap: .6em; }
+.mg-picker-cards .mg-plan-options { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+.mg-plan-option { position: relative; display: block; cursor: pointer; }
+.mg-plan-option input { position: absolute; opacity: 0; }
+.mg-plan-option-body { display: grid; gap: .2em; padding: .9em 1em; border: 1px solid var(--mg-border); border-radius: var(--mg-radius); border-top: 3px solid var(--c, var(--mg-accent)); height: 100%; box-sizing: border-box; }
+.mg-plan-option input:checked + .mg-plan-option-body { border-color: var(--c, var(--mg-accent)); box-shadow: 0 0 0 2px var(--c, var(--mg-accent)); }
+.mg-plan-option input:focus-visible + .mg-plan-option-body { outline: 2px solid var(--mg-accent); outline-offset: 2px; }
+.mg-picker-radio .mg-plan-option-body { grid-template-columns: 1fr auto; border-top-width: 1px; }
+.mg-plan-price { font-weight: 600; }
+.mg-plan-desc, .mg-plan-trial { color: var(--mg-muted); font-size: .88em; }
+.mg-chosen-plan { padding: .9em 1.1em; border: 1px solid var(--mg-border); border-left: 4px solid var(--c, var(--mg-accent)); border-radius: var(--mg-radius); background: var(--mg-surface); }
+.mg-chosen-plan p { margin: .3em 0 0; color: var(--mg-muted); font-size: .92em; }
+.mg-chosen-plan .mg-change-plan { font-size: .88em; }
+
+/* Pricing table */
+.mg-pricing { --mg-cols: 3; display: grid; grid-template-columns: repeat(var(--mg-cols), minmax(0, 1fr)); gap: 1.2em; margin: 1.5em 0; }
+.mg-pricing-list { grid-template-columns: 1fr; }
+.mg-plan { position: relative; display: flex; flex-direction: column; gap: .8em; padding: 1.6em 1.4em; border: 1px solid var(--mg-border); border-radius: 14px; border-top: 4px solid var(--c, var(--mg-accent)); background: var(--wp--preset--color--base, #fff); }
+.mg-plan.is-featured { box-shadow: 0 10px 30px rgba(0,0,0,.08); border-color: var(--c, var(--mg-accent)); }
+.mg-plan.is-current { outline: 2px solid var(--c, var(--mg-accent)); }
+.mg-ribbon { position: absolute; top: -.8em; right: 1em; background: var(--c, var(--mg-accent)); color: #fff; font-size: .75em; font-weight: 700; padding: .25em .7em; border-radius: 999px; }
+.mg-plan-name { margin: 0; font-size: 1.25em; }
+.mg-price .mg-amount { font-size: 1.9em; font-weight: 800; }
+.mg-price .mg-period { color: var(--mg-muted); }
+.mg-plan-fee { color: var(--mg-muted); font-size: .88em; }
+.mg-plan-features { list-style: none; margin: 0; padding: 0; display: grid; gap: .45em; }
+.mg-plan-features li::before { content: '✓'; color: var(--c, var(--mg-accent)); font-weight: 700; margin-right: .5em; }
+.mg-plan-cta { margin-top: auto; }
+.mg-plan-cta .mg-button { width: 100%; box-sizing: border-box; }
+.mg-pricing-list .mg-plan { flex-direction: row; flex-wrap: wrap; align-items: center; }
+.mg-pricing-list .mg-plan-cta { margin-top: 0; margin-left: auto; min-width: 180px; }
+.mg-pricing-compare { display: block; overflow-x: auto; }
+.mg-pricing-compare table { width: 100%; border-collapse: collapse; }
+.mg-pricing-compare th, .mg-pricing-compare td { padding: .8em; border-bottom: 1px solid var(--mg-border); text-align: center; }
+.mg-pricing-compare tbody th { text-align: left; font-weight: 500; }
+.mg-pricing-compare thead th { position: relative; border-top: 4px solid var(--c, transparent); }
+.mg-yes { color: var(--mg-success); font-weight: 700; }
+.mg-no { color: var(--mg-muted); }
+.mg-pricing.is-dark { --mg-border: rgba(255,255,255,.14); --mg-muted: rgba(255,255,255,.65); color: #f1f5f9; }
+.mg-pricing.is-dark .mg-plan, .mg-pricing.is-dark table { background: #0f172a; }
+@media (max-width: 782px) { .mg-pricing { grid-template-columns: 1fr; } .mg-pricing-list .mg-plan-cta { margin-left: 0; width: 100%; } }

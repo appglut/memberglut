@@ -388,7 +388,9 @@ class MemberGlut_Settings {
 		$cross = 'memberglut_settings_updated' === $action ? self::cross_validate( $values ) : array();
 		$errors = array_merge( $errors, $cross );
 		if ( $errors ) {
-			return new WP_Error( 'memberglut_invalid_settings', __( 'Some settings are not valid.', 'memberglut' ), array( 'status' => 400, 'fields' => $errors ) );
+			/* translators: %s: first error */
+			$message = 1 === count( $errors ) ? reset( $errors ) : sprintf( __( 'Some settings are not valid: %s', 'memberglut' ), reset( $errors ) );
+			return new WP_Error( 'memberglut_invalid_settings', $message, array( 'status' => 400, 'fields' => $errors ) );
 		}
 
 		update_option( $option, $values, true );

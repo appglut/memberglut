@@ -1,18 +1,18 @@
-import { aZ as faCheck, bx as faMinus, aO as faBan, a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, q as FontAwesomeIcon, bg as faFileImport, bf as faFileExport, bF as faPlus, bu as faLock, b9 as faEllipsis, b5 as faCopy, c4 as faUserShield, bW as faTrashCan, bi as faFloppyDisk, b1 as faCircleInfo, bv as faMagnifyingGlass, ca as faXmark, aD as createRoot } from "./chunks/Page-BUA-PWqe.js";
+import { aZ as faCheck, bx as faMinus, aO as faBan, a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, q as FontAwesomeIcon, bg as faFileImport, bf as faFileExport, bF as faPlus, bu as faLock, b9 as faEllipsis, b5 as faCopy, c4 as faUserShield, bW as faTrashCan, bi as faFloppyDisk, b1 as faCircleInfo, bv as faMagnifyingGlass, ca as faXmark, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { a9 as getRoles, Q as getCapabilities, a8 as getRoleOptions, T as Tooltip, E as Empty, A as exportRoles, ay as saveRoleOptions, an as makeDefaultRole, ax as saveRole, r as deleteCapability, k as addCapability, S as Select, p as cloneRole, q as createRole, aq as previewRoleImport, u as deleteRole, ah as importRoles } from "./chunks/api-BM7DBw7H.js";
-import { U as Upload } from "./chunks/index-BhnKlVsJ.js";
-import { T as Tag } from "./chunks/index-DB9Yoa9e.js";
-import { S as Switch } from "./chunks/index-DGAtssNh.js";
-import { D as Dropdown, F as ForwardTable } from "./chunks/Table-D-hy_ITf.js";
-import { S as Segmented } from "./chunks/index-C8TTcjuW.js";
-import { I as Input } from "./chunks/index-C2zsmztB.js";
-import { F as Form } from "./chunks/index-BVdNfLbm.js";
-import { M as Modal } from "./chunks/index-C5EZBHzb.js";
-import { A as Alert } from "./chunks/index-B-TTpDsc.js";
-import "./chunks/progress-BS1Yv_3X.js";
-import "./chunks/useBreakpoint-CSmdvqeW.js";
-import "./chunks/index-B04I5vrr.js";
+import { aa as getRoles, U as getCapabilities, a9 as getRoleOptions, T as Tooltip, E as Empty, B as exportRoles, az as saveRoleOptions, ao as makeDefaultRole, ay as saveRole, s as deleteCapability, k as addCapability, S as Select, p as cloneRole, r as createRole, ar as previewRoleImport, v as deleteRole, ai as importRoles } from "./chunks/api-Dio4a_nt.js";
+import { U as Upload } from "./chunks/index-YerrIPbS.js";
+import { T as Tag } from "./chunks/index-QResbeLU.js";
+import { S as Switch } from "./chunks/index-B-UY_eZJ.js";
+import { D as Dropdown, F as ForwardTable } from "./chunks/Table-BvILjgAE.js";
+import { S as Segmented } from "./chunks/index-DgFmLSfn.js";
+import { I as Input } from "./chunks/index-vq8i8Snb.js";
+import { F as Form } from "./chunks/index-BRTJlPnN.js";
+import { M as Modal } from "./chunks/index-CoXNCXsy.js";
+import { A as Alert } from "./chunks/index-CoZNuKmg.js";
+import "./chunks/progress-1lGvYr_h.js";
+import "./chunks/useBreakpoint-CPqLtmmb.js";
+import "./chunks/index-BDXpcJpj.js";
 const STATE_OPTS = [
   { value: "grant", icon: faCheck, label: __("Grant", "memberglut") },
   { value: "unset", icon: faMinus, label: __("Not set", "memberglut") },

@@ -1,18 +1,17 @@
-import { aJ as faArrowRightFromBracket, a8 as __, bJ as faRightToBracket, bw as faMessage, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bt as faLink, bS as faTableColumns, c1 as faUserPen, aR as faBoxArchive, bj as faFolderTree, bh as faFileLines, bm as faGlobe, bC as faPenToSquare, b5 as faCopy, bW as faTrashCan, E as PageHeader, c as Button, bF as faPlus, a1 as StatCard, bO as faShieldHalved, c0 as faUserLock, bv as faMagnifyingGlass, b8 as faCubes, aP as faBars, b4 as faCode, bP as faSliders, aD as createRoot } from "./chunks/Page-BUA-PWqe.js";
+import { aJ as faArrowRightFromBracket, a8 as __, bJ as faRightToBracket, bw as faMessage, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bt as faLink, bS as faTableColumns, c1 as faUserPen, aR as faBoxArchive, bj as faFolderTree, bh as faFileLines, bm as faGlobe, bC as faPenToSquare, b5 as faCopy, bW as faTrashCan, E as PageHeader, c as Button, bF as faPlus, a1 as StatCard, bO as faShieldHalved, c0 as faUserLock, bv as faMagnifyingGlass, b8 as faCubes, aP as faBars, b4 as faCode, bP as faSliders, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { ab as getRuleStats, a3 as getPerPostRules, ac as getRules, y as duplicateRule, v as deleteRule, aF as setRuleStatus } from "./chunks/api-BM7DBw7H.js";
-import { f as fromNow } from "./chunks/format-DaGJt-sA.js";
-import { L, r as roleName, a as planById } from "./chunks/lookups-DOjv_COY.js";
-import { P as Popconfirm } from "./chunks/index-Bkp9TiIj.js";
-import { S as Switch } from "./chunks/index-DGAtssNh.js";
-import { T as Tabs } from "./chunks/index-DiRpu2og.js";
-import { I as Input } from "./chunks/index-C2zsmztB.js";
-import { F as ForwardTable } from "./chunks/Table-D-hy_ITf.js";
-import { T as Tag } from "./chunks/index-DB9Yoa9e.js";
-import "./chunks/dayjs.min-Bm93or1s.js";
-import "./chunks/index-sggwWRB7.js";
-import "./chunks/useBreakpoint-CSmdvqeW.js";
-import "./chunks/index-B04I5vrr.js";
+import { ac as getRuleStats, a4 as getPerPostRules, ad as getRules, z as duplicateRule, w as deleteRule, aG as setRuleStatus } from "./chunks/api-Dio4a_nt.js";
+import { f as fromNow } from "./chunks/format-CNHKAmkn.js";
+import { L, r as roleName, a as planById } from "./chunks/lookups-DN25OZmC.js";
+import { P as Popconfirm } from "./chunks/index-7UTxYmoy.js";
+import { S as Switch } from "./chunks/index-B-UY_eZJ.js";
+import { T as Tabs } from "./chunks/index-p4FwzSnn.js";
+import { I as Input } from "./chunks/index-vq8i8Snb.js";
+import { F as ForwardTable } from "./chunks/Table-BvILjgAE.js";
+import { T as Tag } from "./chunks/index-QResbeLU.js";
+import "./chunks/index-BcvGEOpP.js";
+import "./chunks/useBreakpoint-CPqLtmmb.js";
+import "./chunks/index-BDXpcJpj.js";
 const PROTECT_ICON = {
   site: faGlobe,
   post_type: faFileLines,

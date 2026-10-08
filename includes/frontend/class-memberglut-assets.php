@@ -29,7 +29,8 @@ class MemberGlut_Assets {
 	 */
 	public static function register() {
 		wp_register_style( 'memberglut', MEMBERGLUT_PLUGIN_URL . 'assets/frontend/memberglut.css', array(), MEMBERGLUT_VERSION );
-		wp_register_script( 'memberglut', MEMBERGLUT_PLUGIN_URL . 'assets/frontend/memberglut.js', array(), MEMBERGLUT_VERSION, true );
+		$deps = 'any' !== memberglut_setting( 'password_strength', 'medium' ) ? array( 'password-strength-meter' ) : array();
+		wp_register_script( 'memberglut', MEMBERGLUT_PLUGIN_URL . 'assets/frontend/memberglut.js', $deps, MEMBERGLUT_VERSION, true );
 		wp_localize_script(
 			'memberglut',
 			'memberglutFront',

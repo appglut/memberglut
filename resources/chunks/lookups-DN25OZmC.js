@@ -1,4 +1,4 @@
-import { az as commonjsGlobal, cB as getDefaultExportFromCjs } from "./Page-BUA-PWqe.js";
+import { az as commonjsGlobal, cB as getDefaultExportFromCjs } from "./Page-C9tSda4_.js";
 var dayjs_min = { exports: {} };
 (function(module, exports) {
   !function(t, e) {
@@ -277,6 +277,38 @@ var dayjs_min = { exports: {} };
 })(dayjs_min);
 var dayjs_minExports = dayjs_min.exports;
 const dayjs = /* @__PURE__ */ getDefaultExportFromCjs(dayjs_minExports);
+const admin = typeof memberglut_admin !== "undefined" ? memberglut_admin : {};
+const L = {
+  plans: [],
+  groups: ["Main"],
+  roles: [],
+  pages: [],
+  post_types: [],
+  taxonomies: [],
+  templates: [],
+  gateways: [],
+  site: { url: "/" },
+  signup_base: "",
+  currency: { code: "USD", symbol: "$", position: "before", thousand: ",", decimal: ".", decimals: 2 },
+  ...admin.lookups || {}
+};
+admin.user || {};
+const planById = (id) => L.plans.find((p) => p.id === Number(id));
+const planOptions = (filter) => L.plans.filter(() => true).map((p) => ({ value: p.id, label: p.status === "active" ? p.name : `${p.name} (inactive)` }));
+const roleOptions = (filter) => L.roles.filter(filter || (() => true)).map((r) => ({ value: r.slug, label: r.name }));
+const roleName = (slug) => (L.roles.find((r) => r.slug === slug) || {}).name || slug;
+const pageOptions = () => L.pages;
+const signupUrl = (slug) => {
+  const base = L.signup_base || `${(L.site.url || "/").replace(/\/$/, "")}/register/`;
+  return `${base}${base.includes("?") ? "&" : "?"}plan=${encodeURIComponent(slug || "plan")}`;
+};
 export {
-  dayjs as d
+  L,
+  planById as a,
+  planOptions as b,
+  roleOptions as c,
+  dayjs as d,
+  pageOptions as p,
+  roleName as r,
+  signupUrl as s
 };
