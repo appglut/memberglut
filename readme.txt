@@ -8,56 +8,174 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Membership plans, recurring payments with Stripe and PayPal, content restriction, member accounts and a full role & capability editor.
+Sell memberships, take payments, protect content and manage user roles — all in one free plugin.
 
 == Description ==
 
-MemberGlut turns WordPress into a membership site: sell free or paid plans, protect content, and give members a self-service account — with a modern admin that also manages user roles and capabilities.
+MemberGlut turns your WordPress site into a membership site in minutes.
 
-= Plans & subscriptions =
-* Free and paid plans: one-time or recurring (day, week, month, year), limited number of payments, free trials, sign-up fees.
-* Access for a fixed length, until a date, for a calendar year or forever.
-* Plan groups with upgrade and downgrade paths (upgrades now, downgrades at the end of the period).
-* Member limits (“Sold out”), who can buy a plan, approval by email or by an administrator.
-* Each plan can give a WordPress role, keep or replace existing roles, and set a role when it ends.
+**In short:**
 
-= Payments =
-* Stripe (cards, Apple Pay, Google Pay, Payment Element, 3-D Secure), PayPal (one-time and subscriptions), bank transfer and manual payments.
-* Coupons: percent or fixed, per plan, dates, total and per-member limits, first payment or every payment, CSV import.
-* Failed-payment retries and on-hold status, refunds from the admin, receipts and a thank-you page.
-* Test mode switch for every gateway.
+* ✅ Free and paid membership plans
+* ✅ Stripe, PayPal and bank transfer payments
+* ✅ Protect any post, page, category or the whole site
+* ✅ A ready-made “My Account” page for members
+* ✅ Registration, login and pricing pages in one click
+* ✅ Full user role & capability editor
+* ✅ 23 ready-to-use emails
+* ✅ Everything below is free — no locked features
 
-= Content restriction =
-* Rules for posts, pages, custom post types, categories, tags, custom taxonomies, URLs and the whole site.
-* Per-post access settings in the block editor and the classic editor.
-* Teasers, custom messages, redirects, hide locked posts from lists, menu items and widgets.
-* “Members-only content” block, block visibility on any block, and the [memberglut_restrict] shortcode.
-* Rule tester: check what any user would see on any URL.
+= 📦 Membership Plans =
 
-= Members =
-* Members list with filters, bulk actions, CSV export, notes, emails to members and a full activity log per member.
-* My Account page: profile, password, memberships (cancel, renew, upgrade, update card), payments, login activity and account deletion — each part can be switched off.
-* Registration, login, lost-password and pricing pages created in one click; custom registration fields; terms, privacy and GDPR consent.
+* Free or paid plans
+* One-time payment or recurring (daily, weekly, monthly, yearly)
+* Free trials
+* Sign-up fees
+* Limit the number of payments (e.g. 12 monthly payments)
+* Access for a set time, until a date, for a calendar year, or forever
+* Limit how many members can join a plan (“Sold out”)
+* Choose who can buy a plan (anyone, new members, or members of other plans)
+* Plan groups with upgrade and downgrade paths
+* Upgrades start right away, downgrades at the end of the period
+* Give a WordPress role with each plan
+* Set a different role when the plan ends
+* Duplicate, reorder, activate or deactivate plans
+* Copy a sign-up link for any plan
 
-= Security & privacy =
-* Limit simultaneous sessions, lock out repeated failed logins, honeypot and timing check, Google reCAPTCHA v2/v3, hCaptcha or Cloudflare Turnstile.
-* Hide the admin bar and block wp-admin by role, custom login URL.
-* WordPress personal data export and erase tools include MemberGlut data.
+= 💳 Payments =
 
-= Roles & capabilities =
-* Create, clone and edit roles; add and remove capabilities; import and export roles.
+* Stripe: cards, Apple Pay, Google Pay, 3-D Secure
+* PayPal: one-time payments and subscriptions
+* Bank transfer with your own instructions
+* Manual payments recorded by the admin
+* Test mode for safe testing
+* Automatic retries when a renewal payment fails
+* Refunds from the admin (full or partial)
+* Receipts and a thank-you page
+* Members can update their card
+* Payments list with filters, totals and CSV export
 
-= Emails =
-* 23 member and admin emails with tags, live preview, test sends and reminders before expiry, renewal and trial end.
+= 🏷️ Coupons =
 
-= Tools =
-* Dashboard with members, revenue, MRR, churn and a setup checklist.
-* Export and import your setup (settings, plans, rules, roles, emails, coupons) between sites.
-* Logs, access log, system status and maintenance tasks; Site Health integration.
+* Percent or fixed amount off
+* Limit to certain plans
+* Start and end dates
+* Total uses and uses per member
+* First payment only or every payment
+* New customers only
+* Import coupons from CSV
 
-= For developers =
-* REST API (memberglut/v1), template overrides in yourtheme/memberglut/, many actions and filters, Action Scheduler for background work.
-* Translation ready, RTL ready, WPML and Polylang compatible.
+= 🔒 Content Restriction =
+
+* Protect posts, pages and custom post types
+* Protect categories, tags and custom taxonomies
+* Protect child pages, authors, page templates and URL patterns
+* Make the whole site members-only (with public pages you choose)
+* Per-post access settings in the block editor and classic editor
+* Show a teaser, a custom message, a login form, or redirect
+* Hide locked posts from blog lists, archives, search, sitemaps and the REST API
+* Show or hide menu items and widgets by plan, role or login state
+* Show or hide any block by plan or role
+* “Members-only content” block and shortcode
+* Rule tester: see what any user would see on any URL
+* Administrators always keep access
+
+= 👤 Member Account Page =
+
+* Dashboard with current memberships
+* Edit profile (with email change confirmation)
+* Change password
+* View, cancel, renew and upgrade memberships
+* Update payment card
+* Payment history with receipts
+* Login activity and “log out other devices”
+* Delete account (optional)
+* Turn each tab on or off
+
+= 📝 Registration & Login =
+
+* Registration, login, lost password, account, pricing and thank-you pages created in one click
+* Custom registration fields (text, select, checkbox, date, country and more)
+* Login with email, username or both
+* Password strength rules and strength meter
+* Terms, privacy and GDPR consent checkboxes
+* Approve new members manually or by email confirmation
+* Custom login URL and redirect away from wp-login.php
+* Redirects after login, logout and registration (also per role)
+* Pricing table with cards, comparison or list layout
+
+= 🛡️ Security =
+
+* Limit how many devices a member can use at once
+* Lock out after too many failed logins
+* Honeypot spam protection
+* Google reCAPTCHA (v2 / v3), hCaptcha or Cloudflare Turnstile
+* Hide the admin bar by role
+* Block wp-admin by role
+* Login history for every member
+
+= 🔐 Privacy & GDPR =
+
+* WordPress “Export Personal Data” includes membership data
+* WordPress “Erase Personal Data” removes or anonymises it
+* Consent records with date and IP
+* Suggested privacy policy text
+
+= 👥 Members Management =
+
+* Members list with search, filters and bulk actions
+* Add members and give or remove plans by hand
+* Extend, put on hold, cancel or change a member’s plan
+* Private notes on members
+* Full activity history for every member
+* Send an email to members of chosen plans
+* Export members to CSV
+* Turn existing users into members in one click
+
+= 🎭 Roles & Capabilities =
+
+* Create, edit, clone and delete roles
+* Add and remove capabilities
+* Set the default role for new users
+* Import and export roles
+
+= ✉️ Emails =
+
+* 23 emails for members and admins (welcome, receipt, renewal, expiry, cancel…)
+* Edit subject and text with smart tags
+* Live preview and test send
+* Reminders before expiry, renewal and trial end
+* Your own sender name, address and footer
+
+= 📊 Dashboard & Tools =
+
+* Dashboard: active members, revenue, MRR, churn and a 12-month chart
+* Setup checklist for new sites
+* Recent activity
+* Export / import your setup to another site (settings, plans, rules, roles, emails, coupons)
+* Logs and access log
+* System status and Site Health checks
+* Maintenance tools (run expirations, recount, sync roles, clear cache)
+
+= 🧩 Shortcodes & Blocks =
+
+* [memberglut_register] — registration and checkout
+* [memberglut_login] — login form
+* [memberglut_account] — My Account page
+* [memberglut_plans] — pricing table
+* [memberglut_restrict]…[/memberglut_restrict] — members-only content
+* [memberglut_member], [memberglut_expiry], [memberglut_members], [memberglut_count] and more
+* Every shortcode is also a block
+
+= ⚙️ For Developers =
+
+* REST API
+* Template overrides in your theme
+* 100+ actions and filters
+* Background jobs with Action Scheduler
+* Translation ready, RTL ready, WPML and Polylang compatible
+* Works with caching plugins (member pages are never cached)
+* Multisite compatible
 
 == Installation ==
 
