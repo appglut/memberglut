@@ -1,16 +1,16 @@
-import { cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bQ as faStar, a8 as __, E as PageHeader, c as Button, bF as faPlus, R as React, aI as faArrowRight, bT as faTableList, bR as faTableCellsLarge, c7 as faUsers, bC as faPenToSquare, b5 as faCopy, bt as faLink, bW as faTrashCan, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
+import { cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bQ as faStar, a8 as __, E as PageHeader, c as Button, bF as faPlus, R as React, aI as faArrowRight, bT as faTableList, bR as faTableCellsLarge, c7 as faUsers, bC as faPenToSquare, b5 as faCopy, bt as faLink, bW as faTrashCan, aD as createRoot } from "./chunks/Page-IjLhTpkA.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { T as Tooltip, ab as getPlans, aK as setPlanStatus, A as duplicatePlan, w as deletePlan } from "./chunks/api-CeNclfze.js";
-import { b as planPrice, m as money, p as planDuration } from "./chunks/format-DjWmiSLr.js";
-import { r as roleName } from "./chunks/lookups-Cfp9TqGS.js";
-import { T as Tag } from "./chunks/index-DXACN07P.js";
-import { S as Switch } from "./chunks/index-B-UY_eZJ.js";
-import { S as Segmented } from "./chunks/index-DgFmLSfn.js";
-import { F as ForwardTable, C as Checkbox } from "./chunks/Table-DI4ycSpx.js";
-import { P as Popconfirm } from "./chunks/index-cx92Nszp.js";
-import "./chunks/useBreakpoint-ChmeCqU6.js";
-import "./chunks/index-BDXpcJpj.js";
-import "./chunks/index-CJ3krbQI.js";
+import { T as Tooltip, ae as getPlans, aR as setPlanStatus, G as duplicatePlan, y as deletePlan } from "./chunks/api-bTN0wgJl.js";
+import { b as planPrice, m as money, p as planDuration } from "./chunks/format-DqybqfzJ.js";
+import { r as roleName } from "./chunks/lookups-BorBkD6H.js";
+import { T as Tag } from "./chunks/index-BGwJdhy2.js";
+import { S as Switch } from "./chunks/index-1uPwKzTk.js";
+import { S as Segmented } from "./chunks/index-DkFErzSq.js";
+import { F as ForwardTable, C as Checkbox } from "./chunks/Table-vL4FzABu.js";
+import { P as Popconfirm } from "./chunks/index-D8mjCa03.js";
+import "./chunks/useBreakpoint-Cs-_AIQv.js";
+import "./chunks/index-Cx3mrKAm.js";
+import "./chunks/index-BCqSRH-G.js";
 function Plans() {
   const { message, modal } = App.useApp();
   const [plans, setPlans] = reactExports.useState([]);

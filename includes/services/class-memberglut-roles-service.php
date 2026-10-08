@@ -369,6 +369,7 @@ class MemberGlut_Roles_Service {
 		if ( ! $role ) {
 			return new WP_Error( 'memberglut_role_error', __( 'The role could not be created.', 'memberglut' ), array( 'status' => 500 ) );
 		}
+		self::remember_created( $slug );
 		/* translators: 1: role name, 2: source role */
 		memberglut_event( 'role_created', $clone ? sprintf( __( 'Role %1$s created from %2$s', 'memberglut' ), $slug, $clone ) : sprintf( __( 'Role %s created', 'memberglut' ), $slug ), array( 'object_type' => 'role' ) );
 		do_action( 'memberglut_role_created', $slug, $clone );
@@ -500,6 +501,18 @@ class MemberGlut_Roles_Service {
 		/* translators: %s: capability */
 		memberglut_event( 'cap_change', sprintf( __( 'Custom capability %s removed', 'memberglut' ), $cap ), array( 'object_type' => 'role' ) );
 		return true;
+	}
+
+	/**
+	 * Remember a role MemberGlut created (only those are removed by “Delete all data” / uninstall).
+	 *
+	 * @param string $slug Role.
+	 * @return void
+	 */
+	private static function remember_created( $slug ) {
+		$created          = (array) get_option( 'memberglut_created_roles', array() );
+		$created[ $slug ] = $slug;
+		update_option( 'memberglut_created_roles', $created, false );
 	}
 
 	/* ---------------------------------------------------------------------
@@ -638,6 +651,7 @@ class MemberGlut_Roles_Service {
 					$slug = $r['slug'] . '_imported_' . $i++;
 				}
 				add_role( $slug, $r['name'] . ' ' . __( '(imported)', 'memberglut' ), $r['caps'] );
+				self::remember_created( $slug );
 				++$done['created'];
 				continue;
 			}
@@ -653,6 +667,7 @@ class MemberGlut_Roles_Service {
 				continue;
 			}
 			add_role( $r['slug'], $r['name'], $r['caps'] );
+			self::remember_created( $r['slug'] );
 			++$done['created'];
 		}
 		if ( ! empty( $data['custom_caps'] ) ) {
