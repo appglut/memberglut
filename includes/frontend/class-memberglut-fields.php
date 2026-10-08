@@ -73,6 +73,10 @@ class MemberGlut_Fields {
 	 * @return string
 	 */
 	public static function render( $f, $value = '', $prefix = 'mg' ) {
+		$custom = apply_filters( 'memberglut_render_field', null, $f, $value, $prefix );
+		if ( null !== $custom ) {
+			return (string) $custom;
+		}
 		$type     = $f['type'];
 		$key      = $f['key'];
 		$name     = $prefix . '[' . $key . ']';
@@ -207,7 +211,13 @@ class MemberGlut_Fields {
 						break;
 				}
 			}
-			$clean[ $key ] = $value;
+			// Add-on field types and extra checks: return an error message to reject the value.
+			$extra = apply_filters( 'memberglut_validate_field', '', $value, $f, $user_id );
+			if ( is_string( $extra ) && '' !== $extra ) {
+				$errors[ $key ] = $extra;
+				continue;
+			}
+			$clean[ $key ] = apply_filters( 'memberglut_sanitize_field', $value, $f, $raw );
 		}
 		return array( $clean, $errors );
 	}

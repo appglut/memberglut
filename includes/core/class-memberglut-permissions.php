@@ -88,7 +88,7 @@ class MemberGlut_Permissions {
 	 * @return string
 	 */
 	public static function screen_cap( $slug ) {
-		$map = self::screen_caps();
+		$map = (array) apply_filters( 'memberglut_screen_caps', self::screen_caps() );
 		return isset( $map[ $slug ] ) ? $map[ $slug ] : 'manage_options';
 	}
 

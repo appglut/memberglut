@@ -37,7 +37,7 @@ class MemberGlut_Settings {
 	public static function schema() {
 		static $schema = null;
 		if ( null !== $schema ) {
-			return $schema;
+			return self::with_extensions( $schema, 'memberglut_settings_schema' );
 		}
 		$member_roles = array( 'subscriber', 'memberglut_basic', 'memberglut_premium', 'memberglut_vip' );
 		$schema       = array(
@@ -176,7 +176,36 @@ class MemberGlut_Settings {
 			'log_debug'                     => array( 'type' => 'bool', 'default' => false ),
 			'renewals_engine'               => array( 'type' => 'enum', 'default' => 'action_scheduler', 'options' => array( 'action_scheduler', 'wp_cron' ) ),
 		);
-		return $schema;
+		return self::with_extensions( $schema, 'memberglut_settings_schema' );
+	}
+
+	/**
+	 * Registration field types (add-ons add more with memberglut_field_types and render / validate them with
+	 * memberglut_render_field and memberglut_validate_field).
+	 *
+	 * @return string[]
+	 */
+	public static function field_types() {
+		$core = array( 'text', 'textarea', 'email', 'url', 'tel', 'number', 'date', 'select', 'radio', 'checkbox', 'country', 'hidden', 'password' );
+		return array_values( array_unique( array_merge( $core, array_map( 'sanitize_key', (array) apply_filters( 'memberglut_field_types', array() ) ) ) ) );
+	}
+
+	/**
+	 * Add-on settings (memberglut_settings_schema / memberglut_forms_schema): key => [ type, default, … ].
+	 * Core keys cannot be replaced.
+	 *
+	 * @param array  $schema Core schema.
+	 * @param string $hook   Filter.
+	 * @return array
+	 */
+	private static function with_extensions( $schema, $hook ) {
+		$extra = (array) apply_filters( $hook, array() );
+		foreach ( $extra as $key => $def ) {
+			if ( isset( $schema[ $key ] ) || ! is_array( $def ) || empty( $def['type'] ) || ! array_key_exists( 'default', $def ) ) {
+				unset( $extra[ $key ] );
+			}
+		}
+		return $schema + $extra;
 	}
 
 	/**
@@ -187,7 +216,7 @@ class MemberGlut_Settings {
 	public static function forms_schema() {
 		static $schema = null;
 		if ( null !== $schema ) {
-			return $schema;
+			return self::with_extensions( $schema, 'memberglut_forms_schema' );
 		}
 		$schema = array(
 			'page_register'         => array( 'type' => 'page', 'default' => 0 ),
@@ -219,7 +248,7 @@ class MemberGlut_Settings {
 			'pricing_columns'       => array( 'type' => 'int', 'default' => 3, 'min' => 1, 'max' => 4 ),
 			'emails_reviewed'       => array( 'type' => 'bool', 'default' => false ),
 		);
-		return $schema;
+		return self::with_extensions( $schema, 'memberglut_forms_schema' );
 	}
 
 	/**
@@ -559,7 +588,7 @@ class MemberGlut_Settings {
 	 * @return array|WP_Error
 	 */
 	public static function sanitize_reg_fields( $raw ) {
-		$types    = array( 'text', 'textarea', 'email', 'url', 'tel', 'number', 'date', 'select', 'radio', 'checkbox', 'country', 'hidden', 'password' );
+		$types    = self::field_types();
 		$core     = self::core_field_keys();
 		$reserved = array( 'user_login', 'user_pass', 'user_email', 'user_url', 'role', 'nickname', 'description', 'rich_editing', 'admin_color', 'wp_capabilities', 'session_tokens', 'plan', 'coupon', 'redirect_to' );
 		$out      = array();

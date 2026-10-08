@@ -1,17 +1,17 @@
-import { d8 as reactExports, di as toArray, j as ConfigContext, dN as useZIndex, d1 as omit, aw as classNames, d6 as queryArg, a8 as __, b1 as faCircleInfo, bl as faGift, by as faMoneyBill, bU as faTag, bq as faInfinity, bH as faRepeat, aW as faCalendarDays, aV as faCalendarCheck, bo as faHourglassHalf, br as faKey, aM as faArrowUpWideShort, c2 as faUserPlus, cV as jsxRuntimeExports, cW as link, c as Button, q as FontAwesomeIcon, aK as faArrowUp, aH as faArrowDown, P as Page, b as App, a_ as faChevronLeft, aD as createRoot } from "./chunks/Page-hmVJ7ZEb.js";
+import { d9 as reactExports, dj as toArray, j as ConfigContext, dO as useZIndex, d2 as omit, aw as classNames, d7 as queryArg, a8 as __, b1 as faCircleInfo, bl as faGift, by as faMoneyBill, bV as faTag, bq as faInfinity, bI as faRepeat, aW as faCalendarDays, aV as faCalendarCheck, bo as faHourglassHalf, br as faKey, aM as faArrowUpWideShort, c3 as faUserPlus, cW as jsxRuntimeExports, cX as link, c as Button, q as FontAwesomeIcon, aK as faArrowUp, aH as faArrowDown, P as Page, b as App, a_ as faChevronLeft, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CQqU9qOj.js";
-import { S as Select, U as genPurePanel, ad as getPlanRules, ac as getPlan, aI as savePlan, aJ as savePlanOrder } from "./chunks/api-VgcaUgLl.js";
-import { c as roleOptions$1, L, p as pageOptions, s as signupUrl } from "./chunks/lookups-PfwO7D-y.js";
-import { A as Alert } from "./chunks/index-BwEO_KtO.js";
-import { S as Spin } from "./chunks/index-meZbse2h.js";
-import { T as Tag } from "./chunks/index-nAZOmPrG.js";
-import "./chunks/index-DyME-zn4.js";
-import "./chunks/index-CH-t94NL.js";
-import "./chunks/index-GRmK3Eb7.js";
-import "./chunks/index-C0PWwl2H.js";
-import "./chunks/index-Dq9_nZbq.js";
-import "./chunks/index-BCEmSWRh.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CZprfnRR.js";
+import { S as Select, U as genPurePanel, ad as getPlanRules, ac as getPlan, aI as savePlan, aJ as savePlanOrder } from "./chunks/api-C3opcxY4.js";
+import { c as roleOptions$1, L, p as pageOptions, s as signupUrl } from "./chunks/lookups-cQsk1BIx.js";
+import { A as Alert } from "./chunks/index-dB_sQhvz.js";
+import { S as Spin } from "./chunks/index-D6ChUS7m.js";
+import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
+import "./chunks/index-DPM4vg2p.js";
+import "./chunks/index-D-BW9vN4.js";
+import "./chunks/index-Bdt2tpd-.js";
+import "./chunks/index-B15yPtij.js";
+import "./chunks/index-BQU-XdN2.js";
+import "./chunks/index-DYGuXoRz.js";
 const {
   Option: Option$1
 } = Select;
@@ -405,6 +405,7 @@ function PlanEditor() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     SettingsPanel,
     {
+      screen: "plan",
       back: { href: link("plans"), label: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faChevronLeft }),
         " ",

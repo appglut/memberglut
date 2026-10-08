@@ -1,13 +1,13 @@
-import { d8 as reactExports, ao as _slicedToArray, R as React, aw as classNames, ae as _defineProperty, ak as _objectSpread2, du as useEvent, au as calculateColor, at as calcOffset, dB as useMergedState, cv as generateColor, e as Color, g as ColorPickerPrefixCls, af as _extends, f as ColorBlock, aE as defaultColor, cs as genStyleHooks, c_ as merge, db as resetComponent, dl as unit, dr as useComponentConfig, dH as useSize, cw as generateColor$1, cz as getColorAlpha, dj as toHexFormat, w as Input, cF as getRoundNumber, al as _objectWithoutProperties, K as KeyCode, d7 as reactDomExports, dx as useLayoutEffect, aq as _toConsumableArray, ar as _typeof, cS as isEqual, dP as warningOnce, aA as composeRef, dV as wrapperRaf, F as FastColor, D as DisabledContext, cC as getGradientPercentColor, a as AggregationColor, cc as genAlphaColor, h as ColorPresets, dz as useLocale, d3 as pickAttrs, ch as genCompactItemStyle, j as ConfigContext, t as FormItemInputContext, dq as useCompactItemContext, dm as useCSSVarCls, cI as getStatusClassNames, n as ContextIsolator, a8 as __, cV as jsxRuntimeExports, q as FontAwesomeIcon, aZ as faCheck, b5 as faCopy, c as Button, bi as faFloppyDisk, bV as faTags } from "./Page-hmVJ7ZEb.js";
-import { d as dayjs } from "./lookups-PfwO7D-y.js";
-import { T as Tabs } from "./index-DyME-zn4.js";
-import { T as Tag } from "./index-nAZOmPrG.js";
-import { I as Input$1 } from "./index-CH-t94NL.js";
-import { S as Select, T as Tooltip, b1 as useForceUpdate, U as genPurePanel, R as Radio, h as Space } from "./api-VgcaUgLl.js";
-import { P as Popover } from "./index-GRmK3Eb7.js";
-import { S as Segmented } from "./index-C0PWwl2H.js";
-import { T as TypedInputNumber, D as DatePicker } from "./index-Dq9_nZbq.js";
-import { S as Switch } from "./index-BCEmSWRh.js";
+import { d9 as reactExports, ao as _slicedToArray, R as React, aw as classNames, ae as _defineProperty, ak as _objectSpread2, dv as useEvent, au as calculateColor, at as calcOffset, dC as useMergedState, cw as generateColor, e as Color, g as ColorPickerPrefixCls, af as _extends, f as ColorBlock, aE as defaultColor, ct as genStyleHooks, c$ as merge, dc as resetComponent, dm as unit, ds as useComponentConfig, dI as useSize, cx as generateColor$1, cA as getColorAlpha, dk as toHexFormat, w as Input, cG as getRoundNumber, al as _objectWithoutProperties, K as KeyCode, d8 as reactDomExports, dy as useLayoutEffect, aq as _toConsumableArray, ar as _typeof, cT as isEqual, dQ as warningOnce, aA as composeRef, dW as wrapperRaf, F as FastColor, D as DisabledContext, cD as getGradientPercentColor, a as AggregationColor, cd as genAlphaColor, h as ColorPresets, dA as useLocale, d4 as pickAttrs, ci as genCompactItemStyle, j as ConfigContext, t as FormItemInputContext, dr as useCompactItemContext, dn as useCSSVarCls, cJ as getStatusClassNames, n as ContextIsolator, a8 as __, cW as jsxRuntimeExports, q as FontAwesomeIcon, aZ as faCheck, b5 as faCopy, c as Button, bi as faFloppyDisk, bG as faPuzzlePiece, bW as faTags } from "./Page-Ch8DcxYv.js";
+import { d as dayjs } from "./lookups-cQsk1BIx.js";
+import { T as Tabs } from "./index-DPM4vg2p.js";
+import { T as Tag } from "./index-8aTEZ5cr.js";
+import { I as Input$1 } from "./index-D-BW9vN4.js";
+import { S as Select, T as Tooltip, b1 as useForceUpdate, U as genPurePanel, R as Radio, h as Space } from "./api-C3opcxY4.js";
+import { P as Popover } from "./index-Bdt2tpd-.js";
+import { S as Segmented } from "./index-B15yPtij.js";
+import { T as TypedInputNumber, D as DatePicker } from "./index-BQU-XdN2.js";
+import { S as Switch } from "./index-DYGuXoRz.js";
 function getPosition$1(e) {
   var obj = "touches" in e ? e.touches[0] : e;
   var scrollXOffset = document.documentElement.scrollLeft || document.body.scrollLeft || window.pageXOffset;
@@ -3839,6 +3839,10 @@ const PurePanel = genPurePanel(
   (prefixCls) => prefixCls
 );
 ColorPicker._InternalPanelDoNotUseOrYouWillBeFired = PurePanel;
+const reg = () => typeof window !== "undefined" && window.memberglutAdmin || { sections: {}, ruleTargets: [], ruleConditions: [] };
+const sectionsFor = (screen) => screen && reg().sections[screen] || [];
+const ruleTargets = () => reg().ruleTargets || [];
+const ruleConditions = () => reg().ruleConditions || [];
 function CopyCode({ code }) {
   const [done, setDone] = reactExports.useState(false);
   const copy = () => {
@@ -3953,7 +3957,7 @@ function SettingsPanel({
   subtitle,
   titleExtra,
   back,
-  sections,
+  sections: coreSections,
   values,
   setValues,
   onSave,
@@ -3961,8 +3965,10 @@ function SettingsPanel({
   saveLabel,
   initialSection,
   headerActions,
-  errors = {}
+  errors = {},
+  screen
 }) {
+  const sections = [...coreSections, ...sectionsFor(screen)];
   const [dirty, setDirty] = reactExports.useState(false);
   const [active, setActive] = reactExports.useState(initialSection || new URLSearchParams(window.location.search).get("tab") || sections[0].key);
   const [subs, setSubs] = reactExports.useState(() => {
@@ -4025,13 +4031,13 @@ function SettingsPanel({
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-layout", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "mg-fs-nav", children: sections.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { type: "button", className: s.key === section.key ? "active" : "", onClick: () => setActive(s.key), children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ic", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: s.icon }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ic", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: s.icon && typeof s.icon === "object" ? s.icon : faPuzzlePiece }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: s.title }),
         hasError(s) && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-fs-nav-error" })
       ] }, s.key)) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mg-fs-card", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-card-head", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ic", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: section.icon }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ic", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: section.icon && typeof section.icon === "object" ? section.icon : faPuzzlePiece }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { children: section.title }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: section.desc })
@@ -4050,5 +4056,7 @@ function SettingsPanel({
 export {
   CopyCode as C,
   SettingsPanel as S,
-  SmartTags as a
+  SmartTags as a,
+  ruleTargets as b,
+  ruleConditions as r
 };

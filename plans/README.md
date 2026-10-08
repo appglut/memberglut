@@ -46,7 +46,7 @@ Audit date: 2026-10-08 · plugin 1.1.5 · the React admin is design-only today (
 | 14 | [phase-13-data-logs.md](phase-13-data-logs.md) | export/import, logs, status, maintenance | most |✅ |
 | 15 | [phase-14-advanced-performance.md](phase-14-advanced-performance.md) | assets, cache, uninstall, i18n, templates | P7–P10 |✅ |
 | 16 | [phase-15-legacy-migration.md](phase-15-legacy-migration.md) *(cleanup)* | remove legacy code | P7, P8, P13 | ☐ |
-| 17 | [phase-16-pro-extension-points.md](phase-16-pro-extension-points.md) | hooks/slots for Pro (**add each hook during its phase**) | all | ☐ |
+| 17 | [phase-16-pro-extension-points.md](phase-16-pro-extension-points.md) | hooks/slots for Pro (**add each hook during its phase**) | all |✅ |
 | 18 | [phase-17-qa-release.md](phase-17-qa-release.md) | tests, compliance, release | all | ☐ |
 
 Phase numbers are IDs, not the order. P11 is built before P10 because the account activity tab needs login history.

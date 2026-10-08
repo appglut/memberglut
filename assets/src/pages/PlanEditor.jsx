@@ -242,6 +242,7 @@ function PlanEditor() {
 
   return (
     <SettingsPanel
+      screen="plan"
       back={{ href: link('plans'), label: <><FontAwesomeIcon icon={faChevronLeft} /> {__( 'All plans', 'memberglut' )}</> }}
       title={currentId ? sprintf( __( 'Edit plan: %s', 'memberglut' ), values.name ) : __( 'New plan', 'memberglut' )}
       titleExtra={currentId > 0 && (

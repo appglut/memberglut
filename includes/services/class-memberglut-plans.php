@@ -28,7 +28,22 @@ class MemberGlut_Plans {
 	private static $rows = null;
 
 	/**
-	 * Settings JSON keys and defaults.
+	 * Add-on plan settings: key => [ type, default, … ] (memberglut_plan_settings_schema).
+	 *
+	 * @return array
+	 */
+	public static function extra_schema() {
+		$out = array();
+		foreach ( (array) apply_filters( 'memberglut_plan_settings_schema', array() ) as $key => $def ) {
+			if ( is_array( $def ) && ! empty( $def['type'] ) && array_key_exists( 'default', $def ) && ! array_key_exists( $key, self::settings_defaults() ) ) {
+				$out[ sanitize_key( $key ) ] = $def;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Defaults of the settings JSON column.
 	 *
 	 * @return array
 	 */
@@ -192,6 +207,9 @@ class MemberGlut_Plans {
 			'created_at'      => memberglut_iso( $row['created_at'] ),
 			'updated_at'      => memberglut_iso( $row['updated_at'] ),
 		);
+		foreach ( self::extra_schema() as $key => $def ) {
+			$plan[ $key ] = isset( $s[ $key ] ) ? $s[ $key ] : $def['default'];
+		}
 		return apply_filters( 'memberglut_plan', $plan, $row );
 	}
 
@@ -358,6 +376,11 @@ class MemberGlut_Plans {
 				continue;
 			}
 			$settings[ $key ] = $v[ $key ];
+		}
+		// Add-on plan settings (memberglut_plan_settings_schema), shown in the Plan editor through the JS registry.
+		foreach ( self::extra_schema() as $key => $def ) {
+			$raw              = array_key_exists( $key, $data ) ? $data[ $key ] : ( isset( $settings[ $key ] ) ? $settings[ $key ] : $def['default'] );
+			$settings[ $key ] = MemberGlut_Settings::sanitize( $raw, $def, $key );
 		}
 		$columns = array(
 			'plan_name'        => $v['name'],

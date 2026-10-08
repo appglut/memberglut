@@ -1,3 +1,4 @@
+import { sectionsFor } from '../services/registry';
 import React, { useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import {
@@ -5,7 +6,7 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFloppyDisk, faCopy, faCheck, faTags } from '@fortawesome/free-solid-svg-icons';
+import { faFloppyDisk, faCopy, faCheck, faTags, faPuzzlePiece } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Generic settings screen: a side nav of sections, one card per section, optional tabs inside a section.
@@ -143,8 +144,10 @@ export function FieldRows({ fields, values, update, errors = {} }) {
  * Full settings screen with title bar, save button, side nav and section card.
  */
 export default function SettingsPanel({
-  title, subtitle, titleExtra, back, sections, values, setValues, onSave, saving, saveLabel, initialSection, headerActions, errors = {},
+  title, subtitle, titleExtra, back, sections: coreSections, values, setValues, onSave, saving, saveLabel, initialSection, headerActions, errors = {}, screen,
 }) {
+  // Add-on sections registered for this screen (services/registry.js).
+  const sections = [...coreSections, ...sectionsFor(screen)];
   const [dirty, setDirty] = useState(false);
   const [active, setActive] = useState(initialSection || new URLSearchParams(window.location.search).get('tab') || sections[0].key);
   const [subs, setSubs] = useState(() => {
@@ -211,7 +214,7 @@ export default function SettingsPanel({
         <nav className="mg-fs-nav">
           {sections.map((s) => (
             <button key={s.key} type="button" className={s.key === section.key ? 'active' : ''} onClick={() => setActive(s.key)}>
-              <span className="ic"><FontAwesomeIcon icon={s.icon} /></span>
+              <span className="ic"><FontAwesomeIcon icon={s.icon && typeof s.icon === 'object' ? s.icon : faPuzzlePiece} /></span>
               <span>{s.title}</span>
               {hasError(s) && <span className="mg-fs-nav-error" />}
             </button>
@@ -220,7 +223,7 @@ export default function SettingsPanel({
 
         <section className="mg-fs-card">
           <div className="mg-fs-card-head">
-            <span className="ic"><FontAwesomeIcon icon={section.icon} /></span>
+            <span className="ic"><FontAwesomeIcon icon={section.icon && typeof section.icon === 'object' ? section.icon : faPuzzlePiece} /></span>
             <div>
               <h2>{section.title}</h2>
               <p>{section.desc}</p>

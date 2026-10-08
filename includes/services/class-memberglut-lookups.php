@@ -36,6 +36,7 @@ class MemberGlut_Lookups {
 				'custom_fields' => self::custom_fields(),
 				'email_tags'    => class_exists( 'MemberGlut_Mailer' ) ? MemberGlut_Mailer::tags_for_client() : array(),
 				'statuses'      => self::statuses(),
+				'field_types'   => MemberGlut_Settings::field_types(),
 				'forms'         => class_exists( 'MemberGlut_Plans' ) ? MemberGlut_Plans::registration_forms() : array( 'default' => __( 'Default registration form', 'memberglut' ) ),
 				'test_mode'     => class_exists( 'MemberGlut_Gateways' ) ? MemberGlut_Gateways::any_in_test_mode() : (bool) memberglut_setting( 'test_mode' ),
 				'site'          => array(

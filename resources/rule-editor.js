@@ -1,17 +1,17 @@
-import { a8 as __, bP as faSliders, bO as faShieldHalved, bs as faLayerGroup, c5 as faUserTag, bJ as faRightToBracket, c3 as faUserSecret, bZ as faUserCheck, bw as faMessage, aJ as faArrowRightFromBracket, bV as faTags, be as faEyeSlash, c8 as faVial, cV as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, ca as faXmark, bF as faPlus, d8 as reactExports, P as Page, b as App, d6 as queryArg, a_ as faChevronLeft, cW as link, aD as createRoot } from "./chunks/Page-hmVJ7ZEb.js";
+import { a8 as __, bQ as faSliders, bP as faShieldHalved, bs as faLayerGroup, c6 as faUserTag, bK as faRightToBracket, c4 as faUserSecret, b_ as faUserCheck, bw as faMessage, aJ as faArrowRightFromBracket, bW as faTags, be as faEyeSlash, c9 as faVial, cW as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, cb as faXmark, bF as faPlus, d9 as reactExports, P as Page, b as App, d7 as queryArg, a_ as faChevronLeft, cX as link, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel } from "./chunks/SettingsPanel-CQqU9qOj.js";
-import { S as Select, aQ as searchUsers, h as Space, aP as searchTerms, aO as searchPosts, aZ as testRule, ah as getRule, aM as saveRule } from "./chunks/api-VgcaUgLl.js";
-import { b as planOptions, c as roleOptions, L, p as pageOptions } from "./chunks/lookups-PfwO7D-y.js";
-import { I as Input } from "./chunks/index-CH-t94NL.js";
-import { A as Alert } from "./chunks/index-BwEO_KtO.js";
-import { S as Spin } from "./chunks/index-meZbse2h.js";
-import "./chunks/index-DyME-zn4.js";
-import "./chunks/index-nAZOmPrG.js";
-import "./chunks/index-GRmK3Eb7.js";
-import "./chunks/index-C0PWwl2H.js";
-import "./chunks/index-Dq9_nZbq.js";
-import "./chunks/index-BCEmSWRh.js";
+import { b as ruleTargets, r as ruleConditions, S as SettingsPanel } from "./chunks/SettingsPanel-CZprfnRR.js";
+import { S as Select, aQ as searchUsers, h as Space, aP as searchTerms, aO as searchPosts, aZ as testRule, ah as getRule, aM as saveRule } from "./chunks/api-C3opcxY4.js";
+import { b as planOptions, c as roleOptions, L, p as pageOptions } from "./chunks/lookups-cQsk1BIx.js";
+import { I as Input } from "./chunks/index-D-BW9vN4.js";
+import { A as Alert } from "./chunks/index-dB_sQhvz.js";
+import { S as Spin } from "./chunks/index-D6ChUS7m.js";
+import "./chunks/index-DPM4vg2p.js";
+import "./chunks/index-8aTEZ5cr.js";
+import "./chunks/index-Bdt2tpd-.js";
+import "./chunks/index-B15yPtij.js";
+import "./chunks/index-BQU-XdN2.js";
+import "./chunks/index-DYGuXoRz.js";
 const TARGETS = [
   { value: "site", label: __("Whole site", "memberglut") },
   { value: "post_type", label: __("All of a post type", "memberglut") },
@@ -22,8 +22,13 @@ const TARGETS = [
   { value: "archive", label: __("Archive & special pages", "memberglut") },
   { value: "author", label: __("Posts by author", "memberglut") },
   { value: "template", label: __("Page template", "memberglut") },
-  { value: "url", label: __("URL pattern", "memberglut") }
+  { value: "url", label: __("URL pattern", "memberglut") },
+  // Add-on target types (services/registry.js).
+  ...ruleTargets().map((t) => ({ value: t.value, label: t.label }))
 ];
+function ExtraTargetFields({ t, def, onChange }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Space, { wrap: true, children: (def.fields || []).map((f) => f.type === "select" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t[f.key], placeholder: f.label, options: f.options || [], onChange: (v) => onChange({ [f.key]: v }), style: { minWidth: 180 } }, f.key) : /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { type: f.type === "number" ? "number" : "text", value: t[f.key], placeholder: f.label, onChange: (e) => onChange({ [f.key]: e.target.value }), style: { width: 200 } }, f.key)) });
+}
 const ARCHIVES = [
   { value: "front", label: __("Front page", "memberglut") },
   { value: "blog", label: __("Blog page", "memberglut") },
@@ -96,8 +101,10 @@ function TargetList({ value = [], onChange, addLabel, empty }) {
         return L.templates.length ? /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t.template, onChange: (v) => set(i, { template: v }), options: L.templates, placeholder: __("Template", "memberglut"), style: { width: "100%" } }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: __("Your theme has no custom page templates.", "memberglut") });
       case "url":
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: t.pattern, onChange: (e) => set(i, { pattern: e.target.value }), placeholder: "/members/*  or  ^/course/[0-9]+/$" });
-      default:
-        return null;
+      default: {
+        const def = ruleTargets().find((x) => x.value === t.type);
+        return def ? /* @__PURE__ */ jsxRuntimeExports.jsx(ExtraTargetFields, { t, def, onChange: (patch) => set(i, patch) }) : null;
+      }
     }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-target-list", children: [
@@ -223,9 +230,12 @@ const SECTIONS = [
           { value: "plans", label: __("Members of plans", "memberglut"), icon: faLayerGroup, desc: __("Active, trialing or canceled-but-not-ended members.", "memberglut") },
           { value: "roles", label: __("User roles", "memberglut"), icon: faUserTag, desc: __("Any user with one of the roles.", "memberglut") },
           { value: "logged_in", label: __("Logged-in users", "memberglut"), icon: faRightToBracket, desc: __("Any account, no plan needed.", "memberglut") },
-          { value: "logged_out", label: __("Logged-out visitors", "memberglut"), icon: faUserSecret, desc: __("e.g. a “join now” landing page.", "memberglut") }
+          { value: "logged_out", label: __("Logged-out visitors", "memberglut"), icon: faUserSecret, desc: __("e.g. a “join now” landing page.", "memberglut") },
+          ...ruleConditions().map((c) => ({ value: c.value, label: c.label, icon: faUserCheck, desc: c.desc || "" }))
         ]
       },
+      // Fields of add-on conditions, shown when the condition is chosen.
+      ...ruleConditions().flatMap((c) => (c.fields || []).map((f) => ({ ...f, show: (v) => v.who === c.value }))),
       { key: "plans", type: "multiselect", label: __("Plans", "memberglut"), options: planOptions(), show: (v) => v.who === "plans" },
       { key: "roles", type: "multiselect", label: __("Roles", "memberglut"), options: roleOptions(), show: (v) => v.who === "roles" },
       { key: "users", type: "tags", label: __("Also allow these users", "memberglut"), tip: __("Usernames that always have access, whatever their plan.", "memberglut"), placeholder: "username", show: (v) => v.who !== "logged_out" }
@@ -276,19 +286,21 @@ function RuleEditor() {
     if (!id) return;
     getRule(id).then((r) => {
       ["posts", "terms", "authors"].forEach((k) => Object.assign(LABELS[k], (r.labels || {})[k] || {}));
-      setValues({ ...NEW_RULE, ...r });
+      setValues({ ...NEW_RULE, ...r.condition || {}, ...r });
     }).catch((e) => message.error(e.message)).finally(() => setLoading(false));
   }, []);
   const save = async (v) => {
     setSaving(true);
     try {
-      const saved = await saveRule({ ...v, id: id || void 0 });
+      const cond = ruleConditions().find((c) => c.value === v.who);
+      const condition = cond ? Object.fromEntries((cond.fields || []).map((f) => [f.key, v[f.key]])) : {};
+      const saved = await saveRule({ ...v, condition, id: id || void 0 });
       setErrors({});
       message.success(__("Rule saved.", "memberglut"));
       if (!id) {
         window.location.href = link("rule_editor", { id: saved.id });
       } else {
-        setValues({ ...NEW_RULE, ...saved });
+        setValues({ ...NEW_RULE, ...saved.condition || {}, ...saved });
       }
       return true;
     } catch (e) {
@@ -304,6 +316,7 @@ function RuleEditor() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     SettingsPanel,
     {
+      screen: "rule",
       back: { href: link("rules"), label: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faChevronLeft }),
         " ",

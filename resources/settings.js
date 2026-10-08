@@ -1,17 +1,17 @@
-import { a8 as __, bk as faGear, bO as faShieldHalved, bJ as faRightToBracket, aN as faArrowsTurnRight, b2 as faCircleUser, b6 as faCreditCard, ba as faEnvelope, c0 as faUserLock, c4 as faUserShield, bN as faScaleBalanced, bP as faSliders, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, aD as createRoot } from "./chunks/Page-hmVJ7ZEb.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CQqU9qOj.js";
-import { S as Select, ak as getSettings, aN as saveSettings } from "./chunks/api-VgcaUgLl.js";
-import { c as roleOptions$1, L, p as pageOptions$1 } from "./chunks/lookups-PfwO7D-y.js";
-import { F as ForwardTable } from "./chunks/Table-BCgh_Ve3.js";
-import { I as Input } from "./chunks/index-CH-t94NL.js";
-import { S as Spin } from "./chunks/index-meZbse2h.js";
-import "./chunks/index-DyME-zn4.js";
-import "./chunks/index-nAZOmPrG.js";
-import "./chunks/index-GRmK3Eb7.js";
-import "./chunks/index-C0PWwl2H.js";
-import "./chunks/index-Dq9_nZbq.js";
-import "./chunks/index-BCEmSWRh.js";
-import "./chunks/useBreakpoint-BJ5o-Qbk.js";
+import { a8 as __, bk as faGear, bP as faShieldHalved, bK as faRightToBracket, aN as faArrowsTurnRight, b2 as faCircleUser, b6 as faCreditCard, ba as faEnvelope, c1 as faUserLock, c5 as faUserShield, bO as faScaleBalanced, bQ as faSliders, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CZprfnRR.js";
+import { S as Select, ak as getSettings, aN as saveSettings } from "./chunks/api-C3opcxY4.js";
+import { c as roleOptions$1, L, p as pageOptions$1 } from "./chunks/lookups-cQsk1BIx.js";
+import { F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
+import { I as Input } from "./chunks/index-D-BW9vN4.js";
+import { S as Spin } from "./chunks/index-D6ChUS7m.js";
+import "./chunks/index-DPM4vg2p.js";
+import "./chunks/index-8aTEZ5cr.js";
+import "./chunks/index-Bdt2tpd-.js";
+import "./chunks/index-B15yPtij.js";
+import "./chunks/index-BQU-XdN2.js";
+import "./chunks/index-DYGuXoRz.js";
+import "./chunks/useBreakpoint-m1SzewdH.js";
 const roleOptions = roleOptions$1();
 const freePlanOptions = L.plans.filter((p) => p.type === "free" && p.status === "active").map((p) => ({ value: p.id, label: p.name }));
 const pageOptions = pageOptions$1();
@@ -517,6 +517,7 @@ function Settings() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     SettingsPanel,
     {
+      screen: "settings",
       title: __("Global Settings", "memberglut"),
       subtitle: __("Options for the whole membership site. Plans and rules can override many of them.", "memberglut"),
       sections: SECTIONS,

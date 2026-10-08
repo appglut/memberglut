@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Page from '../components/Page';
 import SettingsPanel from '../components/SettingsPanel';
+import { ruleTargets, ruleConditions } from '../services/registry';
 import { link, queryArg } from '../components/adminData';
 import * as api from '../services/api';
 import { L, planOptions, roleOptions, pageOptions } from '../services/lookups';
@@ -23,7 +24,20 @@ const TARGETS = [
   { value: 'author', label: __( 'Posts by author', 'memberglut' ) },
   { value: 'template', label: __( 'Page template', 'memberglut' ) },
   { value: 'url', label: __( 'URL pattern', 'memberglut' ) },
+  // Add-on target types (services/registry.js).
+  ...ruleTargets().map((t) => ({ value: t.value, label: t.label })),
 ];
+
+/** Fields of an add-on target type, rendered as simple inputs. */
+function ExtraTargetFields({ t, def, onChange }) {
+  return (
+    <Space wrap>
+      {(def.fields || []).map((f) => (f.type === 'select'
+        ? <Select key={f.key} value={t[f.key]} placeholder={f.label} options={f.options || []} onChange={(v) => onChange({ [f.key]: v })} style={{ minWidth: 180 }} />
+        : <Input key={f.key} type={f.type === 'number' ? 'number' : 'text'} value={t[f.key]} placeholder={f.label} onChange={(e) => onChange({ [f.key]: e.target.value })} style={{ width: 200 }} />))}
+    </Space>
+  );
+}
 
 const ARCHIVES = [
   { value: 'front', label: __( 'Front page', 'memberglut' ) }, { value: 'blog', label: __( 'Blog page', 'memberglut' ) },
@@ -88,7 +102,10 @@ function TargetList({ value = [], onChange, addLabel, empty }) {
           ? <Select value={t.template} onChange={(v) => set(i, { template: v })} options={L.templates} placeholder={__( 'Template', 'memberglut' )} style={{ width: '100%' }} />
           : <span className="mg-muted">{__( 'Your theme has no custom page templates.', 'memberglut' )}</span>;
       case 'url': return <Input value={t.pattern} onChange={(e) => set(i, { pattern: e.target.value })} placeholder="/members/*  or  ^/course/[0-9]+/$" />;
-      default: return null;
+      default: {
+        const def = ruleTargets().find((x) => x.value === t.type);
+        return def ? <ExtraTargetFields t={t} def={def} onChange={(patch) => set(i, patch)} /> : null;
+      }
     }
   };
   return (
@@ -182,8 +199,11 @@ const SECTIONS = [
           { value: 'roles', label: __( 'User roles', 'memberglut' ), icon: faUserTag, desc: __( 'Any user with one of the roles.', 'memberglut' ) },
           { value: 'logged_in', label: __( 'Logged-in users', 'memberglut' ), icon: faRightToBracket, desc: __( 'Any account, no plan needed.', 'memberglut' ) },
           { value: 'logged_out', label: __( 'Logged-out visitors', 'memberglut' ), icon: faUserSecret, desc: __( 'e.g. a “join now” landing page.', 'memberglut' ) },
+          ...ruleConditions().map((c) => ({ value: c.value, label: c.label, icon: faUserCheck, desc: c.desc || '' })),
         ],
       },
+      // Fields of add-on conditions, shown when the condition is chosen.
+      ...ruleConditions().flatMap((c) => (c.fields || []).map((f) => ({ ...f, show: (v) => v.who === c.value }))),
       { key: 'plans', type: 'multiselect', label: __( 'Plans', 'memberglut' ), options: planOptions(), show: (v) => v.who === 'plans' },
       { key: 'roles', type: 'multiselect', label: __( 'Roles', 'memberglut' ), options: roleOptions(), show: (v) => v.who === 'roles' },
       { key: 'users', type: 'tags', label: __( 'Also allow these users', 'memberglut' ), tip: __( 'Usernames that always have access, whatever their plan.', 'memberglut' ), placeholder: 'username', show: (v) => v.who !== 'logged_out' },
@@ -226,20 +246,22 @@ function RuleEditor() {
     if (!id) return;
     api.getRule(id).then((r) => {
       ['posts', 'terms', 'authors'].forEach((k) => Object.assign(LABELS[k], (r.labels || {})[k] || {}));
-      setValues({ ...NEW_RULE, ...r });
+      setValues({ ...NEW_RULE, ...(r.condition || {}), ...r });
     }).catch((e) => message.error(e.message)).finally(() => setLoading(false));
   }, []);
 
   const save = async (v) => {
     setSaving(true);
     try {
-      const saved = await api.saveRule({ ...v, id: id || undefined });
+      const cond = ruleConditions().find((c) => c.value === v.who);
+      const condition = cond ? Object.fromEntries((cond.fields || []).map((f) => [f.key, v[f.key]])) : {};
+      const saved = await api.saveRule({ ...v, condition, id: id || undefined });
       setErrors({});
       message.success(__( 'Rule saved.', 'memberglut' ));
       if (!id) {
         window.location.href = link('rule_editor', { id: saved.id });
       } else {
-        setValues({ ...NEW_RULE, ...saved });
+        setValues({ ...NEW_RULE, ...(saved.condition || {}), ...saved });
       }
       return true;
     } catch (e) {
@@ -256,6 +278,7 @@ function RuleEditor() {
 
   return (
     <SettingsPanel
+      screen="rule"
       back={{ href: link('rules'), label: <><FontAwesomeIcon icon={faChevronLeft} /> {__( 'All rules', 'memberglut' )}</> }}
       title={id ? sprintf( __( 'Edit rule: %s', 'memberglut' ), values.title ) : __( 'New content rule', 'memberglut' )}
       subtitle={__( 'Choose what to protect, who may see it, and what everyone else gets.', 'memberglut' )}

@@ -51,6 +51,7 @@ $memberglut_id = 'mg-login-' . wp_rand( 100, 999 );
 				<a class="mg-lost-link" href="<?php echo esc_url( $lost_url ); ?>"><?php esc_html_e( 'Lost your password?', 'memberglut' ); ?></a>
 			<?php endif; ?>
 		</div>
+		<?php do_action( 'memberglut_login_form_after_fields' ); ?>
 		<?php echo $guard; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped. ?>
 		<div class="mg-actions">
 			<button type="submit" class="mg-button mg-submit" data-mg-label="<?php echo esc_attr( $button ); ?>"><?php echo esc_html( $button ); ?></button>

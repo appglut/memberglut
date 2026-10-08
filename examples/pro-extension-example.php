@@ -1,175 +1,222 @@
 <?php
 /**
- * Example Pro Extension for MemberGlut
- * This file demonstrates how Pro features can extend the base plugin
+ * Example add-on for MemberGlut — how a separate plugin (e.g. MemberGlut Pro) extends the free plugin without
+ * editing its files. Copy into its own plugin to try it. Every hook used here is listed in docs/hooks.md.
  *
- * @package MemberGlut Pro
- * @since 1.0.0
+ * It adds:
+ *  1. a payment gateway (“Invoice”),
+ *  2. a content-rule condition (“Members for at least N days”) and a rule target (“Posts older than N days”),
+ *  3. a My Account tab,
+ *  4. a Plan editor section with its own setting,
+ *  5. a Global Settings field.
+ *
+ * Plugin Name: MemberGlut Example Add-on
+ * Requires Plugins: memberglut
+ *
+ * @package MemberGlutExample
  */
 
-// Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-// This file would be included in the Pro version plugin
+/* -------------------------------------------------------------------------
+ * 1. Gateway
+ * ---------------------------------------------------------------------- */
 
-/**
- * Example: Advanced Role Creation Hook
- */
-add_action( 'memberglut_before_role_creation', function( $role_slug, $role_name, $capabilities, $description ) {
-	// Pro feature: Log role creation with additional metadata
-	if ( function_exists( 'error_log' ) && WP_DEBUG === true ) {
-		error_log( sprintf( 'Pro: Creating role %s with advanced logging', sanitize_text_field( $role_name ) ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+add_action(
+	'plugins_loaded',
+	static function () {
+		if ( ! class_exists( 'MemberGlut_Gateway' ) ) {
+			return;
+		}
+
+		/**
+		 * Pay later by invoice: the payment stays pending until an admin marks it paid.
+		 */
+		class MemberGlut_Example_Gateway_Invoice extends MemberGlut_Gateway {
+			/**
+			 * ID.
+			 *
+			 * @var string
+			 */
+			public $id = 'invoice';
+
+			/**
+			 * Features.
+			 *
+			 * @var string[]
+			 */
+			protected $features = array( 'one_time' );
+
+			/**
+			 * Title.
+			 *
+			 * @return string
+			 */
+			public function title() {
+				return 'Invoice';
+			}
+
+			/**
+			 * Enabled through the add-on's own setting (see 5.).
+			 *
+			 * @return bool
+			 */
+			public function is_enabled() {
+				return (bool) memberglut_setting( 'example_invoice_enabled', false );
+			}
+
+			/**
+			 * Start the payment.
+			 *
+			 * @param array $ctx user, plan, summary, payment, subscription, data.
+			 * @return array
+			 */
+			public function process( $ctx ) {
+				return array( 'redirect' => $this->return_url( $ctx['payment'] ) );
+			}
+		}
+
+		add_filter(
+			'memberglut_gateways',
+			static function ( $classes ) {
+				$classes[] = 'MemberGlut_Example_Gateway_Invoice';
+				return $classes;
+			}
+		);
+	},
+	5
+);
+
+/* -------------------------------------------------------------------------
+ * 2. Rule condition and rule target
+ * ---------------------------------------------------------------------- */
+
+add_filter(
+	'memberglut_rule_conditions',
+	static function ( $conditions ) {
+		$conditions[] = 'member_days';
+		return $conditions;
 	}
+);
 
-	// Pro feature: Send notification to admin
-	$admin_email = get_option( 'admin_email' );
-	if ( is_email( $admin_email ) ) {
-		wp_mail(
-			$admin_email,
-			sprintf( 'New Role Created: %s', sanitize_text_field( $role_name ) ),
-			sprintf( 'Role "%s" was created with %d capabilities.', sanitize_text_field( $role_name ), intval( count( $capabilities ) ) )
+// Keep the condition's own setting (sent by the Rule editor as condition.days).
+add_filter(
+	'memberglut_sanitize_rule_condition',
+	static function ( $clean, $who, $raw ) {
+		return 'member_days' === $who ? array( 'days' => max( 1, absint( isset( $raw['days'] ) ? $raw['days'] : 30 ) ) ) : $clean;
+	},
+	10,
+	3
+);
+
+// Decide the condition.
+add_filter(
+	'memberglut_user_passes_condition',
+	static function ( $passes, $who, $user_id ) {
+		if ( 'member_days' !== $who['who'] || ! $user_id ) {
+			return $passes;
+		}
+		$days  = isset( $who['condition']['days'] ) ? (int) $who['condition']['days'] : 30;
+		$since = null;
+		foreach ( MemberGlut_Subscription_Service::access_subscriptions( $user_id ) as $s ) {
+			$since = null === $since ? $s['start_date'] : min( $since, $s['start_date'] );
+		}
+		return $since && strtotime( $since . ' UTC' ) <= time() - $days * DAY_IN_SECONDS;
+	},
+	10,
+	3
+);
+
+add_filter(
+	'memberglut_rule_targets',
+	static function ( $targets ) {
+		$targets[] = 'older_than';
+		return $targets;
+	}
+);
+add_filter(
+	'memberglut_sanitize_rule_target',
+	static function ( $clean, $raw ) {
+		if ( 'older_than' === $clean['type'] ) {
+			$clean['days'] = max( 1, absint( isset( $raw['days'] ) ? $raw['days'] : 90 ) );
+		}
+		return $clean;
+	},
+	10,
+	2
+);
+add_filter(
+	'memberglut_rule_target_matches',
+	static function ( $match, $target, $subject, $kind ) {
+		if ( 'older_than' !== $target['type'] || 'post' !== $kind ) {
+			return $match;
+		}
+		return strtotime( $subject->post_date_gmt . ' UTC' ) < time() - (int) $target['days'] * DAY_IN_SECONDS;
+	},
+	10,
+	4
+);
+
+/* -------------------------------------------------------------------------
+ * 3. My Account tab
+ * ---------------------------------------------------------------------- */
+
+add_filter(
+	'memberglut_account_tabs',
+	static function ( $tabs ) {
+		$tabs['downloads'] = 'Downloads';
+		return $tabs;
+	}
+);
+add_filter(
+	'memberglut_account_tab_content',
+	static function ( $html, $tab, $user ) {
+		if ( 'downloads' !== $tab ) {
+			return $html;
+		}
+		return '<h2 class="mg-account-title">Downloads</h2><p>' . esc_html( sprintf( 'Hello %s, your files will appear here.', $user->display_name ) ) . '</p>';
+	},
+	10,
+	3
+);
+
+/* -------------------------------------------------------------------------
+ * 4. Plan editor section + 5. Global Settings field
+ * ---------------------------------------------------------------------- */
+
+// Server side: declare the values so they are sanitized and saved.
+add_filter(
+	'memberglut_plan_settings_schema',
+	static function ( $schema ) {
+		$schema['example_welcome_gift'] = array( 'type' => 'text', 'default' => '' );
+		return $schema;
+	}
+);
+add_filter(
+	'memberglut_settings_schema',
+	static function ( $schema ) {
+		$schema['example_invoice_enabled'] = array( 'type' => 'bool', 'default' => false );
+		return $schema;
+	}
+);
+add_filter(
+	'memberglut_rule_settings_schema',
+	static function ( $schema ) {
+		$schema['example_note_for_members'] = array( 'type' => 'text', 'default' => '' );
+		return $schema;
+	}
+);
+
+// Admin side: register the sections and rule items in the React screens.
+add_action(
+	'memberglut_admin_enqueue',
+	static function () {
+		wp_add_inline_script(
+			'memberglut-registry',
+			'memberglutAdmin.registerSection("plan",{key:"example",title:"Welcome gift",fields:[{key:"example_welcome_gift",type:"text",label:"Gift sent to new members"}]});'
+			. 'memberglutAdmin.registerSection("settings",{key:"example",title:"Invoices",fields:[{key:"example_invoice_enabled",type:"switch",label:"Offer “Invoice” at checkout"}]});'
+			. 'memberglutAdmin.registerRuleCondition({value:"member_days",label:"Members for N days",desc:"Members whose membership started at least N days ago.",fields:[{key:"days",type:"number",label:"Days"}]});'
+			. 'memberglutAdmin.registerRuleTarget({value:"older_than",label:"Posts older than",fields:[{key:"days",type:"number",label:"Days"}]});'
 		);
 	}
-} );
-
-/**
- * Example: Enhanced Content Restriction
- */
-add_filter( 'memberglut_restriction_message', function( $message, $post_id ) {
-	// Pro feature: Add time-based restrictions
-	$restriction_start = get_post_meta( $post_id, '_memberglut_pro_restriction_start', true );
-	$restriction_end   = get_post_meta( $post_id, '_memberglut_pro_restriction_end', true );
-
-	if ( $restriction_start && $restriction_end ) {
-		$current_time = current_time( 'timestamp' );
-		$start_time   = strtotime( $restriction_start );
-		$end_time     = strtotime( $restriction_end );
-
-		if ( $current_time < $start_time ) {
-			$message .= '<p><strong>Available from:</strong> ' . esc_html( date_i18n( get_option( 'date_format' ), $start_time ) ) . '</p>';
-		} elseif ( $current_time > $end_time ) {
-			$message .= '<p><strong>This content has expired.</strong></p>';
-		}
-	}
-
-	return $message;
-}, 10, 2 );
-
-/**
- * Example: Register Pro Features
- */
-add_action( 'memberglut_init', function() {
-	$extensions = MemberGlut_Extensions::get_instance();
-
-	// Register time-based restrictions feature
-	$extensions->register_feature( 'time_based_restrictions', array(
-		'name'        => __( 'Time-Based Restrictions', 'memberglut' ),
-		'description' => __( 'Restrict content based on date and time ranges', 'memberglut' ),
-		'type'        => 'pro',
-		'status'      => 'active',
-		'version'     => '1.0.0',
-		'callback'    => 'memberglut_pro_init_time_restrictions',
-	) );
-
-	// Register advanced analytics feature
-	$extensions->register_feature( 'advanced_analytics', array(
-		'name'        => __( 'Advanced Analytics', 'memberglut' ),
-		'description' => __( 'Detailed member activity and content access reports', 'memberglut' ),
-		'type'        => 'pro',
-		'status'      => 'active',
-		'version'     => '1.0.0',
-		'class'       => 'MemberGlut_Pro_Analytics',
-		'file'        => 'pro/class-memberglut-pro-analytics.php',
-	) );
-} );
-
-/**
- * Example: Pro-only admin tab
- */
-add_action( 'memberglut_after_content_restricted', function( $post_id, $restriction_message ) {
-	// Pro feature: Track restriction events for analytics
-	global $wpdb;
-
-	$table_name = $wpdb->prefix . 'memberglut_pro_restriction_logs';
-
-	// Sanitize and validate server variables
-	$ip_address = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
-	$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-
-	// Insert with proper sanitization
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Example code for demonstration purposes.
-	$wpdb->insert(
-		$table_name,
-		array(
-			'post_id'    => intval( $post_id ),
-			'user_id'    => intval( get_current_user_id() ),
-			'ip_address' => $ip_address,
-			'user_agent' => $user_agent,
-			'timestamp'  => current_time( 'mysql' ),
-		),
-		array( '%d', '%d', '%s', '%s', '%s' )
-	);
-} );
-
-/**
- * Example: Override free version limitations
- */
-add_filter( 'memberglut_is_pro_active', '__return_true' );
-
-/**
- * Example: Add Pro-specific capabilities
- */
-add_filter( 'memberglut_available_capabilities', function( $capabilities ) {
-	$pro_capabilities = array(
-		'memberglut_pro_analytics_access'       => __( 'Access Pro Analytics', 'memberglut' ),
-		'memberglut_pro_bulk_operations'        => __( 'Bulk Member Operations', 'memberglut' ),
-		'memberglut_pro_advanced_restrictions'  => __( 'Advanced Content Restrictions', 'memberglut' ),
-		'memberglut_pro_email_campaigns'        => __( 'Email Campaign Management', 'memberglut' ),
-		'memberglut_pro_export_data'            => __( 'Export Member Data', 'memberglut' ),
-	);
-
-	return array_merge( $capabilities, $pro_capabilities );
-} );
-
-/**
- * Example: Add Pro settings to roles page
- */
-add_action( 'memberglut_after_role_created', function( $role_slug, $role_name, $capabilities, $description ) {
-	// Pro feature: Set up default expiration settings for new roles
-	$default_expiration = get_option( 'memberglut_pro_default_expiration', 365 ); // days
-	update_option( 'memberglut_pro_role_expiration_' . sanitize_key( $role_slug ), intval( $default_expiration ) );
-} );
-
-/**
- * Example Pro function that can be called
- */
-function memberglut_pro_init_time_restrictions() {
-	// Initialize time-based restrictions functionality
-	add_action( 'wp_enqueue_scripts', function() {
-		// Enqueue inline JavaScript for client-side time checking
-		$js_code = '// Pro feature: Real-time content unlocking
-		setInterval(function() {
-			// Check if any time-restricted content should now be available
-			// This would make AJAX calls to check restriction status
-		}, 60000); // Check every minute';
-
-		wp_add_inline_script( 'jquery', $js_code );
-	} );
-}
-
-/**
- * Example: Pro shortcode
- */
-add_action( 'memberglut_register_pro_shortcodes', function() {
-	add_shortcode( 'memberglut_pro_analytics', function( $atts ) {
-		$atts = shortcode_atts( array(
-			'type'   => 'member_growth',
-			'period' => '30_days',
-		), $atts );
-
-		// Pro feature: Display analytics charts
-		return '<div class="memberglut-pro-analytics" data-type="' . esc_attr( $atts['type'] ) . '" data-period="' . esc_attr( $atts['period'] ) . '">Loading analytics...</div>';
-	} );
-} );
+);

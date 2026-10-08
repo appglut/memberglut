@@ -507,6 +507,16 @@ class MemberGlut_Checkout {
 				<?php endif; ?>
 				<span class="mg-field-error" role="alert"></span>
 			</div>
+			<?php
+			/**
+			 * Extra checkout fields (order bumps, pricing fields, tax number…). Validate them with
+			 * memberglut_registration_validate and read them in memberglut_order_summary.
+			 *
+			 * @param array[] $plans   Plans offered.
+			 * @param int     $user_id User.
+			 */
+			do_action( 'memberglut_checkout_fields', $plans, $user_id );
+			?>
 			<div class="mg-pay-area" data-mg-pay-area hidden></div>
 		</div>
 		<?php

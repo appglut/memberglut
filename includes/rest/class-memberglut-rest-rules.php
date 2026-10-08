@@ -354,7 +354,11 @@ class MemberGlut_REST_Rules extends MemberGlut_REST_Controller {
 	private function clean_targets( $list ) {
 		$out = array();
 		foreach ( (array) $list as $t ) {
-			if ( ! is_array( $t ) || empty( $t['type'] ) || ! in_array( $t['type'], MemberGlut_Rules::TARGETS, true ) ) {
+			if ( ! is_array( $t ) || empty( $t['type'] ) || ! in_array( $t['type'], MemberGlut_Rules::targets(), true ) ) {
+				continue;
+			}
+			if ( ! in_array( $t['type'], MemberGlut_Rules::TARGETS, true ) ) {
+				$out[] = (array) apply_filters( 'memberglut_sanitize_rule_target', array( 'type' => sanitize_key( $t['type'] ) ), $t );
 				continue;
 			}
 			$out[] = array(

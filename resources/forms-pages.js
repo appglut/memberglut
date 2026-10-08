@@ -1,21 +1,21 @@
-import { a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, bh as faFileLines, c2 as faUserPlus, bJ as faRightToBracket, bp as faIdCard, bS as faTableColumns, b4 as faCode, c as Button, q as FontAwesomeIcon, c9 as faWandMagicSparkles, aZ as faCheck, bX as faTriangleExclamation, aL as faArrowUpRightFromSquare, aK as faArrowUp, aH as faArrowDown, bu as faLock, bB as faPen, bW as faTrashCan, bF as faPlus, aD as createRoot } from "./chunks/Page-hmVJ7ZEb.js";
+import { a8 as __, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, bh as faFileLines, c3 as faUserPlus, bK as faRightToBracket, bp as faIdCard, bT as faTableColumns, b4 as faCode, c as Button, q as FontAwesomeIcon, ca as faWandMagicSparkles, aZ as faCheck, bY as faTriangleExclamation, aL as faArrowUpRightFromSquare, aK as faArrowUp, aH as faArrowDown, bu as faLock, bB as faPen, bX as faTrashCan, bF as faPlus, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel, C as CopyCode } from "./chunks/SettingsPanel-CQqU9qOj.js";
-import { a2 as getFormsConfig, aH as saveFormsConfig, S as Select, T as Tooltip, t as createPages } from "./chunks/api-VgcaUgLl.js";
-import { L, b as planOptions } from "./chunks/lookups-PfwO7D-y.js";
-import { b as planPrice } from "./chunks/format-CBnx-JJy.js";
-import { S as Spin } from "./chunks/index-meZbse2h.js";
-import { T as Tag } from "./chunks/index-nAZOmPrG.js";
-import { A as Alert } from "./chunks/index-BwEO_KtO.js";
-import { F as Form } from "./chunks/index-6b3MThe_.js";
-import { I as Input } from "./chunks/index-CH-t94NL.js";
-import { S as Switch } from "./chunks/index-BCEmSWRh.js";
-import { M as Modal } from "./chunks/index-BgWjIT_i.js";
-import "./chunks/index-DyME-zn4.js";
-import "./chunks/index-GRmK3Eb7.js";
-import "./chunks/index-C0PWwl2H.js";
-import "./chunks/index-Dq9_nZbq.js";
-import "./chunks/useBreakpoint-BJ5o-Qbk.js";
+import { S as SettingsPanel, C as CopyCode } from "./chunks/SettingsPanel-CZprfnRR.js";
+import { a2 as getFormsConfig, aH as saveFormsConfig, S as Select, T as Tooltip, t as createPages } from "./chunks/api-C3opcxY4.js";
+import { L, b as planOptions } from "./chunks/lookups-cQsk1BIx.js";
+import { b as planPrice } from "./chunks/format-DZEqfpos.js";
+import { S as Spin } from "./chunks/index-D6ChUS7m.js";
+import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
+import { A as Alert } from "./chunks/index-dB_sQhvz.js";
+import { F as Form } from "./chunks/index--FwfDeQZ.js";
+import { I as Input } from "./chunks/index-D-BW9vN4.js";
+import { S as Switch } from "./chunks/index-DYGuXoRz.js";
+import { M as Modal } from "./chunks/index-BtIaElEq.js";
+import "./chunks/index-DPM4vg2p.js";
+import "./chunks/index-Bdt2tpd-.js";
+import "./chunks/index-B15yPtij.js";
+import "./chunks/index-BQU-XdN2.js";
+import "./chunks/useBreakpoint-m1SzewdH.js";
 const PAGE_SLOTS = [
   ["page_register", __("Registration & checkout", "memberglut"), "[memberglut_register]", __("Account fields, plan choice and payment. Plan signup links open this page.", "memberglut")],
   ["page_login", __("Login", "memberglut"), "[memberglut_login]", __("Replaces wp-login.php when “Use MemberGlut pages” is on.", "memberglut")],
@@ -26,7 +26,7 @@ const PAGE_SLOTS = [
 ];
 const LOCKED_KEYS = ["email", "password"];
 const NO_PROFILE = ["password", "password_confirm", "username", "email"];
-const FIELD_TYPES = ["text", "textarea", "email", "url", "tel", "number", "date", "select", "radio", "checkbox", "country", "hidden"].map((t) => ({ value: t, label: t }));
+const FIELD_TYPES = (L.field_types || ["text", "textarea", "email", "url", "tel", "number", "date", "select", "radio", "checkbox", "country", "hidden"]).filter((t) => t !== "password").map((t) => ({ value: t, label: t }));
 function FieldBuilder({ values, update }) {
   const [editing, setEditing] = reactExports.useState(null);
   const [form] = Form.useForm();
@@ -329,6 +329,7 @@ function FormsPages() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     SettingsPanel,
     {
+      screen: "forms",
       title: __("Forms & Pages", "memberglut"),
       subtitle: __("The pages members use, and the fields and text of each form.", "memberglut"),
       sections: sections({ status, setStatus, pages, setPages }),

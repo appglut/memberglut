@@ -59,6 +59,56 @@ class MemberGlut_Rules {
 	}
 
 	/**
+	 * Target types (Pro add-ons register more with memberglut_rule_targets and match them with
+	 * memberglut_rule_target_matches).
+	 *
+	 * @return string[]
+	 */
+	public static function targets() {
+		return array_values( array_unique( (array) apply_filters( 'memberglut_rule_targets', self::TARGETS ) ) );
+	}
+
+	/**
+	 * “Who can see it” conditions (extended with memberglut_rule_conditions + memberglut_user_passes_condition).
+	 *
+	 * @return string[]
+	 */
+	public static function conditions() {
+		return array_values( array_unique( (array) apply_filters( 'memberglut_rule_conditions', array( 'plans', 'roles', 'logged_in', 'logged_out' ) ) ) );
+	}
+
+	/**
+	 * Add-on rule settings: key => [ type, default, … ] (memberglut_rule_settings_schema). Stored in access.ext.
+	 *
+	 * @return array
+	 */
+	public static function extra_schema() {
+		$out = array();
+		foreach ( (array) apply_filters( 'memberglut_rule_settings_schema', array() ) as $key => $def ) {
+			if ( is_array( $def ) && ! empty( $def['type'] ) && array_key_exists( 'default', $def ) ) {
+				$out[ sanitize_key( $key ) ] = $def;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Add-on rule settings from the submitted data.
+	 *
+	 * @param array      $d        Data.
+	 * @param array|null $existing Existing rule (normalized).
+	 * @return array
+	 */
+	private static function sanitize_ext( $d, $existing ) {
+		$out = array();
+		foreach ( self::extra_schema() as $key => $def ) {
+			$raw         = array_key_exists( $key, $d ) ? $d[ $key ] : ( $existing && array_key_exists( $key, $existing ) ? $existing[ $key ] : $def['default'] );
+			$out[ $key ] = MemberGlut_Settings::sanitize( $raw, $def, $key );
+		}
+		return $out;
+	}
+
+	/**
 	 * Row → normalized rule (also the client shape).
 	 *
 	 * @param array $row Row.
@@ -66,7 +116,7 @@ class MemberGlut_Rules {
 	 */
 	public static function normalize( $row ) {
 		$access = is_array( $row['access'] ) ? $row['access'] : array();
-		return array(
+		$rule = array(
 			'id'               => (int) $row['id'],
 			'title'            => (string) $row['title'],
 			'status'           => (string) $row['status'],
@@ -80,6 +130,7 @@ class MemberGlut_Rules {
 			'roles'            => array_values( isset( $access['roles'] ) ? (array) $access['roles'] : array() ),
 			'users'            => array_values( isset( $access['users'] ) ? (array) $access['users'] : array() ),
 			'user_ids'         => array_map( 'intval', isset( $access['user_ids'] ) ? (array) $access['user_ids'] : array() ),
+			'condition'        => isset( $access['condition'] ) ? (array) $access['condition'] : array(),
 			'action'           => (string) $row['action'],
 			'redirect'         => (int) $row['redirect'],
 			'custom_message'   => (bool) $row['custom_message'],
@@ -88,6 +139,13 @@ class MemberGlut_Rules {
 			'in_lists'         => (string) $row['in_lists'],
 			'updated'          => memberglut_iso( $row['updated_at'] ),
 		);
+		$ext = isset( $access['ext'] ) && is_array( $access['ext'] ) ? $access['ext'] : array();
+		foreach ( self::extra_schema() as $key => $def ) {
+			if ( ! isset( $rule[ $key ] ) ) {
+				$rule[ $key ] = array_key_exists( $key, $ext ) ? $ext[ $key ] : $def['default'];
+			}
+		}
+		return $rule;
 	}
 
 	/**
@@ -213,7 +271,12 @@ class MemberGlut_Rules {
 	private static function clean_targets( $list, $field, &$errors ) {
 		$out = array();
 		foreach ( (array) $list as $i => $t ) {
-			if ( ! is_array( $t ) || empty( $t['type'] ) || ! in_array( $t['type'], self::TARGETS, true ) ) {
+			if ( ! is_array( $t ) || empty( $t['type'] ) || ! in_array( $t['type'], self::targets(), true ) ) {
+				continue;
+			}
+			if ( ! in_array( $t['type'], self::TARGETS, true ) ) {
+				// Add-on target type: the add-on sanitizes its own settings.
+				$out[] = (array) apply_filters( 'memberglut_sanitize_rule_target', array( 'type' => sanitize_key( $t['type'] ) ), $t );
 				continue;
 			}
 			$c = array( 'type' => $t['type'] );
@@ -293,7 +356,7 @@ class MemberGlut_Rules {
 		if ( ! $protect && empty( $errors['protect'] ) ) {
 			$errors['protect'] = __( 'Choose the content to protect.', 'memberglut' );
 		}
-		$who = isset( $d['who'] ) && in_array( $d['who'], array( 'plans', 'roles', 'logged_in', 'logged_out' ), true ) ? $d['who'] : 'plans';
+		$who = isset( $d['who'] ) && in_array( $d['who'], self::conditions(), true ) ? $d['who'] : 'plans';
 		$plans = array_values( array_filter( array_map( 'intval', (array) ( isset( $d['plans'] ) ? $d['plans'] : array() ) ), array( 'MemberGlut_Plans', 'get' ) ) );
 		$roles = array_values( array_filter( array_map( 'sanitize_key', (array) ( isset( $d['roles'] ) ? $d['roles'] : array() ) ), 'get_role' ) );
 		if ( 'plans' === $who && ! $plans ) {
@@ -331,7 +394,7 @@ class MemberGlut_Rules {
 			'protect'          => $protect,
 			'exclude'          => $exclude,
 			'include_children' => ! empty( $d['include_children'] ),
-			'access'           => array( 'who' => $who, 'plans' => $plans, 'roles' => $roles, 'users' => $usernames, 'user_ids' => $user_ids ),
+			'access'           => array( 'who' => $who, 'plans' => $plans, 'roles' => $roles, 'users' => $usernames, 'user_ids' => $user_ids, 'condition' => (array) apply_filters( 'memberglut_sanitize_rule_condition', array(), $who, isset( $d['condition'] ) ? (array) $d['condition'] : array(), $d ), 'ext' => self::sanitize_ext( $d, $existing ) ),
 			'action'           => $action,
 			'redirect'         => $redirect,
 			'custom_message'   => ! empty( $d['custom_message'] ),
@@ -501,7 +564,7 @@ class MemberGlut_Rules {
 			case 'url':
 				return self::url_matches( $t['pattern'], self::path_of( get_permalink( $post ) ) );
 		}
-		return false;
+		return (bool) apply_filters( 'memberglut_rule_target_matches', false, $t, $post, 'post' );
 	}
 
 	/**
@@ -532,7 +595,7 @@ class MemberGlut_Rules {
 			case 'url':
 				return self::url_matches( $t['pattern'], $ctx['path'] );
 		}
-		return false;
+		return (bool) apply_filters( 'memberglut_rule_target_matches', false, $t, $ctx, 'context' );
 	}
 
 	/**
@@ -647,6 +710,8 @@ class MemberGlut_Rules {
 				case 'site':
 					$ids = array_merge( $ids, get_posts( $base + array( 'post_type' => $types ) ) );
 					break;
+				default:
+					$ids = array_merge( $ids, (array) apply_filters( 'memberglut_rule_target_post_ids', array(), $t, $rule ) );
 			}
 		}
 		$ids = array_values( array_unique( array_map( 'intval', $ids ) ) );

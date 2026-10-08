@@ -447,6 +447,7 @@ export default function Settings() {
 
   return (
     <SettingsPanel
+      screen="settings"
       title={__( 'Global Settings', 'memberglut' )}
       subtitle={__( 'Options for the whole membership site. Plans and rules can override many of them.', 'memberglut' )}
       sections={SECTIONS}

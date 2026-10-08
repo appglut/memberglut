@@ -23,7 +23,7 @@ const PAGE_SLOTS = [
 
 const LOCKED_KEYS = ['email', 'password'];
 const NO_PROFILE = ['password', 'password_confirm', 'username', 'email'];
-const FIELD_TYPES = ['text', 'textarea', 'email', 'url', 'tel', 'number', 'date', 'select', 'radio', 'checkbox', 'country', 'hidden'].map((t) => ({ value: t, label: t }));
+const FIELD_TYPES = (L.field_types || ['text', 'textarea', 'email', 'url', 'tel', 'number', 'date', 'select', 'radio', 'checkbox', 'country', 'hidden']).filter((t) => t !== 'password').map((t) => ({ value: t, label: t }));
 
 function FieldBuilder({ values, update }) {
   const [editing, setEditing] = useState(null); // index or 'new'
@@ -274,6 +274,7 @@ function FormsPages() {
 
   return (
     <SettingsPanel
+      screen="forms"
       title={__( 'Forms & Pages', 'memberglut' )}
       subtitle={__( 'The pages members use, and the fields and text of each form.', 'memberglut' )}
       sections={sections({ status, setStatus, pages, setPages })}

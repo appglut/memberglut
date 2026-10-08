@@ -56,6 +56,10 @@ class MemberGlut_Pricing {
 		$discount  = $coupon ? MemberGlut_Coupons::discount( $coupon, $price ) : 0.0;
 		$first     = $trial ? 0.0 : max( 0, $price - $discount );
 		$renewal   = $recurring ? max( 0, $price - ( $coupon && $coupon['recurring'] ? $discount : 0 ) ) : 0.0;
+		if ( $change ) {
+			// Pro proration: credit the unused part of the current plan.
+			$first = max( 0, (float) apply_filters( 'memberglut_plan_change_amount', $first, $plan, $user_id, $context ) );
+		}
 
 		$lines   = array();
 		$lines[] = array( 'label' => $plan['name'] . ( $recurring ? ' (' . MemberGlut_Plans::period_label( $plan['duration'] ) . ')' : '' ), 'amount' => $price );

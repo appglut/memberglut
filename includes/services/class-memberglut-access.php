@@ -111,7 +111,8 @@ class MemberGlut_Access {
 				}
 				return (bool) array_intersect( array_map( 'intval', (array) $who['plans'] ), $plans );
 		}
-		return false;
+		// Add-on conditions (memberglut_rule_conditions).
+		return (bool) apply_filters( 'memberglut_user_passes_condition', false, $who, (int) $user_id );
 	}
 
 	/**
