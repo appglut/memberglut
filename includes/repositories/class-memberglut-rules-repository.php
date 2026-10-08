@@ -24,7 +24,7 @@ class MemberGlut_Rules_Repository extends MemberGlut_Repository {
 	 *
 	 * @var array
 	 */
-	protected $columns = array( 'id' => '%d', 'title' => '%s', 'status' => '%s', 'priority' => '%d', 'note' => '%s', 'protect' => '%s', 'exclude' => '%s', 'include_children' => '%d', 'access' => '%s', 'action' => '%s', 'redirect' => '%d', 'custom_message' => '%d', 'message' => '%s', 'teaser' => '%s', 'in_lists' => '%s', 'created_at' => '%s', 'updated_at' => '%s' );
+	protected $columns = array( 'id' => '%d', 'title' => '%s', 'status' => '%s', 'priority' => '%d', 'note' => '%s', 'protect' => '%s', 'exclude' => '%s', 'include_children' => '%d', 'access' => '%s', 'action' => '%s', 'redirect' => '%d', 'custom_message' => '%d', 'message' => '%s', 'teaser' => '%s', 'in_lists' => '%s', 'created_at' => '%s', 'updated_at' => '%s' ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- “exclude” is a column of the rules table, not a query argument.
 
 	/**
 	 * JSON columns.

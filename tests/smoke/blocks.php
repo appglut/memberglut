@@ -1,4 +1,14 @@
 <?php
+/**
+ * Smoke test (development only — not shipped, see .distignore). Run with tests/smoke/run.sh.
+ *
+ * @package MemberGlut
+ */
+
+// phpcs:ignoreFile -- CLI test script that prints plain-text results.
+
+defined( 'ABSPATH' ) || exit;
+
 $reg = WP_Block_Type_Registry::get_instance();
 $names = array_filter( array_keys( $reg->get_all_registered() ), fn( $n ) => 0 === strpos( $n, 'memberglut/' ) );
 echo count( $names ) . " blocks: " . implode( ',', $names ) . "\n";

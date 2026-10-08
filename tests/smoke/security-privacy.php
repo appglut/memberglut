@@ -1,4 +1,14 @@
 <?php
+/**
+ * Smoke test (development only — not shipped, see .distignore). Run with tests/smoke/run.sh.
+ *
+ * @package MemberGlut
+ */
+
+// phpcs:ignoreFile -- CLI test script that prints plain-text results.
+
+defined( 'ABSPATH' ) || exit;
+
 add_filter( 'pre_wp_mail', '__return_true' );
 echo "components: " . ( has_filter( 'authenticate', array( 'MemberGlut_Security', 'check_lockout' ) ) ? 'security ' : '' ) . ( has_filter( 'wp_privacy_personal_data_exporters', array( 'MemberGlut_Privacy', 'register_exporters' ) ) ? 'privacy' : '' ) . "\n";
 $_SERVER['REMOTE_ADDR'] = '203.0.113.' . wp_rand( 1, 200 );
@@ -19,9 +29,9 @@ echo "device={$row['device_label']} ip={$row['ip']} verifier_live=" . ( isset( M
 MemberGlut_Settings::update( array( 'session_behavior' => 'block' ) );
 echo "block: " . $try( 'Secret123!' ) . "\n";
 wp_set_current_user( 1 );
-list( $s, $l ) = rest( 'GET', '/logins', null, array( 'user' => $uid ) );
+list( $s, $l ) = memberglut_smoke_rest( 'GET', '/logins', null, array( 'user' => $uid ) );
 echo "rest logins $s n=" . count( (array) $l ) . " current=" . count( array_filter( array_column( (array) $l, 'current' ) ) ) . "\n";
-list( $s ) = rest( 'POST', "/members/user/$uid/logout-all", array() );
+list( $s ) = memberglut_smoke_rest( 'POST', "/members/user/$uid/logout-all", array() );
 echo "logout-all $s sessions=" . count( MemberGlut_Security::sessions( $uid ) ) . " open rows=" . memberglut_repo( 'logins' )->count( array( 'where' => array( 'user_id' => $uid, 'ended_at IS NULL' => true ) ) ) . "\n";
 wp_set_current_user( 0 );
 echo "after logout-all block lifts: " . $try( 'Secret123!' ) . "\n";

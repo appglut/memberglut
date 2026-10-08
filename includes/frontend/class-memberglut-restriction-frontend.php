@@ -331,7 +331,7 @@ class MemberGlut_Restriction_Frontend {
 	public static function sitemap_args( $args ) {
 		$hidden = self::hidden_ids();
 		if ( $hidden ) {
-			$args['post__not_in'] = array_merge( isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), $hidden );
+			$args['post__not_in'] = array_merge( isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), $hidden ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Members-only posts must not be listed; the ID list is small and cached.
 		}
 		return $args;
 	}
@@ -403,7 +403,7 @@ class MemberGlut_Restriction_Frontend {
 		}
 		$hidden = self::hidden_ids();
 		if ( $hidden ) {
-			$args['post__not_in'] = array_merge( isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), $hidden );
+			$args['post__not_in'] = array_merge( isset( $args['post__not_in'] ) ? (array) $args['post__not_in'] : array(), $hidden ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Members-only posts must not be listed; the ID list is small and cached.
 		}
 		return $args;
 	}

@@ -4,7 +4,7 @@ End-to-end scripts that exercise each area through the real services and REST AP
 They print one line per check and clean up the data they create. They are not shipped in the release zip.
 
 ```
-php tests/smoke/boot.php tests/smoke/checkout.php
+tests/smoke/run.sh tests/smoke/checkout.php
 ```
 
 | Script | Covers |

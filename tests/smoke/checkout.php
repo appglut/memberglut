@@ -1,4 +1,14 @@
 <?php
+/**
+ * Smoke test (development only — not shipped, see .distignore). Run with tests/smoke/run.sh.
+ *
+ * @package MemberGlut
+ */
+
+// phpcs:ignoreFile -- CLI test script that prints plain-text results.
+
+defined( 'ABSPATH' ) || exit;
+
 $GLOBALS['mails'] = array();
 add_filter( 'pre_wp_mail', function ( $r, $a ) { $GLOBALS['mails'][] = $a; return true; }, 10, 2 );
 $subjects = function () { $s = array_map( fn( $m ) => $m['subject'], $GLOBALS['mails'] ); $GLOBALS['mails'] = array(); return implode( ' | ', $s ); };
@@ -11,18 +21,18 @@ $silver = MemberGlut_Plans::get( 'silver' );
 echo "silver gateways for checkout: " . implode( ',', array_keys( MemberGlut_Checkout::gateways_for( $silver ) ) ) . "\n";
 
 // Coupons via REST.
-list( $s, $c ) = rest( 'POST', '/coupons', array( 'code' => 'bad code!', 'type' => 'percent', 'amount' => 150 ) );
+list( $s, $c ) = memberglut_smoke_rest( 'POST', '/coupons', array( 'code' => 'bad code!', 'type' => 'percent', 'amount' => 150 ) );
 echo "coupon invalid $s " . wp_json_encode( $c['data']['fields'] ?? $c ) . "\n";
-list( $s, $c50 ) = rest( 'POST', '/coupons', array( 'code' => 'half50', 'type' => 'percent', 'amount' => 50, 'plans' => array( $silver['id'] ) ) );
+list( $s, $c50 ) = memberglut_smoke_rest( 'POST', '/coupons', array( 'code' => 'half50', 'type' => 'percent', 'amount' => 50, 'plans' => array( $silver['id'] ) ) );
 echo "coupon half $s code={$c50['code']} status={$c50['status']}\n";
-list( $s, $c100 ) = rest( 'POST', '/coupons', array( 'code' => 'FREEALL', 'type' => 'percent', 'amount' => 100, 'recurring' => true ) );
-list( $s, $dup ) = rest( 'POST', '/coupons', array( 'code' => 'HALF50', 'type' => 'fixed', 'amount' => 1 ) ); echo "dup $s {$dup['message']}\n";
-list( $s, $imp ) = rest( 'POST', '/coupons/import', array( 'csv' => "code,type,amount\nIMPA,percent,10\nIMPB,fixed,5\n,percent,1\n" ) );
+list( $s, $c100 ) = memberglut_smoke_rest( 'POST', '/coupons', array( 'code' => 'FREEALL', 'type' => 'percent', 'amount' => 100, 'recurring' => true ) );
+list( $s, $dup ) = memberglut_smoke_rest( 'POST', '/coupons', array( 'code' => 'HALF50', 'type' => 'fixed', 'amount' => 1 ) ); echo "dup $s {$dup['message']}\n";
+list( $s, $imp ) = memberglut_smoke_rest( 'POST', '/coupons/import', array( 'csv' => "code,type,amount\nIMPA,percent,10\nIMPB,fixed,5\n,percent,1\n" ) );
 echo "import $s created={$imp['created']} updated={$imp['updated']} errors=" . count( $imp['errors'] ) . " total=" . count( $imp['coupons'] ) . "\n";
 echo "summary 50%: " . MemberGlut_Pricing::summary( $silver, MemberGlut_Coupons::find_by_code( 'HALF50' ) )['text'] . "\n";
 
 wp_set_current_user( 0 );
-$pub = function ( $route, $data ) { $data['_mgnonce'] = wp_create_nonce( 'memberglut_' . str_replace( '-', '_', $route ) ); return rest( 'POST', '/public/' . $route, $data ); };
+$pub = function ( $route, $data ) { $data['_mgnonce'] = wp_create_nonce( 'memberglut_' . str_replace( '-', '_', $route ) ); return memberglut_smoke_rest( 'POST', '/public/' . $route, $data ); };
 $base = array( 'password' => 'Secret123!', 'password_confirm' => 'Secret123!', 'agree_privacy' => 1, 'agree_gdpr' => 1 );
 
 // Bank checkout.
@@ -38,15 +48,15 @@ $sub = MemberGlut_Subscription_Service::for_user( $u1->ID )[0];
 $pay = memberglut_repo( 'payments' )->query( array( 'where' => array( 'user_id' => $u1->ID ) ) )[0];
 echo "sub={$sub['status']} pay={$pay['status']} amount={$pay['amount']} discount={$pay['discount']} coupon={$pay['coupon_code']} mails: " . $subjects() . "\n";
 wp_set_current_user( 1 );
-list( $s, $list ) = rest( 'GET', '/payments', null, array( 'status' => 'pending' ) );
+list( $s, $list ) = memberglut_smoke_rest( 'GET', '/payments', null, array( 'status' => 'pending' ) );
 echo "list pending $s total={$list['total']} summary.pending=" . wp_json_encode( $list['summary']['pending'] ) . "\n";
-list( $s, $d ) = rest( 'POST', "/payments/{$pay['id']}/mark-paid", array() );
+list( $s, $d ) = memberglut_smoke_rest( 'POST', "/payments/{$pay['id']}/mark-paid", array() );
 echo "mark-paid $s status={$d['status']} log=" . implode( ' / ', array_column( $d['log'], 'text' ) ) . "\n";
 $sub = MemberGlut_Subscription_Service::get( $sub['id'] );
 echo "sub now {$sub['status']} expires={$sub['expires_at']} has_plan=" . ( memberglut_user_has_plan( $silver["id"], $u1->ID ) ? 'y' : 'n' ) . " coupon uses=" . MemberGlut_Coupons::find_by_code( 'HALF50' )['uses'] . " mails: " . $subjects() . "\n";
-list( $s, $d ) = rest( 'POST', "/payments/{$pay['id']}/mark-paid", array() ); echo "mark-paid again $s\n";
-list( $s, $d ) = rest( 'POST', "/payments/{$pay['id']}/resend-receipt", array() ); echo "resend $s mails: " . $subjects() . "\n";
-list( $s, $d ) = rest( 'POST', "/payments/{$pay['id']}/refund", array() );
+list( $s, $d ) = memberglut_smoke_rest( 'POST', "/payments/{$pay['id']}/mark-paid", array() ); echo "mark-paid again $s\n";
+list( $s, $d ) = memberglut_smoke_rest( 'POST', "/payments/{$pay['id']}/resend-receipt", array() ); echo "resend $s mails: " . $subjects() . "\n";
+list( $s, $d ) = memberglut_smoke_rest( 'POST', "/payments/{$pay['id']}/refund", array() );
 echo "refund $s status={$d['status']} refunded={$d['refunded']}\n";
 echo "after refund sub=" . MemberGlut_Subscription_Service::get( $sub['id'] )['status'] . " has_plan=" . ( memberglut_user_has_plan( $silver["id"], $u1->ID ) ? 'y' : 'n' ) . " mails: " . $subjects() . "\n";
 
@@ -61,16 +71,16 @@ echo "100% coupon $s sub={$sub2['status']} gateway={$sub2['gateway']} next=" . v
 // Manual payment.
 wp_set_current_user( 1 );
 $u3 = wp_create_user( 'manual' . wp_rand(), 'Secret123!', 'man' . wp_rand() . '@example.com' );
-list( $s, $m ) = rest( 'POST', '/payments', array( 'member' => 0, 'plan' => 0 ) ); echo "manual invalid $s " . wp_json_encode( array_keys( $m['data']['fields'] ?? array() ) ) . "\n";
-list( $s, $m ) = rest( 'POST', '/payments', array( 'member' => $u3, 'plan' => $silver['id'], 'amount' => 9, 'status' => 'completed', 'activate' => true, 'note' => 'cash' ) );
+list( $s, $m ) = memberglut_smoke_rest( 'POST', '/payments', array( 'member' => 0, 'plan' => 0 ) ); echo "manual invalid $s " . wp_json_encode( array_keys( $m['data']['fields'] ?? array() ) ) . "\n";
+list( $s, $m ) = memberglut_smoke_rest( 'POST', '/payments', array( 'member' => $u3, 'plan' => $silver['id'], 'amount' => 9, 'status' => 'completed', 'activate' => true, 'note' => 'cash' ) );
 echo "manual $s status={$m['status']} type={$m['type']} plan=" . ( memberglut_user_has_plan( $silver["id"], $u3 ) ? 'y' : 'n' ) . "\n";
-list( $s, $sum ) = rest( 'GET', '/payments/summary' ); echo "summary " . wp_json_encode( $sum ) . "\n";
-list( $s, $one ) = rest( 'GET', '/payments/' . $m['id'] ); echo "show $s log=" . count( $one['log'] ) . "\n";
-list( $s, $x ) = rest( 'GET', '/payments/999999' ); echo "missing $s\n";
+list( $s, $sum ) = memberglut_smoke_rest( 'GET', '/payments/summary' ); echo "summary " . wp_json_encode( $sum ) . "\n";
+list( $s, $one ) = memberglut_smoke_rest( 'GET', '/payments/' . $m['id'] ); echo "show $s log=" . count( $one['log'] ) . "\n";
+list( $s, $x ) = memberglut_smoke_rest( 'GET', '/payments/999999' ); echo "missing $s\n";
 
 // Permissions.
 $sub_user = wp_create_user( 'subsc' . wp_rand(), 'Secret123!', 'sub' . wp_rand() . '@example.com' );
-wp_set_current_user( $sub_user ); list( $s ) = rest( 'GET', '/payments' ); list( $s2 ) = rest( 'GET', '/coupons' ); echo "subscriber payments=$s coupons=$s2\n";
+wp_set_current_user( $sub_user ); list( $s ) = memberglut_smoke_rest( 'GET', '/payments' ); list( $s2 ) = memberglut_smoke_rest( 'GET', '/coupons' ); echo "subscriber payments=$s coupons=$s2\n";
 wp_set_current_user( 1 );
 
 // Stripe with mocked HTTP.

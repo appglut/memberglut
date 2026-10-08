@@ -1,14 +1,24 @@
 <?php
+/**
+ * Smoke test (development only — not shipped, see .distignore). Run with tests/smoke/run.sh.
+ *
+ * @package MemberGlut
+ */
+
+// phpcs:ignoreFile -- CLI test script that prints plain-text results.
+
+defined( 'ABSPATH' ) || exit;
+
 $GLOBALS['mails'] = array();
 add_filter( 'pre_wp_mail', function ( $r, $a ) { $GLOBALS['mails'][] = $a; return true; }, 10, 2 );
-list( $s, $d ) = rest( 'POST', '/forms/pages/create', array() );
+list( $s, $d ) = memberglut_smoke_rest( 'POST', '/forms/pages/create', array() );
 echo "pages $s created=" . wp_json_encode( $d['created'] ) . "\n";
 MemberGlut_Settings::update( array( 'honeypot' => false ) ); // timing check would block an instant script submit
 wp_set_current_user( 0 );
 $pub = function ( $route, $data ) {
 	$action = str_replace( '-', '_', $route );
 	$data['_mgnonce'] = wp_create_nonce( 'memberglut_' . $action );
-	return rest( 'POST', '/public/' . $route, $data );
+	return memberglut_smoke_rest( 'POST', '/public/' . $route, $data );
 };
 $free = MemberGlut_Plans::get( 'free' );
 $email = 'reg' . wp_rand() . '@example.com';

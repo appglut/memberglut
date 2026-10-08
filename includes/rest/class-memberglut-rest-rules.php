@@ -273,7 +273,7 @@ class MemberGlut_REST_Rules extends MemberGlut_REST_Controller {
 				'title'            => isset( $draft['title'] ) && $draft['title'] ? sanitize_text_field( $draft['title'] ) : __( 'this rule', 'memberglut' ),
 				'priority'         => isset( $draft['priority'] ) ? (int) $draft['priority'] : 10,
 				'protect'          => $this->clean_targets( isset( $draft['protect'] ) ? $draft['protect'] : array() ),
-				'exclude'          => $this->clean_targets( isset( $draft['exclude'] ) ? $draft['exclude'] : array() ),
+				'exclude'          => $this->clean_targets( isset( $draft['exclude'] ) ? $draft['exclude'] : array() ), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- “exclude” is the rule’s exclusion list, not a query argument.
 				'include_children' => ! empty( $draft['include_children'] ),
 				'who'              => isset( $draft['who'] ) ? sanitize_key( $draft['who'] ) : 'plans',
 				'plans'            => array_map( 'intval', isset( $draft['plans'] ) ? (array) $draft['plans'] : array() ),

@@ -1,4 +1,14 @@
 <?php
+/**
+ * Smoke test (development only — not shipped, see .distignore). Run with tests/smoke/run.sh.
+ *
+ * @package MemberGlut
+ */
+
+// phpcs:ignoreFile -- CLI test script that prints plain-text results.
+
+defined( 'ABSPATH' ) || exit;
+
 $GLOBALS['mails'] = array();
 add_filter( 'pre_wp_mail', function ( $r, $a ) { $GLOBALS['mails'][] = $a; return true; }, 10, 2 );
 $subjects = function () { $s = array_map( fn( $m ) => $m['subject'], $GLOBALS['mails'] ); $GLOBALS['mails'] = array(); return implode( ' | ', $s ); };

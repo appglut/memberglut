@@ -123,7 +123,7 @@ class MemberGlut_Rules {
 			'priority'         => (int) $row['priority'],
 			'note'             => (string) $row['note'],
 			'protect'          => array_values( (array) $row['protect'] ),
-			'exclude'          => array_values( (array) $row['exclude'] ),
+			'exclude'          => array_values( (array) $row['exclude'] ), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- “exclude” is the rule’s exclusion list, not a query argument.
 			'include_children' => (bool) $row['include_children'],
 			'who'              => isset( $access['who'] ) ? $access['who'] : 'plans',
 			'plans'            => array_map( 'intval', isset( $access['plans'] ) ? (array) $access['plans'] : array() ),
@@ -161,7 +161,7 @@ class MemberGlut_Rules {
 				$r            = self::normalize( $row );
 				$r['summary'] = array(
 					'protect' => array_map( array( __CLASS__, 'target_summary' ), $r['protect'] ),
-					'exclude' => array_map( array( __CLASS__, 'target_summary' ), $r['exclude'] ),
+					'exclude' => array_map( array( __CLASS__, 'target_summary' ), $r['exclude'] ), // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- “exclude” is the rule’s exclusion list, not a query argument.
 				);
 				$r['access'] = array( 'who' => $r['who'], 'plans' => $r['plans'], 'roles' => $r['roles'] );
 				return $r;
@@ -392,7 +392,7 @@ class MemberGlut_Rules {
 			'priority'         => max( 0, min( 999, isset( $d['priority'] ) ? (int) $d['priority'] : 10 ) ),
 			'note'             => sanitize_textarea_field( isset( $d['note'] ) ? $d['note'] : '' ),
 			'protect'          => $protect,
-			'exclude'          => $exclude,
+			'exclude'          => $exclude, // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_exclude -- “exclude” is the rule’s exclusion list, not a query argument.
 			'include_children' => ! empty( $d['include_children'] ),
 			'access'           => array( 'who' => $who, 'plans' => $plans, 'roles' => $roles, 'users' => $usernames, 'user_ids' => $user_ids, 'condition' => (array) apply_filters( 'memberglut_sanitize_rule_condition', array(), $who, isset( $d['condition'] ) ? (array) $d['condition'] : array(), $d ), 'ext' => self::sanitize_ext( $d, $existing ) ),
 			'action'           => $action,

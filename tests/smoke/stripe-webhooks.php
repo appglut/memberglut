@@ -1,4 +1,14 @@
 <?php
+/**
+ * Smoke test (development only — not shipped, see .distignore). Run with tests/smoke/run.sh.
+ *
+ * @package MemberGlut
+ */
+
+// phpcs:ignoreFile -- CLI test script that prints plain-text results.
+
+defined( 'ABSPATH' ) || exit;
+
 add_filter( 'pre_wp_mail', '__return_true' );
 $silver = MemberGlut_Plans::get( 'silver' );
 MemberGlut_Plans::set_gateway_ids( $silver['id'], array() );
