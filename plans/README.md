@@ -41,7 +41,7 @@ Audit date: 2026-10-08 · plugin 1.1.5 · the React admin is design-only today (
 | 9 | [phase-08-forms-pages-auth.md](phase-08-forms-pages-auth.md) | pages, register/login/reset, approval, wp-login, pricing | P1, P2, P4, P5 |✅ |
 | 10 | [phase-09-checkout-payments-coupons.md](phase-09-checkout-payments-coupons.md) | Stripe, bank, PayPal, coupons, payments admin | P2, P4, P5, P8 |✅ |
 | 11 | [phase-11-security-privacy.md](phase-11-security-privacy.md) | sessions, lockout, captcha, GDPR | P0, P8 |✅ |
-| 12 | [phase-10-my-account.md](phase-10-my-account.md) | account tabs + self-service | P8, P9, P11 | ☐ |
+| 12 | [phase-10-my-account.md](phase-10-my-account.md) | account tabs + self-service | P8, P9, P11 |✅ |
 | 13 | [phase-12-dashboard.md](phase-12-dashboard.md) | stats, chart, checklist | P4, P7, P9 | ☐ |
 | 14 | [phase-13-data-logs.md](phase-13-data-logs.md) | export/import, logs, status, maintenance | most | ☐ |
 | 15 | [phase-14-advanced-performance.md](phase-14-advanced-performance.md) | assets, cache, uninstall, i18n, templates | P7–P10 | ☐ |

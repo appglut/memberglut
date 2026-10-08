@@ -146,8 +146,9 @@ class MemberGlut_Checkout {
 			$errors['coupon'] = $coupon->get_error_message();
 			$coupon           = null;
 		}
-		$current = $user_id ? MemberGlut_Subscription_Service::in_group( $user_id, $plan['group'] ) : null;
-		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $current ) );
+		$renew   = self::renewable_sub( $user_id, $plan );
+		$current = $user_id && ! $renew ? MemberGlut_Subscription_Service::in_group( $user_id, $plan['group'] ) : null;
+		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $current, 'renewal' => (bool) $renew ) );
 		if ( self::needs_gateway( $s ) && ! self::is_downgrade( $current, $plan ) ) {
 			$gateways = self::gateways_for( $plan );
 			$chosen   = isset( $data['gateway'] ) ? sanitize_key( $data['gateway'] ) : '';
@@ -158,6 +159,27 @@ class MemberGlut_Checkout {
 			}
 		}
 		return $errors;
+	}
+
+	/**
+	 * Subscription a member can renew early with this plan (Member account › Allow renewal): a paid, non-recurring
+	 * plan they have now, ending within “renew_days_before” days.
+	 *
+	 * @param int   $user_id User.
+	 * @param array $plan    Plan.
+	 * @return array|null
+	 */
+	public static function renewable_sub( $user_id, $plan ) {
+		if ( ! $user_id || ! memberglut_setting( 'allow_renew', true ) || 'paid' !== $plan['type'] || 'recurring' === $plan['billing'] ) {
+			return null;
+		}
+		$window = (int) memberglut_setting( 'renew_days_before', 15 ) * DAY_IN_SECONDS;
+		foreach ( MemberGlut_Subscription_Service::for_user( $user_id ) as $s ) {
+			if ( (int) $s['plan_id'] === (int) $plan['id'] && MemberGlut_Subscription_Service::grants_access( $s ) && $s['expires_at'] && strtotime( $s['expires_at'] . ' UTC' ) - time() <= $window ) {
+				return $s;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -185,7 +207,11 @@ class MemberGlut_Checkout {
 	 * @return array|WP_Error [ redirect ] | [ client, return_url ] | [ message ]
 	 */
 	public static function start( $user_id, $plan, $data, $approved = true ) {
-		$user    = get_userdata( $user_id );
+		$user  = get_userdata( $user_id );
+		$renew = self::renewable_sub( $user_id, $plan );
+		if ( $renew ) {
+			return self::start_renewal( $user, $plan, $renew, $data );
+		}
 		$current = MemberGlut_Subscription_Service::in_group( $user_id, $plan['group'] );
 		if ( $current ) {
 			$cur_plan = MemberGlut_Plans::get( $current['plan_id'] );
@@ -268,6 +294,57 @@ class MemberGlut_Checkout {
 		}
 		$res['payment']    = (int) $payment['id'];
 		$res['summary']    = array( 'total' => $s['total'], 'text' => $s['text'] );
+		return $res;
+	}
+
+	/**
+	 * Early renewal of a non-recurring plan: a “renewal” payment on the existing subscription; once paid the new
+	 * period starts at the current expiry date (MemberGlut_Subscription_Service::renew()).
+	 *
+	 * @param WP_User $user  User.
+	 * @param array   $plan  Plan.
+	 * @param array   $sub   Subscription being renewed.
+	 * @param array   $data  Form data.
+	 * @return array|WP_Error
+	 */
+	private static function start_renewal( $user, $plan, $sub, $data ) {
+		$coupon = self::coupon_from( $plan, $data, $user->ID, $user->user_email );
+		if ( is_wp_error( $coupon ) ) {
+			return $coupon;
+		}
+		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user->ID, array( 'renewal' => true ) );
+		$gateway = self::needs_gateway( $s ) ? MemberGlut_Gateways::get( isset( $data['gateway'] ) ? sanitize_key( $data['gateway'] ) : '' ) : MemberGlut_Gateways::get( 'free' );
+		if ( ! $gateway || ( 'free' !== $gateway->id && ! isset( self::gateways_for( $plan )[ $gateway->id ] ) ) ) {
+			return new WP_Error( 'memberglut_gateway', __( 'Choose a payment method.', 'memberglut' ), array( 'status' => 400, 'fields' => array( 'gateway' => __( 'Choose a payment method.', 'memberglut' ) ) ) );
+		}
+		// Drop an unfinished renewal attempt.
+		memberglut_repo( 'payments' )->update_where( array( 'subscription_id' => $sub['id'], 'type' => 'renewal', 'status' => 'pending' ), array( 'status' => 'failed', 'note' => 'Abandoned checkout' ) );
+		$redirect = isset( $data['redirect_to'] ) ? esc_url_raw( (string) $data['redirect_to'] ) : '';
+		$payment  = MemberGlut_Payments::create(
+			array(
+				'user_id'         => $user->ID,
+				'subscription_id' => $sub['id'],
+				'plan_id'         => $plan['id'],
+				'type'            => 'renewal',
+				'gateway'         => $gateway->id,
+				'summary'         => $s,
+				'meta'            => array( 'redirect_to' => $redirect ? $redirect : memberglut_page_url( 'account', array( 'tab' => 'subscriptions' ) ) ),
+			)
+		);
+		$res = $gateway->process( array( 'user' => $user, 'plan' => $plan, 'summary' => $s, 'payment' => $payment, 'subscription' => $sub, 'data' => $data ) );
+		if ( is_wp_error( $res ) ) {
+			MemberGlut_Payments::fail( $payment['id'], $res->get_error_message() );
+			return new WP_Error( $res->get_error_code(), $res->get_error_message(), array( 'status' => 400, 'fields' => array( 'gateway' => $res->get_error_message() ) ) );
+		}
+		if ( ! empty( $res['complete'] ) ) {
+			$done = MemberGlut_Payments::complete( $payment['id'], isset( $res['complete_args'] ) ? $res['complete_args'] : array() );
+			if ( is_wp_error( $done ) ) {
+				return $done;
+			}
+			return array( 'redirect' => self::after_payment_url( MemberGlut_Payments::get( $payment['id'] ) ) );
+		}
+		$res['payment'] = (int) $payment['id'];
+		$res['summary'] = array( 'total' => $s['total'], 'text' => $s['text'] );
 		return $res;
 	}
 

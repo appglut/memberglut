@@ -168,11 +168,13 @@ class MemberGlut_Auth {
 			$errors['plan'] = __( 'Choose a plan.', 'memberglut' );
 		}
 		if ( $plan ) {
-			$can = MemberGlut_Plans::can_join( $plan, $user_id );
-			if ( is_wp_error( $can ) ) {
+			$renewal = class_exists( 'MemberGlut_Checkout' ) && MemberGlut_Checkout::renewable_sub( $user_id, $plan );
+			$can     = MemberGlut_Plans::can_join( $plan, $user_id );
+			// Renewing a plan you have is not “joining”: buyer restrictions don't apply.
+			if ( is_wp_error( $can ) && ! ( $renewal && in_array( $can->get_error_code(), array( 'memberglut_plan_new_only', 'memberglut_plan_members_only', 'memberglut_plan_sold_out' ), true ) ) ) {
 				$errors['plan'] = $can->get_error_message();
 			}
-			if ( $user_id && MemberGlut_Subscription_Service::user_has_plan( $user_id, $plan['id'] ) ) {
+			if ( ! $renewal && $user_id && MemberGlut_Subscription_Service::user_has_plan( $user_id, $plan['id'] ) ) {
 				$errors['plan'] = __( 'You already have this plan.', 'memberglut' );
 			}
 		}

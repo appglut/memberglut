@@ -43,14 +43,14 @@ class MemberGlut_Pricing {
 	 * @param array      $plan    Plan.
 	 * @param array|null $coupon  Coupon row (already validated).
 	 * @param int        $user_id User.
-	 * @param array      $context change (bool): plan change of an existing member.
+	 * @param array      $context change (bool): plan change of an existing member; renewal (bool): early renewal, no sign-up fee.
 	 * @return array
 	 */
 	public static function summary( $plan, $coupon = null, $user_id = 0, $context = array() ) {
 		$currency  = memberglut_setting( 'currency', 'USD' );
 		$change    = ! empty( $context['change'] );
 		$price     = 'paid' === $plan['type'] ? (float) $plan['price'] : 0.0;
-		$fee       = 'paid' === $plan['type'] && ( ! $change || $plan['fee_on_change'] ) ? (float) $plan['signup_fee'] : 0.0;
+		$fee       = 'paid' === $plan['type'] && empty( $context['renewal'] ) && ( ! $change || $plan['fee_on_change'] ) ? (float) $plan['signup_fee'] : 0.0;
 		$trial     = self::has_trial( $plan, $user_id );
 		$recurring = 'paid' === $plan['type'] && 'recurring' === $plan['billing'];
 		$discount  = $coupon ? MemberGlut_Coupons::discount( $coupon, $price ) : 0.0;
