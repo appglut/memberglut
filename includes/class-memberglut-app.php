@@ -245,7 +245,8 @@ class MemberGlut_App {
 			'lookups'       => MemberGlut_Lookups::all(),
 			'user'          => array(
 				'id'   => get_current_user_id(),
-				'name' => wp_get_current_user()->display_name,
+				'name'  => wp_get_current_user()->display_name,
+				'email' => wp_get_current_user()->user_email,
 			),
 			'pages'         => array(
 				'dashboard'     => $url( 'memberglut' ),

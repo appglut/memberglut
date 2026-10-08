@@ -1,17 +1,17 @@
 import { aY as faCheck, bw as faMinus, aO as faBan, a8 as __, cU as jsxRuntimeExports, P as Page, b as App, d7 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, q as FontAwesomeIcon, bf as faFileImport, be as faFileExport, bE as faPlus, bt as faLock, b8 as faEllipsis, b4 as faCopy, c3 as faUserShield, bV as faTrashCan, bh as faFloppyDisk, b0 as faCircleInfo, bu as faMagnifyingGlass, c9 as faXmark, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { Z as getRoles, A as getCapabilities, Y as getRoleOptions, T as Tooltip, E as Empty, r as exportRoles, ai as saveRoleOptions, aa as makeDefaultRole, ah as saveRole, n as deleteCapability, k as addCapability, S as Select, l as cloneRole, m as createRole, ab as previewRoleImport, p as deleteRole, a4 as importRoles } from "./chunks/api-BU-mz-0j.js";
-import { U as Upload } from "./chunks/index-r7tyyvVT.js";
-import { T as Tag } from "./chunks/index-C-39T1aj.js";
+import { Z as getRoles, A as getCapabilities, Y as getRoleOptions, T as Tooltip, E as Empty, r as exportRoles, ak as saveRoleOptions, aa as makeDefaultRole, aj as saveRole, n as deleteCapability, k as addCapability, S as Select, l as cloneRole, m as createRole, ac as previewRoleImport, p as deleteRole, a4 as importRoles } from "./chunks/api-fY3e1Vcq.js";
+import { U as Upload } from "./chunks/index-R4RdIBUs.js";
+import { T as Tag } from "./chunks/index-C4fpz-4h.js";
 import { S as Switch } from "./chunks/index-Dfx4LXY8.js";
-import { D as Dropdown, F as ForwardTable } from "./chunks/Table-BSxTADFX.js";
+import { D as Dropdown, F as ForwardTable } from "./chunks/Table-2b7eYoRI.js";
 import { S as Segmented } from "./chunks/index-wYjIfrAo.js";
 import { I as Input } from "./chunks/index-B1n7UfX_.js";
-import { F as Form } from "./chunks/index-BF0Kmkp7.js";
-import { M as Modal } from "./chunks/index-BNjsPr98.js";
+import { F as Form } from "./chunks/index-D28DLv47.js";
+import { M as Modal } from "./chunks/index-X7sZdAeO.js";
 import { A as Alert } from "./chunks/index-Dxdfeq7i.js";
-import "./chunks/progress-Dbgqw2rZ.js";
-import "./chunks/useBreakpoint-DPNFZzhM.js";
+import "./chunks/progress-CrZNUm8K.js";
+import "./chunks/useBreakpoint-I0WrFief.js";
 import "./chunks/index-CIIETatw.js";
 const STATE_OPTS = [
   { value: "grant", icon: faCheck, label: __("Grant", "memberglut") },

@@ -1,5 +1,5 @@
 import { R as React, d7 as reactExports, dh as toArray, aw as classNames, cr as genStyleHooks, cZ as merge, da as resetComponent, dk as unit, dg as textEllipsis, dq as useComponentConfig, dG as useSize, j as ConfigContext, aq as _toConsumableArray, X as RefIcon, dl as useCSSVarCls } from "./Page-uv7jJYOd.js";
-import { m as matchScreen, u as useBreakpoint } from "./useBreakpoint-DPNFZzhM.js";
+import { m as matchScreen, u as useBreakpoint } from "./useBreakpoint-I0WrFief.js";
 const DEFAULT_COLUMN_MAP = {
   xxl: 3,
   xl: 3,

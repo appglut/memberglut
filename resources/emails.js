@@ -1,78 +1,122 @@
 import { a8 as __, cU as jsxRuntimeExports, P as Page, b as App, d7 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, cV as link, q as FontAwesomeIcon, bj as faGear, bh as faFloppyDisk, c3 as faUserShield, bX as faUser, bA as faPen, bc as faEye, bz as faPaperPlane, bK as faRotateLeft, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { a as SmartTags } from "./chunks/SettingsPanel-DiMCVytW.js";
-import { G as getEmails, ad as saveEmails } from "./chunks/api-BU-mz-0j.js";
-import { E as EMAIL_TAGS } from "./chunks/demoData-CdeUL1Xh.js";
+import { a as SmartTags } from "./chunks/SettingsPanel-JeHdAjF2.js";
+import { G as getEmails, af as saveEmails, ad as resetEmail, ab as previewEmail, as as testEmail } from "./chunks/api-fY3e1Vcq.js";
+import "./chunks/lookups-DHSS-Myl.js";
 import { S as Switch } from "./chunks/index-Dfx4LXY8.js";
-import { T as Tag } from "./chunks/index-C-39T1aj.js";
+import { T as Tag } from "./chunks/index-C4fpz-4h.js";
 import { S as Segmented } from "./chunks/index-wYjIfrAo.js";
-import { T as TypedInputNumber } from "./chunks/index-CzvwyE0L.js";
+import { T as TypedInputNumber } from "./chunks/index-CeqreKgZ.js";
 import { I as Input } from "./chunks/index-B1n7UfX_.js";
-import { M as Modal } from "./chunks/index-BNjsPr98.js";
+import { M as Modal } from "./chunks/index-X7sZdAeO.js";
 import "./chunks/dayjs.min-Cgo1VKL0.js";
-import "./chunks/index-BLJyNKCC.js";
-import "./chunks/index-Bb5iF4J6.js";
-import "./chunks/index-CLOt1R7U.js";
+import "./chunks/index-YNfV1lQJ.js";
+import "./chunks/index-C0jBAFnu.js";
+import "./chunks/index-CQ9IQMWb.js";
 const GROUPS = [
   ["account", __("Account", "memberglut")],
   ["subscription", __("Subscription", "memberglut")],
   ["payment", __("Payment", "memberglut")],
   ["admin", __("To the admin", "memberglut")]
 ];
-const DEFAULT_BODY = {
-  register: "Hi {first_name},\n\nWelcome to {site_name}! Your account is ready.\n\nUsername: {username}\nLog in here: {login_url}\n\nSee you inside,\n{site_name}",
-  activated: "Hi {first_name},\n\nYour {plan_name} membership is now active.\n\nPlan: {plan_name}\nPrice: {plan_price}\nRenews / expires: {expiration_date}\n\nManage it any time from your account: {account_url}",
-  payment_failed: "Hi {first_name},\n\nWe could not take the payment for your {plan_name} membership.\n\nPlease update your card from your account so you do not lose access: {account_url}\n\nWe will try again automatically in a few days."
-};
 const REMINDERS = ["expiring_soon", "renewal_reminder", "trial_ending"];
-const SAMPLE = {
-  "{first_name}": "Aisha",
-  "{display_name}": "Aisha Rahman",
-  "{last_name}": "Rahman",
-  "{username}": "aisha",
-  "{user_email}": "aisha@example.com",
-  "{plan_name}": "Gold",
-  "{plan_price}": "$89.00 / year",
-  "{plan_duration}": "1 year",
-  "{start_date}": "Oct 6, 2026",
-  "{expiration_date}": "Oct 6, 2027",
-  "{subscription_status}": "Active",
-  "{payment_id}": "5003",
-  "{payment_amount}": "$89.00",
-  "{payment_gateway}": "Stripe",
-  "{site_name}": "My Membership Site",
-  "{site_url}": "https://yoursite.com",
-  "{account_url}": "https://yoursite.com/account/",
-  "{login_url}": "https://yoursite.com/login/",
-  "{reset_link}": "https://yoursite.com/reset/…",
-  "{admin_email}": "admin@yoursite.com"
-};
-const fill = (text = "") => Object.entries(SAMPLE).reduce((t, [k, v]) => t.split(k).join(v), text);
+function Preview({ email }) {
+  const [data, setData] = reactExports.useState(null);
+  const [error, setError] = reactExports.useState("");
+  reactExports.useEffect(() => {
+    let live = true;
+    const t = setTimeout(() => {
+      previewEmail(email.key, { subject: email.subject, heading: email.heading, body: email.body }).then((d) => {
+        if (live) setData(d);
+      }).catch((e) => {
+        if (live) setError(e.message);
+      });
+    }, 250);
+    return () => {
+      live = false;
+      clearTimeout(t);
+    };
+  }, [email.key, email.subject, email.heading, email.body]);
+  if (error) return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-note", children: error });
+  if (!data) return /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true, paragraph: { rows: 8 } });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-preview", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-meta", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Subject:", "memberglut") }),
+      " ",
+      data.subject
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("iframe", { title: __("Email preview", "memberglut"), className: "mg-email-iframe", srcDoc: data.html, sandbox: "" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", style: { marginTop: 8 }, children: __("Smart tags are filled with sample data (your account and a paid plan).", "memberglut") })
+  ] });
+}
 function Emails() {
   const { message } = App.useApp();
   const [emails, setEmails] = reactExports.useState(null);
+  const [tags, setTags] = reactExports.useState([]);
   const [current, setCurrent] = reactExports.useState("register");
   const [mode, setMode] = reactExports.useState("edit");
   const [dirty, setDirty] = reactExports.useState(false);
+  const [saving, setSaving] = reactExports.useState(false);
   const [testOpen, setTestOpen] = reactExports.useState(false);
-  const [testTo, setTestTo] = reactExports.useState("admin@yoursite.com");
+  const [testTo, setTestTo] = reactExports.useState("");
+  const [sending, setSending] = reactExports.useState(false);
+  const apply = (d) => {
+    setEmails(d.emails);
+    setTags(d.tags);
+  };
   reactExports.useEffect(() => {
-    getEmails().then((list) => setEmails(list.map((e) => ({ heading: "", days: 7, ...e, body: e.body || DEFAULT_BODY[e.key] || `Hi {first_name},
-
-${e.desc}
-
-{site_name}` }))));
+    getEmails().then(apply).catch((e) => message.error(e.message));
+    const admin = typeof memberglut_admin !== "undefined" ? memberglut_admin : {};
+    setTestTo(admin.user && admin.user.email || "");
   }, []);
+  reactExports.useEffect(() => {
+    const warn = (e) => {
+      if (dirty) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
   if (!emails) return /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true, paragraph: { rows: 12 } });
-  const email = emails.find((e) => e.key === current);
+  const email = emails.find((e) => e.key === current) || emails[0];
   const set = (key, patch) => {
     setEmails(emails.map((e) => e.key === key ? { ...e, ...patch } : e));
     setDirty(true);
   };
   const save = async () => {
-    await saveEmails(emails);
-    setDirty(false);
-    message.success(__("Emails saved.", "memberglut"));
+    setSaving(true);
+    try {
+      apply(await saveEmails(emails));
+      setDirty(false);
+      message.success(__("Emails saved.", "memberglut"));
+    } catch (e) {
+      message.error(e.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+  const reset = async () => {
+    try {
+      const d = await resetEmail(email.key);
+      setEmails(emails.map((e) => e.key === email.key ? { ...e, subject: d.subject, heading: d.heading, body: d.body, is_default: true } : e));
+      message.success(__("Default text restored.", "memberglut"));
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+  const sendTest = async () => {
+    setSending(true);
+    try {
+      await testEmail(email.key, { to: testTo, subject: email.subject, heading: email.heading, body: email.body });
+      setTestOpen(false);
+      message.success(sprintf(__("Test sent to %s.", "memberglut"), testTo));
+    } catch (e) {
+      message.error(e.message);
+    } finally {
+      setSending(false);
+    }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -83,7 +127,7 @@ ${e.desc}
         actions: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faGear }), href: link("settings", { tab: "emails" }), children: __("Sender & design", "memberglut") }),
           dirty && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-fs-unsaved", children: __("Unsaved changes", "memberglut") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", type: "primary", disabled: !dirty, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faFloppyDisk }), onClick: save, className: "mg-save-btn", children: __("Save emails", "memberglut") })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", type: "primary", disabled: !dirty, loading: saving, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faFloppyDisk }), onClick: save, className: "mg-save-btn", children: __("Save emails", "memberglut") })
         ] })
       }
     ),
@@ -102,7 +146,9 @@ ${e.desc}
             /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { children: [
               email.name,
               " ",
-              !email.enabled && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: __("Off", "memberglut") })
+              !email.enabled && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: __("Off", "memberglut") }),
+              " ",
+              !email.is_default && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "pink", bordered: false, children: __("Customized", "memberglut") })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { children: [
               email.desc,
@@ -121,7 +167,7 @@ ${e.desc}
         mode === "edit" ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-form", children: [
           REMINDERS.includes(email.key) && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-field", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { children: __("Send", "memberglut") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 1, max: 90, value: email.days, onChange: (v) => set(email.key, { days: v }), addonAfter: email.key === "trial_ending" ? __("days before the trial ends", "memberglut") : __("days before the date", "memberglut") })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 1, max: 90, value: email.days, onChange: (v) => set(email.key, { days: v || 1 }), addonAfter: email.key === "trial_ending" ? __("days before the trial ends", "memberglut") : email.key === "renewal_reminder" ? __("days before the automatic renewal", "memberglut") : __("days before the expiry date", "memberglut") })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-field", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("label", { children: __("Subject", "memberglut") }),
@@ -136,49 +182,26 @@ ${e.desc}
             /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: email.heading, placeholder: email.name, onChange: (e) => set(email.key, { heading: e.target.value }) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-field", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("label", { children: __("Message", "memberglut") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { children: [
+              __("Message", "memberglut"),
+              " ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: __("(a line with only a link becomes a button)", "memberglut") })
+            ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Input.TextArea, { className: "mg-editor", rows: 12, value: email.body, onChange: (e) => set(email.key, { body: e.target.value }) })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(SmartTags, { tags: EMAIL_TAGS }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { className: "mg-reset-link", onClick: () => set(email.key, { body: DEFAULT_BODY[email.key] || "", subject: email.subject }), children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SmartTags, { tags }),
+          !email.is_default && /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { className: "mg-reset-link", onClick: reset, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faRotateLeft }),
             " ",
             __("Restore the default text", "memberglut")
           ] })
-        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-preview", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-meta", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Subject:", "memberglut") }),
-            " ",
-            fill(email.subject)
-          ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-frame", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-email-brand", children: "My Membership Site" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-email-card", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { children: fill(email.heading || email.name) }),
-              fill(email.body).split("\n").map((line, i) => line ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: line }, i) : /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}, i))
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-email-foot", children: __("My Membership Site · You receive this email because you have an account with us.", "memberglut") })
-          ] })
-        ] })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Preview, { email })
       ] })
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      Modal,
-      {
-        title: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-modal-title", children: __("Send a test email", "memberglut") }),
-        open: testOpen,
-        onCancel: () => setTestOpen(false),
-        okText: __("Send", "memberglut"),
-        onOk: () => {
-          setTestOpen(false);
-          message.success(sprintf(__("Test sent to %s.", "memberglut"), testTo));
-        },
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mg-modal-intro", children: __("Smart tags are filled with sample data.", "memberglut") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value: testTo, onChange: (e) => setTestTo(e.target.value) })
-        ]
-      }
-    )
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Modal, { title: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-modal-title", children: __("Send a test email", "memberglut") }), open: testOpen, onCancel: () => setTestOpen(false), okText: __("Send", "memberglut"), confirmLoading: sending, onOk: sendTest, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mg-modal-intro", children: __("Smart tags are filled with sample data. Unsaved changes are included.", "memberglut") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { type: "email", value: testTo, onChange: (e) => setTestTo(e.target.value), placeholder: "you@example.com" })
+    ] })
   ] });
 }
 function EmailsPage() {

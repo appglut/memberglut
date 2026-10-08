@@ -1,21 +1,21 @@
 import { a8 as __, bg as faFileLines, c1 as faUserPlus, bI as faRightToBracket, bo as faIdCard, bR as faTableColumns, b3 as faCode, cU as jsxRuntimeExports, b as App, c as Button, q as FontAwesomeIcon, c8 as faWandMagicSparkles, aY as faCheck, aL as faArrowUpRightFromSquare, d7 as reactExports, aK as faArrowUp, aH as faArrowDown, bt as faLock, bV as faTrashCan, bE as faPlus, P as Page, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-DiMCVytW.js";
-import { S as Select, T as Tooltip, I as getFormsConfig, ae as saveFormsConfig } from "./chunks/api-BU-mz-0j.js";
-import { b as PLANS, P as PAGES } from "./chunks/demoData-CdeUL1Xh.js";
-import { T as Tag } from "./chunks/index-C-39T1aj.js";
-import { F as Form } from "./chunks/index-BF0Kmkp7.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-JeHdAjF2.js";
+import { S as Select, T as Tooltip, I as getFormsConfig, ag as saveFormsConfig } from "./chunks/api-fY3e1Vcq.js";
+import { b as PLANS, P as PAGES } from "./chunks/demoData-BM0HoCev.js";
+import { T as Tag } from "./chunks/index-C4fpz-4h.js";
+import { F as Form } from "./chunks/index-D28DLv47.js";
 import { I as Input } from "./chunks/index-B1n7UfX_.js";
 import { S as Switch } from "./chunks/index-Dfx4LXY8.js";
-import { M as Modal } from "./chunks/index-BNjsPr98.js";
+import { M as Modal } from "./chunks/index-X7sZdAeO.js";
 import { S as Spin } from "./chunks/index-CIIETatw.js";
 import "./chunks/dayjs.min-Cgo1VKL0.js";
-import "./chunks/index-BLJyNKCC.js";
-import "./chunks/index-Bb5iF4J6.js";
+import "./chunks/index-YNfV1lQJ.js";
+import "./chunks/index-C0jBAFnu.js";
 import "./chunks/index-wYjIfrAo.js";
-import "./chunks/index-CzvwyE0L.js";
-import "./chunks/index-CLOt1R7U.js";
-import "./chunks/useBreakpoint-DPNFZzhM.js";
+import "./chunks/index-CeqreKgZ.js";
+import "./chunks/index-CQ9IQMWb.js";
+import "./chunks/useBreakpoint-I0WrFief.js";
 const PAGE_SLOTS = [
   ["page_register", __("Registration & checkout", "memberglut"), "[memberglut_register]", __("Account fields, plan choice and payment.", "memberglut")],
   ["page_login", __("Login", "memberglut"), "[memberglut_login]", __("Replaces wp-login.php when that option is on.", "memberglut")],

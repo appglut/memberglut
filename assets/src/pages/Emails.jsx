@@ -7,7 +7,7 @@ import Page, { PageHeader } from '../components/Page';
 import { SmartTags } from '../components/SettingsPanel';
 import { link } from '../components/adminData';
 import * as api from '../services/api';
-import { EMAIL_TAGS } from '../services/demoData';
+import { currentUser } from '../services/lookups';
 
 const GROUPS = [
   ['account', __( 'Account', 'memberglut' )],
@@ -16,38 +16,85 @@ const GROUPS = [
   ['admin', __( 'To the admin', 'memberglut' )],
 ];
 
-const DEFAULT_BODY = {
-  register: 'Hi {first_name},\n\nWelcome to {site_name}! Your account is ready.\n\nUsername: {username}\nLog in here: {login_url}\n\nSee you inside,\n{site_name}',
-  activated: 'Hi {first_name},\n\nYour {plan_name} membership is now active.\n\nPlan: {plan_name}\nPrice: {plan_price}\nRenews / expires: {expiration_date}\n\nManage it any time from your account: {account_url}',
-  payment_failed: 'Hi {first_name},\n\nWe could not take the payment for your {plan_name} membership.\n\nPlease update your card from your account so you do not lose access: {account_url}\n\nWe will try again automatically in a few days.',
-};
-
 const REMINDERS = ['expiring_soon', 'renewal_reminder', 'trial_ending'];
 
-const SAMPLE = {
-  '{first_name}': 'Aisha', '{display_name}': 'Aisha Rahman', '{last_name}': 'Rahman', '{username}': 'aisha', '{user_email}': 'aisha@example.com',
-  '{plan_name}': 'Gold', '{plan_price}': '$89.00 / year', '{plan_duration}': '1 year', '{start_date}': 'Oct 6, 2026', '{expiration_date}': 'Oct 6, 2027',
-  '{subscription_status}': 'Active', '{payment_id}': '5003', '{payment_amount}': '$89.00', '{payment_gateway}': 'Stripe', '{site_name}': 'My Membership Site',
-  '{site_url}': 'https://yoursite.com', '{account_url}': 'https://yoursite.com/account/', '{login_url}': 'https://yoursite.com/login/', '{reset_link}': 'https://yoursite.com/reset/…', '{admin_email}': 'admin@yoursite.com',
-};
-const fill = (text = '') => Object.entries(SAMPLE).reduce((t, [k, v]) => t.split(k).join(v), text);
+/** Server-rendered preview (real template, colours and logo from Email settings). */
+function Preview({ email }) {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let live = true;
+    const t = setTimeout(() => {
+      api.previewEmail(email.key, { subject: email.subject, heading: email.heading, body: email.body })
+        .then((d) => { if (live) setData(d); })
+        .catch((e) => { if (live) setError(e.message); });
+    }, 250);
+    return () => { live = false; clearTimeout(t); };
+  }, [email.key, email.subject, email.heading, email.body]);
+  if (error) return <div className="mg-fs-note">{error}</div>;
+  if (!data) return <Skeleton active paragraph={{ rows: 8 }} />;
+  return (
+    <div className="mg-email-preview">
+      <div className="mg-email-meta"><b>{__( 'Subject:', 'memberglut' )}</b> {data.subject}</div>
+      <iframe title={__( 'Email preview', 'memberglut' )} className="mg-email-iframe" srcDoc={data.html} sandbox="" />
+      <div className="mg-muted" style={{ marginTop: 8 }}>{__( 'Smart tags are filled with sample data (your account and a paid plan).', 'memberglut' )}</div>
+    </div>
+  );
+}
 
 function Emails() {
   const { message } = App.useApp();
   const [emails, setEmails] = useState(null);
+  const [tags, setTags] = useState([]);
   const [current, setCurrent] = useState('register');
   const [mode, setMode] = useState('edit');
   const [dirty, setDirty] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [testOpen, setTestOpen] = useState(false);
-  const [testTo, setTestTo] = useState('admin@yoursite.com');
+  const [testTo, setTestTo] = useState('');
+  const [sending, setSending] = useState(false);
 
-  useEffect(() => { api.getEmails().then((list) => setEmails(list.map((e) => ({ heading: '', days: 7, ...e, body: e.body || DEFAULT_BODY[e.key] || `Hi {first_name},\n\n${e.desc}\n\n{site_name}` })))); }, []);
+  const apply = (d) => { setEmails(d.emails); setTags(d.tags); };
+
+  useEffect(() => {
+    api.getEmails().then(apply).catch((e) => message.error(e.message));
+    const admin = typeof memberglut_admin !== 'undefined' ? memberglut_admin : {};
+    setTestTo((admin.user && admin.user.email) || '');
+  }, []);
+
+  useEffect(() => {
+    const warn = (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
 
   if (!emails) return <Skeleton active paragraph={{ rows: 12 }} />;
 
-  const email = emails.find((e) => e.key === current);
+  const email = emails.find((e) => e.key === current) || emails[0];
   const set = (key, patch) => { setEmails(emails.map((e) => (e.key === key ? { ...e, ...patch } : e))); setDirty(true); };
-  const save = async () => { await api.saveEmails(emails); setDirty(false); message.success(__( 'Emails saved.', 'memberglut' )); };
+  const save = async () => {
+    setSaving(true);
+    try {
+      apply(await api.saveEmails(emails));
+      setDirty(false);
+      message.success(__( 'Emails saved.', 'memberglut' ));
+    } catch (e) { message.error(e.message); } finally { setSaving(false); }
+  };
+  const reset = async () => {
+    try {
+      const d = await api.resetEmail(email.key);
+      setEmails(emails.map((e) => (e.key === email.key ? { ...e, subject: d.subject, heading: d.heading, body: d.body, is_default: true } : e)));
+      message.success(__( 'Default text restored.', 'memberglut' ));
+    } catch (e) { message.error(e.message); }
+  };
+  const sendTest = async () => {
+    setSending(true);
+    try {
+      await api.testEmail(email.key, { to: testTo, subject: email.subject, heading: email.heading, body: email.body });
+      setTestOpen(false);
+      message.success(sprintf( __( 'Test sent to %s.', 'memberglut' ), testTo ));
+    } catch (e) { message.error(e.message); } finally { setSending(false); }
+  };
 
   return (
     <>
@@ -58,7 +105,7 @@ function Emails() {
           <>
             <Button size="large" icon={<FontAwesomeIcon icon={faGear} />} href={link('settings', { tab: 'emails' })}>{__( 'Sender & design', 'memberglut' )}</Button>
             {dirty && <span className="mg-fs-unsaved">{__( 'Unsaved changes', 'memberglut' )}</span>}
-            <Button size="large" type="primary" disabled={!dirty} icon={<FontAwesomeIcon icon={faFloppyDisk} />} onClick={save} className="mg-save-btn">{__( 'Save emails', 'memberglut' )}</Button>
+            <Button size="large" type="primary" disabled={!dirty} loading={saving} icon={<FontAwesomeIcon icon={faFloppyDisk} />} onClick={save} className="mg-save-btn">{__( 'Save emails', 'memberglut' )}</Button>
           </>
         )}
       />
@@ -82,7 +129,7 @@ function Emails() {
         <section className="mg-email-editor">
           <div className="mg-email-editor-head">
             <div>
-              <h2>{email.name} {!email.enabled && <Tag bordered={false}>{__( 'Off', 'memberglut' )}</Tag>}</h2>
+              <h2>{email.name} {!email.enabled && <Tag bordered={false}>{__( 'Off', 'memberglut' )}</Tag>} {!email.is_default && <Tag color="pink" bordered={false}>{__( 'Customized', 'memberglut' )}</Tag>}</h2>
               <p>{email.desc} <span className="mg-muted">· {email.recipient === 'admin' ? __( 'Sent to the admin', 'memberglut' ) : __( 'Sent to the member', 'memberglut' )}</span></p>
             </div>
             <div className="mg-fs-actions">
@@ -96,7 +143,7 @@ function Emails() {
               {REMINDERS.includes(email.key) && (
                 <div className="mg-email-field">
                   <label>{__( 'Send', 'memberglut' )}</label>
-                  <InputNumber min={1} max={90} value={email.days} onChange={(v) => set(email.key, { days: v })} addonAfter={email.key === 'trial_ending' ? __( 'days before the trial ends', 'memberglut' ) : __( 'days before the date', 'memberglut' )} />
+                  <InputNumber min={1} max={90} value={email.days} onChange={(v) => set(email.key, { days: v || 1 })} addonAfter={email.key === 'trial_ending' ? __( 'days before the trial ends', 'memberglut' ) : (email.key === 'renewal_reminder' ? __( 'days before the automatic renewal', 'memberglut' ) : __( 'days before the expiry date', 'memberglut' ))} />
                 </div>
               )}
               <div className="mg-email-field">
@@ -108,32 +155,19 @@ function Emails() {
                 <Input value={email.heading} placeholder={email.name} onChange={(e) => set(email.key, { heading: e.target.value })} />
               </div>
               <div className="mg-email-field">
-                <label>{__( 'Message', 'memberglut' )}</label>
+                <label>{__( 'Message', 'memberglut' )} <span className="mg-muted">{__( '(a line with only a link becomes a button)', 'memberglut' )}</span></label>
                 <Input.TextArea className="mg-editor" rows={12} value={email.body} onChange={(e) => set(email.key, { body: e.target.value })} />
               </div>
-              <SmartTags tags={EMAIL_TAGS} />
-              <a className="mg-reset-link" onClick={() => set(email.key, { body: DEFAULT_BODY[email.key] || '', subject: email.subject })}><FontAwesomeIcon icon={faRotateLeft} /> {__( 'Restore the default text', 'memberglut' )}</a>
+              <SmartTags tags={tags} />
+              {!email.is_default && <a className="mg-reset-link" onClick={reset}><FontAwesomeIcon icon={faRotateLeft} /> {__( 'Restore the default text', 'memberglut' )}</a>}
             </div>
-          ) : (
-            <div className="mg-email-preview">
-              <div className="mg-email-meta"><b>{__( 'Subject:', 'memberglut' )}</b> {fill(email.subject)}</div>
-              <div className="mg-email-frame">
-                <div className="mg-email-brand">My Membership Site</div>
-                <div className="mg-email-card">
-                  <h1>{fill(email.heading || email.name)}</h1>
-                  {fill(email.body).split('\n').map((line, i) => (line ? <p key={i}>{line}</p> : <br key={i} />))}
-                </div>
-                <div className="mg-email-foot">{__( 'My Membership Site · You receive this email because you have an account with us.', 'memberglut' )}</div>
-              </div>
-            </div>
-          )}
+          ) : <Preview email={email} />}
         </section>
       </div>
 
-      <Modal title={<span className="mg-modal-title">{__( 'Send a test email', 'memberglut' )}</span>} open={testOpen} onCancel={() => setTestOpen(false)} okText={__( 'Send', 'memberglut' )}
-        onOk={() => { setTestOpen(false); message.success(sprintf( __( 'Test sent to %s.', 'memberglut' ), testTo )); }}>
-        <p className="mg-modal-intro">{__( 'Smart tags are filled with sample data.', 'memberglut' )}</p>
-        <Input value={testTo} onChange={(e) => setTestTo(e.target.value)} />
+      <Modal title={<span className="mg-modal-title">{__( 'Send a test email', 'memberglut' )}</span>} open={testOpen} onCancel={() => setTestOpen(false)} okText={__( 'Send', 'memberglut' )} confirmLoading={sending} onOk={sendTest}>
+        <p className="mg-modal-intro">{__( 'Smart tags are filled with sample data. Unsaved changes are included.', 'memberglut' )}</p>
+        <Input type="email" value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder="you@example.com" />
       </Modal>
     </>
   );

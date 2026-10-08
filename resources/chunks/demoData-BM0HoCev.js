@@ -82,30 +82,6 @@ const CAP_GROUPS = [
 ({
   administrator: Object.fromEntries(CAP_GROUPS.flatMap((g) => g.caps).map((c) => [c, "grant"]))
 });
-const EMAIL_TAGS = [
-  { tag: "{display_name}", label: "Member display name" },
-  { tag: "{first_name}", label: "First name" },
-  { tag: "{last_name}", label: "Last name" },
-  { tag: "{username}", label: "Username" },
-  { tag: "{user_email}", label: "Member email" },
-  { tag: "{plan_name}", label: "Plan name" },
-  { tag: "{plan_price}", label: "Plan price" },
-  { tag: "{plan_duration}", label: "Plan duration" },
-  { tag: "{start_date}", label: "Subscription start date" },
-  { tag: "{expiration_date}", label: "Expiration date" },
-  { tag: "{subscription_status}", label: "Subscription status" },
-  { tag: "{payment_id}", label: "Payment ID" },
-  { tag: "{payment_amount}", label: "Payment amount" },
-  { tag: "{payment_gateway}", label: "Payment method" },
-  { tag: "{bank_details}", label: "Bank transfer instructions" },
-  { tag: "{account_url}", label: "My Account page link" },
-  { tag: "{login_url}", label: "Login page link" },
-  { tag: "{reset_link}", label: "Password reset link" },
-  { tag: "{activation_link}", label: "Email activation link" },
-  { tag: "{site_name}", label: "Site title" },
-  { tag: "{site_url}", label: "Site address" },
-  { tag: "{admin_email}", label: "Admin email" }
-];
 const PAGES = [
   { value: 11, label: "Register" },
   { value: 12, label: "Login" },
@@ -144,7 +120,6 @@ Array.from({ length: 24 }, (_, i) => ({
 }));
 export {
   ACTIVITY as A,
-  EMAIL_TAGS as E,
   MEMBERS as M,
   PAGES as P,
   ROLES as R,
