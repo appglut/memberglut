@@ -127,7 +127,7 @@ class MemberGlut_App {
 		add_menu_page(
 			__( 'MemberGlut', 'memberglut' ),
 			__( 'MemberGlut', 'memberglut' ),
-			'manage_options',
+			MemberGlut_Permissions::screen_cap( 'memberglut' ),
 			'memberglut',
 			array( $this, 'render_page' ),
 			MEMBERGLUT_PLUGIN_URL . 'global-assets/images/logo.svg',
@@ -143,7 +143,7 @@ class MemberGlut_App {
 				$page[2] ? 'memberglut' : '__memberglut_hidden',
 				$page[1],
 				$label,
-				'manage_options',
+				MemberGlut_Permissions::screen_cap( $slug ),
 				$slug,
 				array( $this, 'render_page' )
 			);
@@ -242,6 +242,11 @@ class MemberGlut_App {
 			'site_url'      => home_url(),
 			'dashboard_url' => admin_url( 'index.php' ),
 			'version'       => MEMBERGLUT_VERSION,
+			'lookups'       => MemberGlut_Lookups::all(),
+			'user'          => array(
+				'id'   => get_current_user_id(),
+				'name' => wp_get_current_user()->display_name,
+			),
 			'pages'         => array(
 				'dashboard'     => $url( 'memberglut' ),
 				'members'       => $url( 'memberglut-members' ),
@@ -290,8 +295,8 @@ class MemberGlut_App {
 	 * @return void
 	 */
 	public function render_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'Unauthorized access.', 'memberglut' ) );
+		if ( ! current_user_can( MemberGlut_Permissions::screen_cap( $this->current_page() ) ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'memberglut' ) );
 		}
 
 		if ( ! file_exists( MEMBERGLUT_PLUGIN_PATH . 'resources/' . $this->pages()[ $this->current_page() ][0] . '.js' ) ) {

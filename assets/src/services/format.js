@@ -1,15 +1,26 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { __ } from '@wordpress/i18n';
+import { L } from './lookups';
 
 dayjs.extend(relativeTime);
 
-/** Format an amount in the store currency. */
-export function money(amount, currency = 'USD') {
-  try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency, maximumFractionDigits: amount % 1 ? 2 : 0 }).format(amount || 0);
-  } catch (e) {
-    return '$' + Number(amount || 0).toFixed(2);
+/** Format an amount with the store currency settings (Global Settings › Payments). */
+export function money(amount, currency) {
+  const c = L.currency || {};
+  const code = currency || c.code || 'USD';
+  const decimals = code === c.code ? (c.decimals ?? 2) : 2;
+  const n = Number(amount || 0);
+  const fixed = Math.abs(n).toFixed(decimals);
+  const [int, frac] = fixed.split('.');
+  const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, c.thousand ?? ',');
+  const number = (n < 0 ? '-' : '') + grouped + (frac ? (c.decimal ?? '.') + frac : '');
+  const symbol = code === c.code ? (c.symbol || code) : code;
+  switch (c.position) {
+    case 'before_space': return `${symbol} ${number}`;
+    case 'after': return `${number}${symbol}`;
+    case 'after_space': return `${number} ${symbol}`;
+    default: return `${symbol}${number}`;
   }
 }
 
