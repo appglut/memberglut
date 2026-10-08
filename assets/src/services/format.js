@@ -52,19 +52,28 @@ export const GATEWAY = {
   free: __( 'Free', 'memberglut' ),
 };
 
-/** “1 month”, “Unlimited”, “Until Dec 31” for a plan. */
+/** “month”, “3 months” for a { length, unit } duration. */
+export function periodLabel(d) {
+  const { length = 1, unit = 'month' } = d || {};
+  const one = { day: __( 'day', 'memberglut' ), week: __( 'week', 'memberglut' ), month: __( 'month', 'memberglut' ), year: __( 'year', 'memberglut' ) };
+  const many = { day: __( 'days', 'memberglut' ), week: __( 'weeks', 'memberglut' ), month: __( 'months', 'memberglut' ), year: __( 'years', 'memberglut' ) };
+  return Number(length) === 1 ? one[unit] : `${length} ${many[unit]}`;
+}
+
+/** How long access lasts: “Until canceled”, “Lifetime”, “1 year”, “Until Dec 31”, “Calendar year”. */
 export function planDuration(p) {
-  if (p.duration_type === 'unlimited') return __( 'Lifetime', 'memberglut' );
+  if (p.type === 'paid' && p.billing === 'recurring') return __( 'Until canceled', 'memberglut' );
   if (p.duration_type === 'date') return __( 'Until ', 'memberglut' ) + date(p.end_date);
-  const { length = 1, unit = 'month' } = p.duration || {};
-  const units = { day: __( 'day', 'memberglut' ), week: __( 'week', 'memberglut' ), month: __( 'month', 'memberglut' ), year: __( 'year', 'memberglut' ) };
-  return length === 1 ? units[unit] : `${length} ${units[unit]}s`;
+  if (p.duration_type === 'calendar') return __( 'Calendar year', 'memberglut' );
+  if (p.duration_type === 'fixed') return periodLabel(p.duration);
+  return __( 'Lifetime', 'memberglut' );
 }
 
 /** “$9 / month”, “Free”, “$299 once”. */
 export function planPrice(p) {
+  if (!p) return '';
   if (p.type === 'free' || !p.price) return __( 'Free', 'memberglut' );
-  if (p.billing === 'recurring') return `${money(p.price)} / ${planDuration(p)}`;
+  if (p.billing === 'recurring') return `${money(p.price)} / ${periodLabel(p.duration)}`;
   return `${money(p.price)} ${__( 'once', 'memberglut' )}`;
 }
 

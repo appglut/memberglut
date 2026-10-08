@@ -1,4 +1,4 @@
-import { J as PresetColors, R as React, x as Keyframe, cP as initMotion, d8 as reactExports, k as ConfigProvider, dB as useMergedState, j as ConfigContext, ax as classNames, as as _typeof, ap as _slicedToArray, K as KeyCode, al as _objectWithoutProperties, af as _extends, ak as _objectSpread2, _ as RefResizeObserver, dV as wrapperRaf, du as useEvent, d7 as reactDomExports, dx as useLayoutEffect$1, dO as warning, aB as composeRef, d3 as pickAttrs, ae as _defineProperty, C as CSSMotion, dg as supportRef, cb as fillRef, ds as useComposeRef, cE as getNodeRef, cR as isDOM, cU as isVisible, ar as _toConsumableArray, cH as getShadowRoot, dw as useId$1, H as Portal, dP as warningOnce, aq as _toArray, ac as _createClass, ab as _classCallCheck, dA as useMemo, d1 as omit, aw as canUseDom, di as toArray$3, dK as useToken, dz as useLocale, F as FastColor, cs as genStyleHooks, c_ as merge, dr as useComponentConfig, db as resetComponent, dh as textEllipsis, dl as unit, dc as resetIcon, ch as genCompactItemStyle, I as Icon$1, T as RefIcon$3, W as RefIcon$4, X as RefIcon$5, Z as RefIcon$6, n as ContextIsolator, dq as useCompactItemContext, dL as useVariant, dm as useCSSVarCls, t as FormItemInputContext, dH as useSize, D as DisabledContext, cI as getStatusClassNames, dN as useZIndex, cK as getTransitionName, cD as getMergedStatus, cQ as initZoomMotion, cw as generateColor, cT as isFragment, az as cloneElement, dW as zIndexContext, aH as devUseWarning, cS as isEqual, ah as _inherits, ad as _createSuper, dv as useForm$1, cA as getDOM, i as Compact } from "./Page-DwAue1bn.js";
+import { J as PresetColors, R as React, x as Keyframe, cO as initMotion, d7 as reactExports, k as ConfigProvider, dA as useMergedState, j as ConfigContext, aw as classNames, ar as _typeof, ao as _slicedToArray, K as KeyCode, al as _objectWithoutProperties, af as _extends, ak as _objectSpread2, _ as RefResizeObserver, dU as wrapperRaf, dt as useEvent, d6 as reactDomExports, dw as useLayoutEffect$1, dN as warning, aA as composeRef, d2 as pickAttrs, ae as _defineProperty, C as CSSMotion, df as supportRef, ca as fillRef, dr as useComposeRef, cD as getNodeRef, cQ as isDOM, cT as isVisible, aq as _toConsumableArray, cG as getShadowRoot, dv as useId$1, H as Portal, dO as warningOnce, ap as _toArray, ac as _createClass, ab as _classCallCheck, dz as useMemo, d0 as omit, av as canUseDom, dh as toArray$3, dJ as useToken, dy as useLocale, F as FastColor, cr as genStyleHooks, cZ as merge, dq as useComponentConfig, da as resetComponent, dg as textEllipsis, dk as unit, db as resetIcon, cg as genCompactItemStyle, I as Icon$1, T as RefIcon$3, W as RefIcon$4, X as RefIcon$5, Z as RefIcon$6, n as ContextIsolator, dp as useCompactItemContext, dK as useVariant, dl as useCSSVarCls, t as FormItemInputContext, dG as useSize, D as DisabledContext, cH as getStatusClassNames, dM as useZIndex, cJ as getTransitionName, cC as getMergedStatus, cP as initZoomMotion, cv as generateColor, cS as isFragment, ay as cloneElement, dV as zIndexContext, aG as devUseWarning, cR as isEqual, ah as _inherits, ad as _createSuper, du as useForm$1, cz as getDOM, i as Compact } from "./Page-uv7jJYOd.js";
 function genPresetColor(token, genCss) {
   return PresetColors.reduce((prev, colorKey) => {
     const lightColor = token[`${colorKey}1`];
@@ -9618,12 +9618,19 @@ async function request(path, { method = "GET", body, query } = {}) {
 const get = (path, query) => request(path, { query });
 const post = (path, body) => request(path, { method: "POST", body: body || {} });
 const put = (path, body) => request(path, { method: "PUT", body: body || {} });
+const patch = (path, body) => request(path, { method: "PATCH", body: body || {} });
+const del = (path, query) => request(path, { method: "DELETE", query });
 const getStats = () => get("dashboard/stats");
 const getActivity = (limit = 7) => get("events", { per_page: limit }).then((r2) => r2.items);
 const getSetupChecklist = () => get("dashboard/checklist");
 const getPlans = (query) => get("plans", query);
 const getPlan = (id) => get(`plans/${id}`);
 const savePlan = (plan) => plan.id ? put(`plans/${plan.id}`, plan) : post("plans", plan);
+const deletePlan = (id) => del(`plans/${id}`);
+const duplicatePlan = (id, withRules) => post(`plans/${id}/duplicate`, { with_rules: !!withRules });
+const setPlanStatus = (id, status) => patch(`plans/${id}/status`, { status });
+const savePlanOrder = (group, ids) => put("plans/order", { group, ids });
+const getPlanRules = (id) => get(`plans/${id}/rules`);
 const getMembers = (query) => get("members", query);
 const getMember = (userId) => get(`members/user/${userId}`);
 const getRules = (query) => get("rules", query);
@@ -9643,50 +9650,55 @@ const getFormsConfig = () => get("forms");
 const saveFormsConfig = (values) => put("forms", { values });
 const getLogs = (query) => get("logs", query);
 export {
-  saveFormsConfig as $,
-  getPayments as A,
-  getPlacements as B,
-  getPlan as C,
+  isPresetStatusColor as $,
+  getMembers as A,
+  getMultipleSelectorUnit as B,
+  getPayments as C,
   DefaultRenderEmpty as D,
   Empty as E,
   ForwardOverflow as F,
-  getPlans as G,
-  getRoles as H,
-  getRule as I,
-  getRules as J,
-  getSettings as K,
+  getPlacements as G,
+  getPlan as H,
+  getPlanRules as I,
+  getPlans as J,
+  getRoles as K,
   List as L,
   MenuItem$1 as M,
-  getSetupChecklist as N,
-  getStats as O,
+  getRule as N,
+  getRules as O,
   Popup as P,
-  getStatus as Q,
+  getSettings as Q,
   RefIcon$2 as R,
   Select as S,
   Tooltip2 as T,
-  initMoveMotion as U,
-  initSlideMotion as V,
-  isMobile as W,
-  isPresetColor as X,
-  isPresetStatusColor as Y,
-  saveCoupon as Z,
-  saveEmails as _,
+  getSetupChecklist as U,
+  getStats as V,
+  getStatus as W,
+  initMoveMotion as X,
+  initSlideMotion as Y,
+  isMobile as Z,
+  isPresetColor as _,
   Divider as a,
-  savePlan as a0,
-  saveRole as a1,
-  saveRule as a2,
-  saveSettings as a3,
-  slideDownIn as a4,
-  slideDownOut as a5,
-  slideUpIn as a6,
-  slideUpOut as a7,
-  toArray as a8,
-  toNamePathStr as a9,
-  useForceUpdate as aa,
-  useForm as ab,
-  useFullPath as ac,
-  useIcons as ad,
-  withPureRenderTheme as ae,
+  saveCoupon as a0,
+  saveEmails as a1,
+  saveFormsConfig as a2,
+  savePlan as a3,
+  savePlanOrder as a4,
+  saveRole as a5,
+  saveRule as a6,
+  saveSettings as a7,
+  setPlanStatus as a8,
+  slideDownIn as a9,
+  slideDownOut as aa,
+  slideUpIn as ab,
+  slideUpOut as ac,
+  toArray as ad,
+  toNamePathStr as ae,
+  useForceUpdate as af,
+  useForm as ag,
+  useFullPath as ah,
+  useIcons as ai,
+  withPureRenderTheme as aj,
   Dropdown$1 as b,
   ExportMenu as c,
   MenuItemGroup as d,
@@ -9695,21 +9707,21 @@ export {
   Space as g,
   SubMenu as h,
   Trigger as i,
-  genOverflowStyle as j,
-  genPresetColor as k,
-  genPurePanel as l,
-  genRoundedArrow as m,
-  getActivity as n,
-  getArrowOffsetToken as o,
-  getArrowStyle as p,
-  getArrowToken as q,
-  getCapabilities as r,
-  getCoupons as s,
-  getEmails as t,
-  getFieldId as u,
-  getFormsConfig as v,
-  getLogs as w,
-  getMember as x,
-  getMembers as y,
-  getMultipleSelectorUnit as z
+  deletePlan as j,
+  duplicatePlan as k,
+  genOverflowStyle as l,
+  genPresetColor as m,
+  genPurePanel as n,
+  genRoundedArrow as o,
+  getActivity as p,
+  getArrowOffsetToken as q,
+  getArrowStyle as r,
+  getArrowToken as s,
+  getCapabilities as t,
+  getCoupons as u,
+  getEmails as v,
+  getFieldId as w,
+  getFormsConfig as x,
+  getLogs as y,
+  getMember as z
 };

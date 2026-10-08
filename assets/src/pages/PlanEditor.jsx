@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import { App, Spin, Button, Tag } from 'antd';
+import { App, Spin, Button, Tag, AutoComplete, Alert } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleInfo, faTag, faHourglassHalf, faKey, faArrowUpWideShort, faUserPlus, faChevronLeft,
@@ -8,25 +8,39 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Page from '../components/Page';
 import SettingsPanel, { CopyCode } from '../components/SettingsPanel';
-import { link, queryArg, _siteUrl } from '../components/adminData';
+import { link, queryArg } from '../components/adminData';
 import * as api from '../services/api';
-import { ROLES, PLANS, PAGES, RULES } from '../services/demoData';
+import { L, roleOptions as lookupRoles, pageOptions, signupUrl } from '../services/lookups';
 
 const NEW_PLAN = {
-  name: '', slug: '', description: '', status: 'active', color: '#e94560', featured: false, group: 'Main',
+  name: '', slug: '', description: '', features: [], status: 'active', color: '#e94560', featured: false, group: 'Main',
   type: 'paid', price: 10, billing: 'recurring', duration: { length: 1, unit: 'month' }, limit_cycles: false, cycles: 12, after_cycles: 'expire',
   trial: false, trial_length: { length: 7, unit: 'day' }, one_trial: true, signup_fee: 0, gateways: ['stripe', 'paypal', 'bank'],
   duration_type: 'unlimited', end_date: '', calendar_start: '01-01',
-  role: 'subscriber', keep_roles: true, expire_role: 'subscriber', who_can_buy: 'anyone', buy_plans: [], hide_in_table: false, max_members: 0,
-  allow_upgrade: true, allow_downgrade: true, fee_on_change: false, order: [],
-  approval: 'inherit', form: 'default', redirect: 'inherit', redirect_page: 16, send_welcome: true,
+  role: 'subscriber', keep_roles: true, expire_role: '', who_can_buy: 'anyone', buy_plans: [], hide_in_table: false, max_members: 0,
+  allow_upgrade: true, allow_downgrade: true, fee_on_change: false, order: null,
+  approval: 'inherit', form: 'default', redirect: 'inherit', redirect_page: 0, send_welcome: true,
 };
 
-const roleOptions = ROLES.filter((r) => r.slug !== 'administrator').map((r) => ({ value: r.slug, label: r.name }));
-const planOptions = PLANS.map((p) => ({ value: p.id, label: p.name }));
+const roleOptions = lookupRoles((r) => r.slug !== 'administrator');
+const currentId = Number(queryArg('id')) || 0;
+const planOptions = L.plans.filter((p) => p.id !== currentId).map((p) => ({ value: p.id, label: p.name }));
+const gatewayOptions = L.gateways.map((g) => ({ value: g.value, label: g.enabled ? g.label : sprintf( __( '%s (not enabled)', 'memberglut' ), g.label ) }));
+const formOptions = Object.entries(L.forms || { default: __( 'Default registration form', 'memberglut' ) }).map(([value, label]) => ({ value, label }));
+const symbol = L.currency.symbol || '$';
+
+/** Order of the plans in the group; this plan included (or appended when new). */
+function groupOrder(values) {
+  if (values.order) return values.order;
+  const ids = L.plans.filter((p) => p.group === values.group && p.id !== currentId).sort((a, b) => a.tier - b.tier).map((p) => p.id);
+  const self = L.plans.find((p) => p.id === currentId);
+  if (!currentId || !self || self.group !== values.group) return [...ids, currentId || 'new'];
+  const all = L.plans.filter((p) => p.group === values.group).sort((a, b) => a.tier - b.tier).map((p) => p.id);
+  return all;
+}
 
 function UpgradeOrder({ values, setValues }) {
-  const list = values.order.length ? values.order : PLANS.filter((p) => p.group === values.group).sort((a, b) => a.tier - b.tier).map((p) => p.id);
+  const list = groupOrder(values);
   const move = (i, dir) => {
     const next = [...list];
     [next[i], next[i + dir]] = [next[i + dir], next[i]];
@@ -37,12 +51,13 @@ function UpgradeOrder({ values, setValues }) {
       <div className="mg-fs-subhead">{__( 'Order in the group', 'memberglut' )}<span>{__( 'Lowest at the top. Moving down the list is an upgrade.', 'memberglut' )}</span></div>
       <ol className="mg-order-list">
         {list.map((id, i) => {
-          const p = PLANS.find((x) => x.id === id) || { name: values.name || __( 'This plan', 'memberglut' ), color: values.color };
-          const self = Number(queryArg('id')) === id;
+          const self = id === currentId || id === 'new';
+          const p = self ? { name: values.name || __( 'This plan', 'memberglut' ), color: values.color } : (L.plans.find((x) => x.id === id) || { name: `#${id}` });
           return (
             <li key={id} className={self ? 'self' : ''}>
               <span className="mg-plan-dot" style={{ background: p.color }} />
               <b>{p.name}</b>{self && <Tag color="pink" bordered={false}>{__( 'this plan', 'memberglut' )}</Tag>}
+              {!self && p.status !== 'active' && <Tag bordered={false}>{__( 'inactive', 'memberglut' )}</Tag>}
               <span className="mg-order-btns">
                 <Button size="small" type="text" disabled={i === 0} onClick={() => move(i, -1)} icon={<FontAwesomeIcon icon={faArrowUp} />} />
                 <Button size="small" type="text" disabled={i === list.length - 1} onClick={() => move(i, 1)} icon={<FontAwesomeIcon icon={faArrowDown} />} />
@@ -51,32 +66,51 @@ function UpgradeOrder({ values, setValues }) {
           );
         })}
       </ol>
+      <div className="mg-muted" style={{ marginTop: 10 }}>{__( 'Members can move along this path from their account when Global Settings › Member account › “Members can upgrade / downgrade” is on as well.', 'memberglut' )}</div>
     </div>
   );
 }
 
 function PlanRules({ values }) {
-  const id = Number(queryArg('id'));
-  const rules = RULES.filter((r) => r.access.plans.includes(id));
+  const [rules, setRules] = useState(null);
+  useEffect(() => {
+    if (!currentId) { setRules([]); return; }
+    api.getPlanRules(currentId).then(setRules).catch(() => setRules([]));
+  }, []);
   return (
     <div className="mg-fs-block">
       <div className="mg-fs-subhead">{__( 'Content this plan unlocks', 'memberglut' )}<span>{__( 'Content rules that list this plan. Add the plan to a rule to give it more access.', 'memberglut' )}</span></div>
-      {rules.length === 0 ? <div className="mg-fs-note">{__( 'No rule uses this plan yet.', 'memberglut' )}</div> : (
+      {rules === null ? <Spin size="small" /> : rules.length === 0 ? <div className="mg-fs-note">{currentId ? __( 'No rule uses this plan yet.', 'memberglut' ) : __( 'Save the plan first, then protect content for it.', 'memberglut' )}</div> : (
         <ul className="mg-link-list">
           {rules.map((r) => <li key={r.id}><a href={link('rule_editor', { id: r.id })}>{r.title}</a><Tag bordered={false} color={r.status === 'active' ? 'green' : 'default'}>{r.status}</Tag></li>)}
         </ul>
       )}
-      <Button href={link('rule_editor', { plan: id || '' })} style={{ marginTop: 10 }}>{__( 'Protect content for this plan', 'memberglut' )}</Button>
+      {currentId > 0 && <Button href={link('rule_editor', { plan: currentId })} style={{ marginTop: 10 }}>{__( 'Protect content for this plan', 'memberglut' )}</Button>}
       {values.name && <div className="mg-muted" style={{ marginTop: 12 }}>{sprintf( __( 'Posts can also be locked to “%s” from the MemberGlut box in the post editor.', 'memberglut' ), values.name )}</div>}
     </div>
   );
 }
 
+function GroupInput({ value, onChange }) {
+  return (
+    <AutoComplete
+      value={value}
+      onChange={onChange}
+      options={L.groups.map((g) => ({ value: g }))}
+      filterOption={(input, o) => o.value.toLowerCase().includes((input || '').toLowerCase())}
+      placeholder={__( 'Main', 'memberglut' )}
+      style={{ width: 260 }}
+    />
+  );
+}
+
+const disabledGateways = (v) => (v.gateways || []).filter((g) => !(L.gateways.find((x) => x.value === g) || {}).enabled);
+
 const SECTIONS = [
   {
     key: 'general', title: __( 'General', 'memberglut' ), icon: faCircleInfo, desc: __( 'Name and how the plan appears in pricing tables.', 'memberglut' ), fields: [
       { key: 'name', type: 'text', label: __( 'Plan name', 'memberglut' ), placeholder: __( 'e.g. Gold', 'memberglut' ) },
-      { key: 'slug', type: 'text', label: __( 'Slug', 'memberglut' ), tip: __( 'Used in signup links (?plan=gold) and shortcodes. Empty creates it from the name.', 'memberglut' ), placeholder: 'gold' },
+      { key: 'slug', type: 'text', label: __( 'Slug', 'memberglut' ), tip: __( 'Used in signup links (?plan=gold) and shortcodes. Empty creates it from the name. Changing it breaks links you already shared.', 'memberglut' ), placeholder: 'gold' },
       { key: 'description', type: 'textarea', label: __( 'Description', 'memberglut' ), tip: __( 'Shown in the pricing table and at checkout.', 'memberglut' ), rows: 3 },
       { key: 'features', type: 'tags', label: __( 'Feature list', 'memberglut' ), tip: __( 'Bullet points for the pricing table. Press Enter after each one.', 'memberglut' ), placeholder: __( 'All premium articles', 'memberglut' ) },
       { key: 'status', type: 'radio', label: __( 'Status', 'memberglut' ), tip: __( 'Inactive plans cannot be bought, but members who have them keep them.', 'memberglut' ), options: [{ value: 'active', label: __( 'Active', 'memberglut' ) }, { value: 'inactive', label: __( 'Inactive', 'memberglut' ) }] },
@@ -93,16 +127,19 @@ const SECTIONS = [
         ],
       },
       { key: 'billing', type: 'radio', label: __( 'Billing', 'memberglut' ), options: [{ value: 'one_time', label: __( 'One payment', 'memberglut' ) }, { value: 'recurring', label: __( 'Recurring subscription', 'memberglut' ) }], show: (v) => v.type === 'paid' },
-      { key: 'price', type: 'price', label: __( 'Price', 'memberglut' ), show: (v) => v.type === 'paid' },
+      { key: 'price', type: 'price', prefix: symbol, label: __( 'Price', 'memberglut' ), show: (v) => v.type === 'paid' },
       { key: 'duration', type: 'duration', label: __( 'Bill every', 'memberglut' ), show: (v) => v.type === 'paid' && v.billing === 'recurring' },
       { key: 'limit_cycles', type: 'switch', label: __( 'Stop after a number of payments', 'memberglut' ), tip: __( 'Pay in installments: e.g. 3 monthly payments for a course.', 'memberglut' ), show: (v) => v.type === 'paid' && v.billing === 'recurring' },
       { key: 'cycles', type: 'number', label: __( 'Number of payments', 'memberglut' ), min: 2, max: 120, show: (v) => v.type === 'paid' && v.billing === 'recurring' && v.limit_cycles },
       { key: 'after_cycles', type: 'radio', label: __( 'After the last payment', 'memberglut' ), options: [{ value: 'keep', label: __( 'Keep access forever', 'memberglut' ) }, { value: 'expire', label: __( 'End access', 'memberglut' ) }], show: (v) => v.type === 'paid' && v.billing === 'recurring' && v.limit_cycles },
-      { key: 'signup_fee', type: 'price', label: __( 'Sign-up fee', 'memberglut' ), tip: __( 'Added once to the first payment.', 'memberglut' ), show: (v) => v.type === 'paid' },
+      { key: 'signup_fee', type: 'price', prefix: symbol, label: __( 'Sign-up fee', 'memberglut' ), tip: __( 'Added once to the first payment (charged at the start of a free trial). Coupons do not discount it.', 'memberglut' ), show: (v) => v.type === 'paid' },
       { key: 'trial', type: 'switch', label: __( 'Free trial', 'memberglut' ), tip: __( 'Members pay nothing until the trial ends. Card details are still collected.', 'memberglut' ), show: (v) => v.type === 'paid' && v.billing === 'recurring' },
       { key: 'trial_length', type: 'duration', label: __( 'Trial length', 'memberglut' ), show: (v) => v.type === 'paid' && v.billing === 'recurring' && v.trial },
       { key: 'one_trial', type: 'switch', label: __( 'One trial per person', 'memberglut' ), tip: __( 'Users who already had a trial on any plan pay from the first day.', 'memberglut' ), show: (v) => v.type === 'paid' && v.billing === 'recurring' && v.trial },
-      { key: 'gateways', type: 'multiselect', label: __( 'Payment methods', 'memberglut' ), tip: __( 'Methods offered for this plan. Set them up in Global Settings › Payments.', 'memberglut' ), options: [{ value: 'stripe', label: 'Stripe' }, { value: 'paypal', label: 'PayPal' }, { value: 'bank', label: __( 'Bank transfer', 'memberglut' ) }], show: (v) => v.type === 'paid' },
+      {
+        key: 'gateways', type: 'multiselect', label: __( 'Payment methods', 'memberglut' ), tip: __( 'Methods offered for this plan. Set them up in Global Settings › Payments.', 'memberglut' ), options: gatewayOptions, show: (v) => v.type === 'paid',
+        after: (v) => (disabledGateways(v).length ? <Alert type="warning" showIcon style={{ marginTop: 8 }} message={sprintf( __( 'Not enabled in Global Settings › Payments: %s. They are not offered until you enable them.', 'memberglut' ), disabledGateways(v).join(', ') )} action={<a href={link('settings', { tab: 'payments' })}>{__( 'Open', 'memberglut' )}</a>} /> : null),
+      },
     ],
   },
   {
@@ -125,7 +162,7 @@ const SECTIONS = [
     key: 'access', title: __( 'Access & role', 'memberglut' ), icon: faKey, desc: __( 'The role members get, and who is allowed to buy this plan.', 'memberglut' ), fields: [
       { key: 'role', type: 'select', label: __( 'Give this role', 'memberglut' ), tip: __( 'Added when the plan becomes active. Create roles in Roles & Capabilities.', 'memberglut' ), options: roleOptions },
       { key: 'keep_roles', type: 'switch', label: __( 'Keep the user’s other roles', 'memberglut' ), tip: __( 'Off replaces the user’s role. Administrators are never changed.', 'memberglut' ) },
-      { key: 'expire_role', type: 'select', label: __( 'Role after the plan ends', 'memberglut' ), options: [{ value: '', label: __( '— Just remove the plan role —', 'memberglut' ) }, ...roleOptions] },
+      { key: 'expire_role', type: 'select', label: __( 'Role after the plan ends', 'memberglut' ), tip: __( 'The plan role is removed unless another active plan gives it or the user had it before joining.', 'memberglut' ), options: [{ value: '', label: __( '— Just remove the plan role —', 'memberglut' ) }, ...roleOptions] },
       {
         key: 'who_can_buy', type: 'select', label: __( 'Who can join', 'memberglut' ), options: [
           { value: 'anyone', label: __( 'Anyone', 'memberglut' ) },
@@ -141,7 +178,7 @@ const SECTIONS = [
   },
   {
     key: 'upgrades', title: __( 'Upgrades', 'memberglut' ), icon: faArrowUpWideShort, desc: __( 'Plans in the same group form a path members can move along.', 'memberglut' ), fields: [
-      { key: 'group', type: 'select', label: __( 'Plan group', 'memberglut' ), tip: __( 'A member holds one plan per group.', 'memberglut' ), options: [{ value: 'Main', label: 'Main' }, { value: 'Courses', label: 'Courses' }] },
+      { key: 'group', type: 'custom', label: __( 'Plan group', 'memberglut' ), tip: __( 'A member holds one plan per group. Type a new name to create a group.', 'memberglut' ), render: ({ value, onChange }) => <GroupInput value={value} onChange={onChange} /> },
       { key: 'allow_upgrade', type: 'switch', label: __( 'Members can upgrade to this plan', 'memberglut' ) },
       { key: 'allow_downgrade', type: 'switch', label: __( 'Members can downgrade to this plan', 'memberglut' ) },
       { key: 'fee_on_change', type: 'switch', label: __( 'Charge the sign-up fee on plan changes', 'memberglut' ) },
@@ -150,12 +187,12 @@ const SECTIONS = [
   },
   {
     key: 'signup', title: __( 'Sign-up', 'memberglut' ), icon: faUserPlus, desc: __( 'The form, approval and the page members see after joining.', 'memberglut' ), fields: [
-      { key: 'form', type: 'select', label: __( 'Registration form', 'memberglut' ), tip: __( 'Edit forms in Forms & Pages.', 'memberglut' ), options: [{ value: 'default', label: __( 'Default registration form', 'memberglut' ) }, { value: 'business', label: __( 'Business form (company fields)', 'memberglut' ) }] },
-      { key: 'approval', type: 'select', label: __( 'Approval', 'memberglut' ), options: [{ value: 'inherit', label: __( 'Use the global setting', 'memberglut' ) }, { value: 'auto', label: __( 'Automatic', 'memberglut' ) }, { value: 'email', label: __( 'Email confirmation', 'memberglut' ) }, { value: 'admin', label: __( 'Admin approval', 'memberglut' ) }] },
-      { key: 'redirect', type: 'select', label: __( 'After joining', 'memberglut' ), options: [{ value: 'inherit', label: __( 'Use the global redirect', 'memberglut' ) }, { value: 'page', label: __( 'Go to a page', 'memberglut' ) }] },
-      { key: 'redirect_page', type: 'select', label: __( 'Page', 'memberglut' ), options: PAGES, show: (v) => v.redirect === 'page' },
-      { key: 'send_welcome', type: 'switch', label: __( 'Send the “Subscription activated” email', 'memberglut' ) },
-      { key: 'signup_link', type: 'custom', label: __( 'Signup link', 'memberglut' ), tip: __( 'Opens the registration page with this plan selected.', 'memberglut' ), render: ({ values }) => <CopyCode code={`${_siteUrl || 'https://yoursite.com'}/register/?plan=${values.slug || 'plan'}`} /> },
+      { key: 'form', type: 'select', label: __( 'Registration form', 'memberglut' ), tip: __( 'Edit forms in Forms & Pages.', 'memberglut' ), options: formOptions },
+      { key: 'approval', type: 'select', label: __( 'Approval', 'memberglut' ), tip: __( 'Overrides Global Settings › Login & registration › New account approval for people joining this plan.', 'memberglut' ), options: [{ value: 'inherit', label: __( 'Use the global setting', 'memberglut' ) }, { value: 'auto', label: __( 'Automatic', 'memberglut' ) }, { value: 'email', label: __( 'Email confirmation', 'memberglut' ) }, { value: 'admin', label: __( 'Admin approval', 'memberglut' ) }] },
+      { key: 'redirect', type: 'select', label: __( 'After joining', 'memberglut' ), tip: __( 'A “return to the page they came from” redirect (Global Settings › Redirects) still wins.', 'memberglut' ), options: [{ value: 'inherit', label: __( 'Use the global redirect', 'memberglut' ) }, { value: 'page', label: __( 'Go to a page', 'memberglut' ) }] },
+      { key: 'redirect_page', type: 'select', label: __( 'Page', 'memberglut' ), options: pageOptions(), show: (v) => v.redirect === 'page' },
+      { key: 'send_welcome', type: 'switch', label: __( 'Send the “Subscription activated” email', 'memberglut' ), tip: __( 'The email must also be on in Emails.', 'memberglut' ) },
+      { key: 'signup_link', type: 'custom', label: __( 'Signup link', 'memberglut' ), tip: __( 'Opens the registration page with this plan selected.', 'memberglut' ), render: ({ values }) => <CopyCode code={values.signup_url && values.slug === values.saved_slug ? values.signup_url : signupUrl(values.slug)} /> },
       { key: 'buy_button', type: 'custom', label: __( 'Buy button shortcode', 'memberglut' ), render: ({ values }) => <CopyCode code={`[memberglut_buy plan="${values.slug || 'plan'}"]`} /> },
     ],
   },
@@ -163,23 +200,42 @@ const SECTIONS = [
 
 function PlanEditor() {
   const { message } = App.useApp();
-  const id = queryArg('id');
   const [values, setValues] = useState(NEW_PLAN);
-  const [loading, setLoading] = useState(!!id);
+  const [loading, setLoading] = useState(!!currentId);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (!id) return;
-    api.getPlan(id).then((p) => { if (p) setValues({ ...NEW_PLAN, ...p, features: ['Premium articles', 'Monthly Q&A'] }); }).finally(() => setLoading(false));
-  }, [id]);
+    if (!currentId) return;
+    api.getPlan(currentId)
+      .then((p) => setValues({ ...NEW_PLAN, ...p, saved_slug: p.slug }))
+      .catch((e) => message.error(e.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   const save = async (v) => {
-    if (!v.name.trim()) { message.error(__( 'Give the plan a name.', 'memberglut' )); return false; }
+    if (!v.name.trim()) { setErrors({ name: __( 'Give the plan a name.', 'memberglut' ) }); message.error(__( 'Give the plan a name.', 'memberglut' )); return false; }
     setSaving(true);
-    await api.savePlan(v);
-    setSaving(false);
-    message.success(id ? __( 'Plan updated.', 'memberglut' ) : __( 'Plan created.', 'memberglut' ));
-    return true;
+    try {
+      const saved = await api.savePlan({ ...v, id: currentId || undefined });
+      if (v.order) {
+        await api.savePlanOrder(saved.group, v.order.map((id) => (id === 'new' ? saved.id : id)));
+      }
+      setErrors({});
+      message.success(currentId ? __( 'Plan updated.', 'memberglut' ) : __( 'Plan created.', 'memberglut' ));
+      if (!currentId) {
+        window.location.href = link('plan_editor', { id: saved.id });
+        return true;
+      }
+      setValues({ ...NEW_PLAN, ...saved, saved_slug: saved.slug, order: null });
+      return true;
+    } catch (e) {
+      setErrors(e.fields || {});
+      message.error(e.message);
+      return false;
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return <div className="mg-loading"><Spin size="large" /></div>;
@@ -187,11 +243,11 @@ function PlanEditor() {
   return (
     <SettingsPanel
       back={{ href: link('plans'), label: <><FontAwesomeIcon icon={faChevronLeft} /> {__( 'All plans', 'memberglut' )}</> }}
-      title={id ? sprintf( __( 'Edit plan: %s', 'memberglut' ), values.name ) : __( 'New plan', 'memberglut' )}
-      titleExtra={id && (
+      title={currentId ? sprintf( __( 'Edit plan: %s', 'memberglut' ), values.name ) : __( 'New plan', 'memberglut' )}
+      titleExtra={currentId > 0 && (
         <div className="mg-fs-formname">
-          <span className="mg-fs-id">ID {id}</span>
-          <span className="mg-muted">{sprintf( __( '%d members', 'memberglut' ), values.members || 0 )}</span>
+          <span className="mg-fs-id">ID {currentId}</span>
+          <a className="mg-muted" href={link('members', { plan: currentId })}>{sprintf( __( '%d members', 'memberglut' ), values.members || 0 )}</a>
         </div>
       )}
       sections={SECTIONS}
@@ -199,7 +255,8 @@ function PlanEditor() {
       setValues={setValues}
       onSave={save}
       saving={saving}
-      saveLabel={id ? __( 'Update plan', 'memberglut' ) : __( 'Create plan', 'memberglut' )}
+      errors={errors}
+      saveLabel={currentId ? __( 'Update plan', 'memberglut' ) : __( 'Create plan', 'memberglut' )}
     />
   );
 }

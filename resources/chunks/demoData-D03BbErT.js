@@ -1,4 +1,4 @@
-import { d as dayjs } from "./index-CeeYjpwl.js";
+import { d as dayjs } from "./index-yo_nZXOO.js";
 const d = (days) => dayjs().subtract(days, "day").format("YYYY-MM-DD HH:mm:ss");
 const f = (days) => dayjs().add(days, "day").format("YYYY-MM-DD HH:mm:ss");
 const PLANS = [
@@ -53,7 +53,7 @@ const PAYMENTS = MEMBERS.filter((m) => m.gateway !== "free").slice(0, 18).map((m
   { id: 2, code: "RAMADAN", type: "percent", amount: 30, plans: [], uses: 128, max_uses: 0, per_user: 1, new_users_only: false, recurring: true, starts: "", expires: d(5), status: "expired" },
   { id: 3, code: "GOLD10", type: "fixed", amount: 10, plans: [3], uses: 7, max_uses: 50, per_user: 1, new_users_only: false, recurring: false, starts: f(2), expires: "", status: "scheduled" }
 ];
-const RULES = [
+[
   { id: 1, title: "Premium articles", status: "active", priority: 10, protect: [{ type: "taxonomy", taxonomy: "category", terms: ["Premium"] }], exclude: [], access: { who: "plans", plans: [2, 3, 4], roles: [] }, action: "message", teaser: "excerpt", updated: d(2) },
   { id: 2, title: "Courses (Gold only)", status: "active", priority: 20, protect: [{ type: "post_type", post_type: "course" }], exclude: [{ type: "posts", posts: ["Course intro (free)"] }], access: { who: "plans", plans: [3, 4], roles: [] }, action: "redirect", redirect: "/pricing/", teaser: "none", updated: d(6) },
   { id: 3, title: "Members area", status: "active", priority: 5, protect: [{ type: "pages", posts: ["Members Area", "Downloads"] }], exclude: [], access: { who: "logged_in", plans: [], roles: [] }, action: "login", teaser: "none", updated: d(12) },
@@ -149,6 +149,5 @@ export {
   PAGES as P,
   ROLES as R,
   PAYMENTS as a,
-  PLANS as b,
-  RULES as c
+  PLANS as b
 };

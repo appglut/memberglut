@@ -1,22 +1,125 @@
-import { b1 as faCircleInfo, bl as faGift, by as faMoneyBill, bU as faTag, bq as faInfinity, bH as faRepeat, aW as faCalendarDays, aV as faCalendarCheck, bo as faHourglassHalf, br as faKey, aN as faArrowUpWideShort, c2 as faUserPlus, a8 as __, cV as jsxRuntimeExports, ao as _siteUrl, d6 as queryArg, cW as link, c as Button, q as FontAwesomeIcon, aL as faArrowUp, aI as faArrowDown, P as Page, b as App, d8 as reactExports, a_ as faChevronLeft, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
+import { d7 as reactExports, dh as toArray, j as ConfigContext, dM as useZIndex, d0 as omit, aw as classNames, d5 as queryArg, a8 as __, b0 as faCircleInfo, bk as faGift, bx as faMoneyBill, bT as faTag, bp as faInfinity, bG as faRepeat, aV as faCalendarDays, aU as faCalendarCheck, bn as faHourglassHalf, bq as faKey, aM as faArrowUpWideShort, c1 as faUserPlus, cU as jsxRuntimeExports, cV as link, c as Button, q as FontAwesomeIcon, aK as faArrowUp, aH as faArrowDown, P as Page, b as App, aZ as faChevronLeft, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-XQcr7b1d.js";
-import { C as getPlan, a0 as savePlan } from "./chunks/api-BB7d3L8U.js";
-import { R as ROLES, b as PLANS, P as PAGES, c as RULES } from "./chunks/demoData-DdpKZU_N.js";
-import { T as Tag } from "./chunks/index-DAwOKiJ9.js";
-import { S as Spin } from "./chunks/index-DYg9RGnF.js";
-import "./chunks/index-CeeYjpwl.js";
-import "./chunks/index-7xpZ3r7T.js";
-import "./chunks/index-DR_RfPho.js";
-import "./chunks/index-wzDtlKHr.js";
-import "./chunks/index-jcrWDM9i.js";
-import "./chunks/index-D6__SY_c.js";
-import "./chunks/index-D0vDDvb0.js";
-import "./chunks/index-BdHVDZgL.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CqhELXy7.js";
+import { S as Select, n as genPurePanel, I as getPlanRules, H as getPlan, a3 as savePlan, a4 as savePlanOrder } from "./chunks/api-BaJbRTwg.js";
+import { a as roleOptions$1, L, p as pageOptions, s as signupUrl } from "./chunks/lookups-DHSS-Myl.js";
+import { A as Alert } from "./chunks/index-Dxdfeq7i.js";
+import { S as Spin } from "./chunks/index-CIIETatw.js";
+import { T as Tag } from "./chunks/index-BN7GKNU8.js";
+import "./chunks/index-yo_nZXOO.js";
+import "./chunks/index-DfyMi8Rc.js";
+import "./chunks/index-B1n7UfX_.js";
+import "./chunks/index-BPzm35Wd.js";
+import "./chunks/index-wYjIfrAo.js";
+import "./chunks/index-CfclbOFd.js";
+import "./chunks/index-BFmP7jBX.js";
+import "./chunks/index-Dfx4LXY8.js";
+const {
+  Option: Option$1
+} = Select;
+function isSelectOptionOrSelectOptGroup(child) {
+  return (child === null || child === void 0 ? void 0 : child.type) && (child.type.isSelectOption || child.type.isSelectOptGroup);
+}
+const AutoComplete$1 = (props, ref) => {
+  var _a, _b;
+  const {
+    prefixCls: customizePrefixCls,
+    className,
+    popupClassName,
+    dropdownClassName,
+    children,
+    dataSource,
+    dropdownStyle,
+    dropdownRender,
+    popupRender,
+    onDropdownVisibleChange,
+    onOpenChange,
+    styles,
+    classNames: classNames$1
+  } = props;
+  const childNodes = toArray(children);
+  const mergedPopupStyle = ((_a = styles === null || styles === void 0 ? void 0 : styles.popup) === null || _a === void 0 ? void 0 : _a.root) || dropdownStyle;
+  const mergedPopupClassName = ((_b = classNames$1 === null || classNames$1 === void 0 ? void 0 : classNames$1.popup) === null || _b === void 0 ? void 0 : _b.root) || popupClassName || dropdownClassName;
+  const mergedPopupRender = popupRender || dropdownRender;
+  const mergedOnOpenChange = onOpenChange || onDropdownVisibleChange;
+  let customizeInput;
+  if (childNodes.length === 1 && /* @__PURE__ */ reactExports.isValidElement(childNodes[0]) && !isSelectOptionOrSelectOptGroup(childNodes[0])) {
+    [customizeInput] = childNodes;
+  }
+  const getInputElement = customizeInput ? () => customizeInput : void 0;
+  let optionChildren;
+  if (childNodes.length && isSelectOptionOrSelectOptGroup(childNodes[0])) {
+    optionChildren = children;
+  } else {
+    optionChildren = dataSource ? dataSource.map((item) => {
+      if (/* @__PURE__ */ reactExports.isValidElement(item)) {
+        return item;
+      }
+      switch (typeof item) {
+        case "string":
+          return /* @__PURE__ */ reactExports.createElement(Option$1, {
+            key: item,
+            value: item
+          }, item);
+        case "object": {
+          const {
+            value: optionValue
+          } = item;
+          return /* @__PURE__ */ reactExports.createElement(Option$1, {
+            key: optionValue,
+            value: optionValue
+          }, item.text);
+        }
+        default:
+          return void 0;
+      }
+    }) : [];
+  }
+  const {
+    getPrefixCls
+  } = reactExports.useContext(ConfigContext);
+  const prefixCls = getPrefixCls("select", customizePrefixCls);
+  const [zIndex] = useZIndex("SelectLike", mergedPopupStyle === null || mergedPopupStyle === void 0 ? void 0 : mergedPopupStyle.zIndex);
+  return /* @__PURE__ */ reactExports.createElement(Select, Object.assign({
+    ref,
+    suffixIcon: null
+  }, omit(props, ["dataSource", "dropdownClassName", "popupClassName"]), {
+    prefixCls,
+    classNames: {
+      popup: {
+        root: mergedPopupClassName
+      },
+      root: classNames$1 === null || classNames$1 === void 0 ? void 0 : classNames$1.root
+    },
+    styles: {
+      popup: {
+        root: Object.assign(Object.assign({}, mergedPopupStyle), {
+          zIndex
+        })
+      },
+      root: styles === null || styles === void 0 ? void 0 : styles.root
+    },
+    className: classNames(`${prefixCls}-auto-complete`, className),
+    mode: Select.SECRET_COMBOBOX_MODE_DO_NOT_USE,
+    popupRender: mergedPopupRender,
+    onOpenChange: mergedOnOpenChange,
+    // Internal api
+    getInputElement
+  }), optionChildren);
+};
+const RefAutoComplete = /* @__PURE__ */ reactExports.forwardRef(AutoComplete$1);
+const {
+  Option
+} = Select;
+const PurePanel = genPurePanel(RefAutoComplete, "dropdownAlign", (props) => omit(props, ["visible"]));
+const AutoComplete = RefAutoComplete;
+AutoComplete.Option = Option;
+AutoComplete._InternalPanelDoNotUseOrYouWillBeFired = PurePanel;
 const NEW_PLAN = {
   name: "",
   slug: "",
   description: "",
+  features: [],
   status: "active",
   color: "#e94560",
   featured: false,
@@ -38,7 +141,7 @@ const NEW_PLAN = {
   calendar_start: "01-01",
   role: "subscriber",
   keep_roles: true,
-  expire_role: "subscriber",
+  expire_role: "",
   who_can_buy: "anyone",
   buy_plans: [],
   hide_in_table: false,
@@ -46,17 +149,29 @@ const NEW_PLAN = {
   allow_upgrade: true,
   allow_downgrade: true,
   fee_on_change: false,
-  order: [],
+  order: null,
   approval: "inherit",
   form: "default",
   redirect: "inherit",
-  redirect_page: 16,
+  redirect_page: 0,
   send_welcome: true
 };
-const roleOptions = ROLES.filter((r) => r.slug !== "administrator").map((r) => ({ value: r.slug, label: r.name }));
-const planOptions = PLANS.map((p) => ({ value: p.id, label: p.name }));
+const roleOptions = roleOptions$1((r) => r.slug !== "administrator");
+const currentId = Number(queryArg("id")) || 0;
+const planOptions = L.plans.filter((p) => p.id !== currentId).map((p) => ({ value: p.id, label: p.name }));
+const gatewayOptions = L.gateways.map((g) => ({ value: g.value, label: g.enabled ? g.label : sprintf(__("%s (not enabled)", "memberglut"), g.label) }));
+const formOptions = Object.entries(L.forms || { default: __("Default registration form", "memberglut") }).map(([value, label]) => ({ value, label }));
+const symbol = L.currency.symbol || "$";
+function groupOrder(values) {
+  if (values.order) return values.order;
+  const ids = L.plans.filter((p) => p.group === values.group && p.id !== currentId).sort((a, b) => a.tier - b.tier).map((p) => p.id);
+  const self = L.plans.find((p) => p.id === currentId);
+  if (!currentId || !self || self.group !== values.group) return [...ids, currentId || "new"];
+  const all = L.plans.filter((p) => p.group === values.group).sort((a, b) => a.tier - b.tier).map((p) => p.id);
+  return all;
+}
 function UpgradeOrder({ values, setValues }) {
-  const list = values.order.length ? values.order : PLANS.filter((p) => p.group === values.group).sort((a, b) => a.tier - b.tier).map((p) => p.id);
+  const list = groupOrder(values);
   const move = (i, dir) => {
     const next = [...list];
     [next[i], next[i + dir]] = [next[i + dir], next[i]];
@@ -68,36 +183,58 @@ function UpgradeOrder({ values, setValues }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Lowest at the top. Moving down the list is an upgrade.", "memberglut") })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("ol", { className: "mg-order-list", children: list.map((id, i) => {
-      const p = PLANS.find((x) => x.id === id) || { name: values.name || __("This plan", "memberglut"), color: values.color };
-      const self = Number(queryArg("id")) === id;
+      const self = id === currentId || id === "new";
+      const p = self ? { name: values.name || __("This plan", "memberglut"), color: values.color } : L.plans.find((x) => x.id === id) || { name: `#${id}` };
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: self ? "self" : "", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-plan-dot", style: { background: p.color } }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: p.name }),
         self && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "pink", bordered: false, children: __("this plan", "memberglut") }),
+        !self && p.status !== "active" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: __("inactive", "memberglut") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "mg-order-btns", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "small", type: "text", disabled: i === 0, onClick: () => move(i, -1), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faArrowUp }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "small", type: "text", disabled: i === list.length - 1, onClick: () => move(i, 1), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faArrowDown }) })
         ] })
       ] }, id);
-    }) })
+    }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", style: { marginTop: 10 }, children: __("Members can move along this path from their account when Global Settings › Member account › “Members can upgrade / downgrade” is on as well.", "memberglut") })
   ] });
 }
 function PlanRules({ values }) {
-  const id = Number(queryArg("id"));
-  const rules = RULES.filter((r) => r.access.plans.includes(id));
+  const [rules, setRules] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    if (!currentId) {
+      setRules([]);
+      return;
+    }
+    getPlanRules(currentId).then(setRules).catch(() => setRules([]));
+  }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-block", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-subhead", children: [
       __("Content this plan unlocks", "memberglut"),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Content rules that list this plan. Add the plan to a rule to give it more access.", "memberglut") })
     ] }),
-    rules.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-note", children: __("No rule uses this plan yet.", "memberglut") }) : /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mg-link-list", children: rules.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
+    rules === null ? /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "small" }) : rules.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-note", children: currentId ? __("No rule uses this plan yet.", "memberglut") : __("Save the plan first, then protect content for it.", "memberglut") }) : /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mg-link-list", children: rules.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: link("rule_editor", { id: r.id }), children: r.title }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, color: r.status === "active" ? "green" : "default", children: r.status })
     ] }, r.id)) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { href: link("rule_editor", { plan: id || "" }), style: { marginTop: 10 }, children: __("Protect content for this plan", "memberglut") }),
+    currentId > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { href: link("rule_editor", { plan: currentId }), style: { marginTop: 10 }, children: __("Protect content for this plan", "memberglut") }),
     values.name && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", style: { marginTop: 12 }, children: sprintf(__("Posts can also be locked to “%s” from the MemberGlut box in the post editor.", "memberglut"), values.name) })
   ] });
 }
+function GroupInput({ value, onChange }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    AutoComplete,
+    {
+      value,
+      onChange,
+      options: L.groups.map((g) => ({ value: g })),
+      filterOption: (input, o) => o.value.toLowerCase().includes((input || "").toLowerCase()),
+      placeholder: __("Main", "memberglut"),
+      style: { width: 260 }
+    }
+  );
+}
+const disabledGateways = (v) => (v.gateways || []).filter((g) => !(L.gateways.find((x) => x.value === g) || {}).enabled);
 const SECTIONS = [
   {
     key: "general",
@@ -106,7 +243,7 @@ const SECTIONS = [
     desc: __("Name and how the plan appears in pricing tables.", "memberglut"),
     fields: [
       { key: "name", type: "text", label: __("Plan name", "memberglut"), placeholder: __("e.g. Gold", "memberglut") },
-      { key: "slug", type: "text", label: __("Slug", "memberglut"), tip: __("Used in signup links (?plan=gold) and shortcodes. Empty creates it from the name.", "memberglut"), placeholder: "gold" },
+      { key: "slug", type: "text", label: __("Slug", "memberglut"), tip: __("Used in signup links (?plan=gold) and shortcodes. Empty creates it from the name. Changing it breaks links you already shared.", "memberglut"), placeholder: "gold" },
       { key: "description", type: "textarea", label: __("Description", "memberglut"), tip: __("Shown in the pricing table and at checkout.", "memberglut"), rows: 3 },
       { key: "features", type: "tags", label: __("Feature list", "memberglut"), tip: __("Bullet points for the pricing table. Press Enter after each one.", "memberglut"), placeholder: __("All premium articles", "memberglut") },
       { key: "status", type: "radio", label: __("Status", "memberglut"), tip: __("Inactive plans cannot be bought, but members who have them keep them.", "memberglut"), options: [{ value: "active", label: __("Active", "memberglut") }, { value: "inactive", label: __("Inactive", "memberglut") }] },
@@ -130,16 +267,24 @@ const SECTIONS = [
         ]
       },
       { key: "billing", type: "radio", label: __("Billing", "memberglut"), options: [{ value: "one_time", label: __("One payment", "memberglut") }, { value: "recurring", label: __("Recurring subscription", "memberglut") }], show: (v) => v.type === "paid" },
-      { key: "price", type: "price", label: __("Price", "memberglut"), show: (v) => v.type === "paid" },
+      { key: "price", type: "price", prefix: symbol, label: __("Price", "memberglut"), show: (v) => v.type === "paid" },
       { key: "duration", type: "duration", label: __("Bill every", "memberglut"), show: (v) => v.type === "paid" && v.billing === "recurring" },
       { key: "limit_cycles", type: "switch", label: __("Stop after a number of payments", "memberglut"), tip: __("Pay in installments: e.g. 3 monthly payments for a course.", "memberglut"), show: (v) => v.type === "paid" && v.billing === "recurring" },
       { key: "cycles", type: "number", label: __("Number of payments", "memberglut"), min: 2, max: 120, show: (v) => v.type === "paid" && v.billing === "recurring" && v.limit_cycles },
       { key: "after_cycles", type: "radio", label: __("After the last payment", "memberglut"), options: [{ value: "keep", label: __("Keep access forever", "memberglut") }, { value: "expire", label: __("End access", "memberglut") }], show: (v) => v.type === "paid" && v.billing === "recurring" && v.limit_cycles },
-      { key: "signup_fee", type: "price", label: __("Sign-up fee", "memberglut"), tip: __("Added once to the first payment.", "memberglut"), show: (v) => v.type === "paid" },
+      { key: "signup_fee", type: "price", prefix: symbol, label: __("Sign-up fee", "memberglut"), tip: __("Added once to the first payment (charged at the start of a free trial). Coupons do not discount it.", "memberglut"), show: (v) => v.type === "paid" },
       { key: "trial", type: "switch", label: __("Free trial", "memberglut"), tip: __("Members pay nothing until the trial ends. Card details are still collected.", "memberglut"), show: (v) => v.type === "paid" && v.billing === "recurring" },
       { key: "trial_length", type: "duration", label: __("Trial length", "memberglut"), show: (v) => v.type === "paid" && v.billing === "recurring" && v.trial },
       { key: "one_trial", type: "switch", label: __("One trial per person", "memberglut"), tip: __("Users who already had a trial on any plan pay from the first day.", "memberglut"), show: (v) => v.type === "paid" && v.billing === "recurring" && v.trial },
-      { key: "gateways", type: "multiselect", label: __("Payment methods", "memberglut"), tip: __("Methods offered for this plan. Set them up in Global Settings › Payments.", "memberglut"), options: [{ value: "stripe", label: "Stripe" }, { value: "paypal", label: "PayPal" }, { value: "bank", label: __("Bank transfer", "memberglut") }], show: (v) => v.type === "paid" }
+      {
+        key: "gateways",
+        type: "multiselect",
+        label: __("Payment methods", "memberglut"),
+        tip: __("Methods offered for this plan. Set them up in Global Settings › Payments.", "memberglut"),
+        options: gatewayOptions,
+        show: (v) => v.type === "paid",
+        after: (v) => disabledGateways(v).length ? /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { type: "warning", showIcon: true, style: { marginTop: 8 }, message: sprintf(__("Not enabled in Global Settings › Payments: %s. They are not offered until you enable them.", "memberglut"), disabledGateways(v).join(", ")), action: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: link("settings", { tab: "payments" }), children: __("Open", "memberglut") }) }) : null
+      }
     ]
   },
   {
@@ -174,7 +319,7 @@ const SECTIONS = [
     fields: [
       { key: "role", type: "select", label: __("Give this role", "memberglut"), tip: __("Added when the plan becomes active. Create roles in Roles & Capabilities.", "memberglut"), options: roleOptions },
       { key: "keep_roles", type: "switch", label: __("Keep the user’s other roles", "memberglut"), tip: __("Off replaces the user’s role. Administrators are never changed.", "memberglut") },
-      { key: "expire_role", type: "select", label: __("Role after the plan ends", "memberglut"), options: [{ value: "", label: __("— Just remove the plan role —", "memberglut") }, ...roleOptions] },
+      { key: "expire_role", type: "select", label: __("Role after the plan ends", "memberglut"), tip: __("The plan role is removed unless another active plan gives it or the user had it before joining.", "memberglut"), options: [{ value: "", label: __("— Just remove the plan role —", "memberglut") }, ...roleOptions] },
       {
         key: "who_can_buy",
         type: "select",
@@ -197,7 +342,7 @@ const SECTIONS = [
     icon: faArrowUpWideShort,
     desc: __("Plans in the same group form a path members can move along.", "memberglut"),
     fields: [
-      { key: "group", type: "select", label: __("Plan group", "memberglut"), tip: __("A member holds one plan per group.", "memberglut"), options: [{ value: "Main", label: "Main" }, { value: "Courses", label: "Courses" }] },
+      { key: "group", type: "custom", label: __("Plan group", "memberglut"), tip: __("A member holds one plan per group. Type a new name to create a group.", "memberglut"), render: ({ value, onChange }) => /* @__PURE__ */ jsxRuntimeExports.jsx(GroupInput, { value, onChange }) },
       { key: "allow_upgrade", type: "switch", label: __("Members can upgrade to this plan", "memberglut") },
       { key: "allow_downgrade", type: "switch", label: __("Members can downgrade to this plan", "memberglut") },
       { key: "fee_on_change", type: "switch", label: __("Charge the sign-up fee on plan changes", "memberglut") }
@@ -210,38 +355,53 @@ const SECTIONS = [
     icon: faUserPlus,
     desc: __("The form, approval and the page members see after joining.", "memberglut"),
     fields: [
-      { key: "form", type: "select", label: __("Registration form", "memberglut"), tip: __("Edit forms in Forms & Pages.", "memberglut"), options: [{ value: "default", label: __("Default registration form", "memberglut") }, { value: "business", label: __("Business form (company fields)", "memberglut") }] },
-      { key: "approval", type: "select", label: __("Approval", "memberglut"), options: [{ value: "inherit", label: __("Use the global setting", "memberglut") }, { value: "auto", label: __("Automatic", "memberglut") }, { value: "email", label: __("Email confirmation", "memberglut") }, { value: "admin", label: __("Admin approval", "memberglut") }] },
-      { key: "redirect", type: "select", label: __("After joining", "memberglut"), options: [{ value: "inherit", label: __("Use the global redirect", "memberglut") }, { value: "page", label: __("Go to a page", "memberglut") }] },
-      { key: "redirect_page", type: "select", label: __("Page", "memberglut"), options: PAGES, show: (v) => v.redirect === "page" },
-      { key: "send_welcome", type: "switch", label: __("Send the “Subscription activated” email", "memberglut") },
-      { key: "signup_link", type: "custom", label: __("Signup link", "memberglut"), tip: __("Opens the registration page with this plan selected.", "memberglut"), render: ({ values }) => /* @__PURE__ */ jsxRuntimeExports.jsx(CopyCode, { code: `${_siteUrl || "https://yoursite.com"}/register/?plan=${values.slug || "plan"}` }) },
+      { key: "form", type: "select", label: __("Registration form", "memberglut"), tip: __("Edit forms in Forms & Pages.", "memberglut"), options: formOptions },
+      { key: "approval", type: "select", label: __("Approval", "memberglut"), tip: __("Overrides Global Settings › Login & registration › New account approval for people joining this plan.", "memberglut"), options: [{ value: "inherit", label: __("Use the global setting", "memberglut") }, { value: "auto", label: __("Automatic", "memberglut") }, { value: "email", label: __("Email confirmation", "memberglut") }, { value: "admin", label: __("Admin approval", "memberglut") }] },
+      { key: "redirect", type: "select", label: __("After joining", "memberglut"), tip: __("A “return to the page they came from” redirect (Global Settings › Redirects) still wins.", "memberglut"), options: [{ value: "inherit", label: __("Use the global redirect", "memberglut") }, { value: "page", label: __("Go to a page", "memberglut") }] },
+      { key: "redirect_page", type: "select", label: __("Page", "memberglut"), options: pageOptions(), show: (v) => v.redirect === "page" },
+      { key: "send_welcome", type: "switch", label: __("Send the “Subscription activated” email", "memberglut"), tip: __("The email must also be on in Emails.", "memberglut") },
+      { key: "signup_link", type: "custom", label: __("Signup link", "memberglut"), tip: __("Opens the registration page with this plan selected.", "memberglut"), render: ({ values }) => /* @__PURE__ */ jsxRuntimeExports.jsx(CopyCode, { code: values.signup_url && values.slug === values.saved_slug ? values.signup_url : signupUrl(values.slug) }) },
       { key: "buy_button", type: "custom", label: __("Buy button shortcode", "memberglut"), render: ({ values }) => /* @__PURE__ */ jsxRuntimeExports.jsx(CopyCode, { code: `[memberglut_buy plan="${values.slug || "plan"}"]` }) }
     ]
   }
 ];
 function PlanEditor() {
   const { message } = App.useApp();
-  const id = queryArg("id");
   const [values, setValues] = reactExports.useState(NEW_PLAN);
-  const [loading, setLoading] = reactExports.useState(!!id);
+  const [loading, setLoading] = reactExports.useState(!!currentId);
   const [saving, setSaving] = reactExports.useState(false);
+  const [errors, setErrors] = reactExports.useState({});
   reactExports.useEffect(() => {
-    if (!id) return;
-    getPlan(id).then((p) => {
-      if (p) setValues({ ...NEW_PLAN, ...p, features: ["Premium articles", "Monthly Q&A"] });
-    }).finally(() => setLoading(false));
-  }, [id]);
+    if (!currentId) return;
+    getPlan(currentId).then((p) => setValues({ ...NEW_PLAN, ...p, saved_slug: p.slug })).catch((e) => message.error(e.message)).finally(() => setLoading(false));
+  }, []);
   const save = async (v) => {
     if (!v.name.trim()) {
+      setErrors({ name: __("Give the plan a name.", "memberglut") });
       message.error(__("Give the plan a name.", "memberglut"));
       return false;
     }
     setSaving(true);
-    await savePlan(v);
-    setSaving(false);
-    message.success(id ? __("Plan updated.", "memberglut") : __("Plan created.", "memberglut"));
-    return true;
+    try {
+      const saved = await savePlan({ ...v, id: currentId || void 0 });
+      if (v.order) {
+        await savePlanOrder(saved.group, v.order.map((id) => id === "new" ? saved.id : id));
+      }
+      setErrors({});
+      message.success(currentId ? __("Plan updated.", "memberglut") : __("Plan created.", "memberglut"));
+      if (!currentId) {
+        window.location.href = link("plan_editor", { id: saved.id });
+        return true;
+      }
+      setValues({ ...NEW_PLAN, ...saved, saved_slug: saved.slug, order: null });
+      return true;
+    } catch (e) {
+      setErrors(e.fields || {});
+      message.error(e.message);
+      return false;
+    } finally {
+      setSaving(false);
+    }
   };
   if (loading) return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-loading", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "large" }) });
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -252,20 +412,21 @@ function PlanEditor() {
         " ",
         __("All plans", "memberglut")
       ] }) },
-      title: id ? sprintf(__("Edit plan: %s", "memberglut"), values.name) : __("New plan", "memberglut"),
-      titleExtra: id && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-formname", children: [
+      title: currentId ? sprintf(__("Edit plan: %s", "memberglut"), values.name) : __("New plan", "memberglut"),
+      titleExtra: currentId > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-formname", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "mg-fs-id", children: [
           "ID ",
-          id
+          currentId
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: sprintf(__("%d members", "memberglut"), values.members || 0) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("a", { className: "mg-muted", href: link("members", { plan: currentId }), children: sprintf(__("%d members", "memberglut"), values.members || 0) })
       ] }),
       sections: SECTIONS,
       values,
       setValues,
       onSave: save,
       saving,
-      saveLabel: id ? __("Update plan", "memberglut") : __("Create plan", "memberglut")
+      errors,
+      saveLabel: currentId ? __("Update plan", "memberglut") : __("Create plan", "memberglut")
     }
   );
 }

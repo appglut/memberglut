@@ -1,35 +1,72 @@
-import { cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bQ as faStar, a8 as __, E as PageHeader, c as Button, bF as faPlus, R as React, aJ as faArrowRight, bT as faTableList, bR as faTableCellsLarge, c7 as faUsers, bC as faPenToSquare, b5 as faCopy, bt as faLink, bW as faTrashCan, ao as _siteUrl, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
+import { cU as jsxRuntimeExports, P as Page, b as App, d7 as reactExports, cV as link, q as FontAwesomeIcon, bP as faStar, a8 as __, E as PageHeader, c as Button, bE as faPlus, R as React, aI as faArrowRight, bS as faTableList, bQ as faTableCellsLarge, c6 as faUsers, bB as faPenToSquare, b4 as faCopy, bs as faLink, bV as faTrashCan, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { G as getPlans, T as Tooltip } from "./chunks/api-BB7d3L8U.js";
-import { b as planPrice, m as money, p as planDuration } from "./chunks/format-pGmZIQcp.js";
-import { T as Tag } from "./chunks/index-DAwOKiJ9.js";
-import { S as Switch } from "./chunks/index-BdHVDZgL.js";
-import { S as Segmented } from "./chunks/index-jcrWDM9i.js";
-import { F as ForwardTable } from "./chunks/Table-DA1U2jgW.js";
-import { P as Popconfirm } from "./chunks/index-CKF9N8du.js";
-import "./chunks/index-CeeYjpwl.js";
-import "./chunks/lookups-BPwJCRM2.js";
-import "./chunks/index-bTvZrssX.js";
-import "./chunks/useBreakpoint-BRPI9HCX.js";
-import "./chunks/index-DYg9RGnF.js";
-import "./chunks/index-wzDtlKHr.js";
+import { T as Tooltip, J as getPlans, a8 as setPlanStatus, k as duplicatePlan, j as deletePlan } from "./chunks/api-BaJbRTwg.js";
+import { b as planPrice, m as money, p as planDuration } from "./chunks/format-d8T3zh3m.js";
+import { r as roleName } from "./chunks/lookups-DHSS-Myl.js";
+import { T as Tag } from "./chunks/index-BN7GKNU8.js";
+import { S as Switch } from "./chunks/index-Dfx4LXY8.js";
+import { S as Segmented } from "./chunks/index-wYjIfrAo.js";
+import { F as ForwardTable, C as Checkbox } from "./chunks/Table-DWPhuWqo.js";
+import { P as Popconfirm } from "./chunks/index-3fEq35Ry.js";
+import "./chunks/index-yo_nZXOO.js";
+import "./chunks/index-CcJNww40.js";
+import "./chunks/useBreakpoint-DzDOjlX5.js";
+import "./chunks/index-CIIETatw.js";
+import "./chunks/index-BPzm35Wd.js";
 function Plans() {
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
   const [plans, setPlans] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
   const [filter, setFilter] = reactExports.useState("");
   const [view, setView] = reactExports.useState("table");
+  const load = () => getPlans().then(setPlans).catch((e) => message.error(e.message)).finally(() => setLoading(false));
   reactExports.useEffect(() => {
-    getPlans().then(setPlans).finally(() => setLoading(false));
+    load();
   }, []);
-  const toggle = (p, on) => {
-    setPlans(plans.map((x) => x.id === p.id ? { ...x, status: on ? "active" : "inactive" } : x));
-    message.success(on ? __("Plan is active and can be bought.", "memberglut") : __("Plan hidden. Current members keep it.", "memberglut"));
+  const replace = (np) => setPlans((all) => all.map((x) => x.id === np.id ? np : x));
+  const toggle = async (p, on) => {
+    try {
+      replace(await setPlanStatus(p.id, on ? "active" : "inactive"));
+      message.success(on ? __("Plan is active and can be bought.", "memberglut") : __("Plan hidden. Current members keep it.", "memberglut"));
+    } catch (e) {
+      message.error(e.message);
+    }
   };
   const copyLink = (p) => {
     var _a;
-    (_a = navigator.clipboard) == null ? void 0 : _a.writeText(`${_siteUrl || "https://yoursite.com"}/register/?plan=${p.slug}`);
+    (_a = navigator.clipboard) == null ? void 0 : _a.writeText(p.signup_url);
     message.success(__("Signup link copied.", "memberglut"));
+  };
+  const duplicate = (p) => {
+    let withRules = true;
+    modal.confirm({
+      title: sprintf(__("Duplicate “%s”?", "memberglut"), p.name),
+      content: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: __("The copy is created as inactive so you can review it before selling it.", "memberglut") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Checkbox, { defaultChecked: true, onChange: (e) => {
+          withRules = e.target.checked;
+        }, children: __("Also give the copy access to the same content rules", "memberglut") })
+      ] }),
+      okText: __("Duplicate", "memberglut"),
+      onOk: async () => {
+        try {
+          const np = await duplicatePlan(p.id, withRules);
+          setPlans((all) => [...all, np]);
+          message.success(__("Plan duplicated.", "memberglut"));
+        } catch (e) {
+          message.error(e.message);
+        }
+      }
+    });
+  };
+  const remove = async (p) => {
+    try {
+      await deletePlan(p.id);
+      setPlans((all) => all.filter((x) => x.id !== p.id));
+      message.success(__("Plan deleted.", "memberglut"));
+    } catch (e) {
+      message.error(e.message);
+    }
   };
   const rows = plans.filter((p) => !filter || p.status === filter);
   const groups = [...new Set(plans.map((p) => p.group))];
@@ -40,7 +77,7 @@ function Plans() {
       __("Edit", "memberglut")
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-action-sep", children: "|" }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { onClick: () => message.success(__("Plan duplicated.", "memberglut")), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { onClick: () => duplicate(p), children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faCopy }),
       " ",
       __("Duplicate", "memberglut")
@@ -56,9 +93,9 @@ function Plans() {
       Popconfirm,
       {
         title: __("Delete this plan?", "memberglut"),
-        description: p.members ? sprintf(__("%d members have it. Make it inactive instead to keep them.", "memberglut"), p.members) : __("This cannot be undone.", "memberglut"),
-        okButtonProps: { danger: true, disabled: p.members > 0 },
-        onConfirm: () => setPlans(plans.filter((x) => x.id !== p.id)),
+        description: p.subscriptions ? sprintf(__("%d members have it. Make it inactive instead to keep them.", "memberglut"), p.subscriptions) : __("It is also removed from rules, coupons and the pricing table. This cannot be undone.", "memberglut"),
+        okButtonProps: { danger: true, disabled: p.subscriptions > 0 },
+        onConfirm: () => remove(p),
         children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { className: "mg-action-delete", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }),
           " ",
@@ -88,6 +125,7 @@ function Plans() {
     { title: __("Price", "memberglut"), dataIndex: "price", render: (v, p) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: planPrice(p) }),
       p.trial && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", children: __("Free trial", "memberglut") }),
+      p.sold_out && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "red", bordered: false, children: __("Sold out", "memberglut") }) }),
       p.signup_fee > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-muted", children: [
         "+ ",
         money(p.signup_fee),
@@ -95,8 +133,8 @@ function Plans() {
         __("sign-up fee", "memberglut")
       ] })
     ] }) },
-    { title: __("Access length", "memberglut"), render: (v, p) => p.billing === "recurring" ? __("Until canceled", "memberglut") : planDuration(p) },
-    { title: __("Role", "memberglut"), dataIndex: "role", render: (v) => /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: v }) },
+    { title: __("Access length", "memberglut"), render: (v, p) => planDuration(p) },
+    { title: __("Role", "memberglut"), dataIndex: "role", render: (v) => v ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: roleName(v) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-muted", children: "—" }) },
     { title: __("Members", "memberglut"), dataIndex: "members", align: "right", render: (v, p) => /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: link("members", { plan: p.id }), children: v }) },
     { title: __("Revenue", "memberglut"), dataIndex: "revenue", align: "right", render: (v) => money(v) },
     { title: __("Active", "memberglut"), dataIndex: "status", align: "center", render: (v, p) => /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { size: "small", checked: v === "active", onChange: (on) => toggle(p, on) }) }
