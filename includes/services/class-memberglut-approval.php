@@ -239,6 +239,7 @@ class MemberGlut_Approval {
 			if ( memberglut_setting( 'auto_login', true ) && ! is_user_logged_in() ) {
 				wp_set_current_user( $uid );
 				wp_set_auth_cookie( $uid, false );
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core / third-party hook fired on purpose.
 				do_action( 'wp_login', get_userdata( $uid )->user_login, get_userdata( $uid ) );
 				wp_safe_redirect( MemberGlut_Redirects::after_registration( $uid ) );
 				exit;

@@ -32,14 +32,17 @@ class MemberGlut_Cache {
 			return;
 		}
 		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Standard constant read by caching plugins.
 			define( 'DONOTCACHEPAGE', true );
 		}
 		if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- Standard constant read by caching plugins.
 			define( 'DONOTCACHEOBJECT', true );
 		}
 		if ( ! headers_sent() ) {
 			nocache_headers();
 		}
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core / third-party hook fired on purpose.
 		do_action( 'litespeed_control_set_nocache', 'memberglut member page' );
 	}
 

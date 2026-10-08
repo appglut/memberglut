@@ -228,7 +228,7 @@ class MemberGlut_Coupons {
 		memberglut_repo( 'coupon_uses' )->insert( array( 'coupon_id' => (int) $coupon_id, 'user_id' => (int) $user_id, 'email' => strtolower( (string) $email ), 'payment_id' => (int) $payment_id ) );
 		global $wpdb;
 		$table = memberglut_repo( 'coupons' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Atomic counter on a plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Atomic counter on a plugin table.
 		$wpdb->query( $wpdb->prepare( "UPDATE `{$table}` SET uses = uses + 1 WHERE id = %d", $coupon_id ) );
 	}
 

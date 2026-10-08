@@ -63,7 +63,7 @@ class MemberGlut_Dashboard {
 	public static function active_at( $at ) {
 		global $wpdb;
 		$t = memberglut_repo( 'subscriptions' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT user_id) FROM `{$t}` WHERE user_id > 0 AND status NOT IN ('pending','abandoned') AND start_date IS NOT NULL AND start_date <= %s AND (expires_at IS NULL OR expires_at > %s)", $at, $at ) );
 	}
 
@@ -75,7 +75,7 @@ class MemberGlut_Dashboard {
 	public static function active_now() {
 		global $wpdb;
 		$t = memberglut_repo( 'subscriptions' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT user_id) FROM `{$t}` WHERE user_id > 0 AND ( status IN ('active','trialing') OR ( status = 'canceled' AND expires_at > %s ) )", memberglut_now() ) );
 	}
 
@@ -89,7 +89,7 @@ class MemberGlut_Dashboard {
 	public static function revenue( $from, $to ) {
 		global $wpdb;
 		$t = memberglut_repo( 'payments' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		return round( (float) $wpdb->get_var( $wpdb->prepare( "SELECT COALESCE(SUM(amount - refunded_amount),0) FROM `{$t}` WHERE status IN ('completed','refunded') AND created_at >= %s AND created_at < %s", $from, $to ) ), 2 );
 	}
 
@@ -137,7 +137,7 @@ class MemberGlut_Dashboard {
 	private static function joined( $from, $to ) {
 		global $wpdb;
 		$t = memberglut_repo( 'subscriptions' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT user_id) FROM `{$t}` WHERE user_id > 0 AND status NOT IN ('pending','abandoned') AND created_at >= %s AND created_at < %s", $from, $to ) );
 	}
 
@@ -234,7 +234,7 @@ class MemberGlut_Dashboard {
 	private static function snapshot_value( $date ) {
 		global $wpdb;
 		$t = MemberGlut_Install::table( 'stats_daily' );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		$v = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM `{$t}` WHERE stat_date = %s AND metric = 'active_members' AND object_id = 0", $date ) );
 		return null === $v ? null : (int) $v;
 	}

@@ -54,23 +54,23 @@ defined( 'ABSPATH' ) || exit;
 				<?php if ( 'select' === $picker ) : ?>
 					<select name="plan" required data-mg-plan-select>
 						<option value=""><?php esc_html_e( '— Choose a plan —', 'memberglut' ); ?></option>
-						<?php foreach ( $plans as $p ) : ?>
-							<option value="<?php echo esc_attr( $p['id'] ); ?>" data-mg-plan-type="<?php echo esc_attr( $p['type'] ); ?>" <?php selected( (string) $selected, (string) $p['id'] ); ?>><?php echo esc_html( $p['name'] . ' — ' . MemberGlut_Plans::price_label( $p ) ); ?></option>
+						<?php foreach ( $plans as $memberglut_p ) : ?>
+							<option value="<?php echo esc_attr( $memberglut_p['id'] ); ?>" data-mg-plan-type="<?php echo esc_attr( $memberglut_p['type'] ); ?>" <?php selected( (string) $selected, (string) $memberglut_p['id'] ); ?>><?php echo esc_html( $memberglut_p['name'] . ' — ' . MemberGlut_Plans::price_label( $memberglut_p ) ); ?></option>
 						<?php endforeach; ?>
 					</select>
 				<?php else : ?>
 					<div class="mg-plan-options">
-						<?php foreach ( $plans as $i => $p ) : ?>
-							<label class="mg-plan-option<?php echo $p['featured'] ? ' is-featured' : ''; ?>" style="--c:<?php echo esc_attr( $p['color'] ); ?>">
-								<input type="radio" name="plan" value="<?php echo esc_attr( $p['id'] ); ?>" data-mg-plan-type="<?php echo esc_attr( $p['type'] ); ?>" <?php checked( (string) $selected ? (string) $selected : ( 0 === $i && 1 === count( $plans ) ? (string) $p['id'] : '' ), (string) $p['id'] ); ?> required>
+						<?php foreach ( $plans as $memberglut_i => $memberglut_p ) : ?>
+							<label class="mg-plan-option<?php echo $memberglut_p['featured'] ? ' is-featured' : ''; ?>" style="--c:<?php echo esc_attr( $memberglut_p['color'] ); ?>">
+								<input type="radio" name="plan" value="<?php echo esc_attr( $memberglut_p['id'] ); ?>" data-mg-plan-type="<?php echo esc_attr( $memberglut_p['type'] ); ?>" <?php checked( (string) $selected ? (string) $selected : ( 0 === $memberglut_i && 1 === count( $plans ) ? (string) $memberglut_p['id'] : '' ), (string) $memberglut_p['id'] ); ?> required>
 								<span class="mg-plan-option-body">
-									<strong><?php echo esc_html( $p['name'] ); ?></strong>
-									<span class="mg-plan-price"><?php echo esc_html( MemberGlut_Plans::price_label( $p ) ); ?></span>
-									<?php if ( 'cards' === $picker && $p['description'] ) : ?>
-										<span class="mg-plan-desc"><?php echo esc_html( $p['description'] ); ?></span>
+									<strong><?php echo esc_html( $memberglut_p['name'] ); ?></strong>
+									<span class="mg-plan-price"><?php echo esc_html( MemberGlut_Plans::price_label( $memberglut_p ) ); ?></span>
+									<?php if ( 'cards' === $picker && $memberglut_p['description'] ) : ?>
+										<span class="mg-plan-desc"><?php echo esc_html( $memberglut_p['description'] ); ?></span>
 									<?php endif; ?>
-									<?php if ( 'paid' === $p['type'] && $p['trial'] ) : ?>
-										<span class="mg-plan-trial"><?php echo esc_html( sprintf( /* translators: %s: trial length */ __( '%s free trial', 'memberglut' ), MemberGlut_Plans::period_label( $p['trial_length'] ) ) ); ?></span>
+									<?php if ( 'paid' === $memberglut_p['type'] && $memberglut_p['trial'] ) : ?>
+										<span class="mg-plan-trial"><?php echo esc_html( sprintf( /* translators: %s: trial length */ __( '%s free trial', 'memberglut' ), MemberGlut_Plans::period_label( $memberglut_p['trial_length'] ) ) ); ?></span>
 									<?php endif; ?>
 								</span>
 							</label>
@@ -84,13 +84,13 @@ defined( 'ABSPATH' ) || exit;
 		<?php if ( $fields ) : ?>
 			<div class="mg-fields">
 				<?php
-				foreach ( $fields as $f ) {
-					$html = MemberGlut_Fields::render( $f, isset( $values[ $f['key'] ] ) ? $values[ $f['key'] ] : '' );
-					if ( isset( $errors[ $f['key'] ] ) ) {
-						$html = str_replace( '<span class="mg-field-error" role="alert"></span>', '<span class="mg-field-error" role="alert">' . wp_kses( $errors[ $f['key'] ], array( 'a' => array( 'href' => true ) ) ) . '</span>', $html );
-						$html = str_replace( 'class="mg-field ', 'class="mg-field has-error ', $html );
+				foreach ( $fields as $memberglut_f ) {
+					$memberglut_html = MemberGlut_Fields::render( $memberglut_f, isset( $values[ $memberglut_f['key'] ] ) ? $values[ $memberglut_f['key'] ] : '' );
+					if ( isset( $errors[ $memberglut_f['key'] ] ) ) {
+						$memberglut_html = str_replace( '<span class="mg-field-error" role="alert"></span>', '<span class="mg-field-error" role="alert">' . wp_kses( $errors[ $memberglut_f['key'] ], array( 'a' => array( 'href' => true ) ) ) . '</span>', $memberglut_html );
+						$memberglut_html = str_replace( 'class="mg-field ', 'class="mg-field has-error ', $memberglut_html );
 					}
-					echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in MemberGlut_Fields::render().
+					echo $memberglut_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in MemberGlut_Fields::render().
 				}
 				?>
 			</div>

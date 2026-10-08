@@ -44,7 +44,7 @@ class MemberGlut_Stats {
 		global $wpdb;
 		$date  = $date ? $date : wp_date( 'Y-m-d' );
 		$table = self::table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table upsert.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table upsert.
 		$wpdb->query( $wpdb->prepare( "INSERT INTO `{$table}` (stat_date, metric, object_id, value) VALUES (%s, %s, %d, %f) ON DUPLICATE KEY UPDATE value = value + VALUES(value)", $date, $metric, (int) $object_id, (float) $by ) );
 	}
 
@@ -60,7 +60,7 @@ class MemberGlut_Stats {
 	public static function set( $metric, $value, $date, $object_id = 0 ) {
 		global $wpdb;
 		$table = self::table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table upsert.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table upsert.
 		$wpdb->query( $wpdb->prepare( "INSERT INTO `{$table}` (stat_date, metric, object_id, value) VALUES (%s, %s, %d, %f) ON DUPLICATE KEY UPDATE value = VALUES(value)", $date, $metric, (int) $object_id, (float) $value ) );
 	}
 
@@ -80,7 +80,7 @@ class MemberGlut_Stats {
 		if ( null !== $object_id ) {
 			$sql .= $wpdb->prepare( ' AND object_id = %d', $object_id );
 		}
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared -- Prepared above.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Prepared above.
 		return (float) $wpdb->get_var( $sql );
 	}
 
@@ -95,7 +95,7 @@ class MemberGlut_Stats {
 	public static function series( $metric, $from, $to ) {
 		global $wpdb;
 		$table = self::table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT stat_date, SUM(value) AS v FROM `{$table}` WHERE metric = %s AND stat_date BETWEEN %s AND %s GROUP BY stat_date", $metric, $from, $to ), ARRAY_A );
 		$out  = array();
 		foreach ( (array) $rows as $r ) {

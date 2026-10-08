@@ -805,7 +805,7 @@ class MemberGlut_Subscription_Service {
 		global $wpdb;
 		$offset = isset( $args['offset'] ) ? (int) $args['offset'] : 0;
 		$table  = memberglut_repo( 'subscriptions' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		$ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT user_id FROM `{$table}` ORDER BY user_id LIMIT 200 OFFSET %d", $offset ) );
 		foreach ( $ids as $uid ) {
 			MemberGlut_Role_Sync::sync_user( (int) $uid, null, true );

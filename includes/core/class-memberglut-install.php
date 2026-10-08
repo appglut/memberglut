@@ -423,7 +423,7 @@ class MemberGlut_Install {
 	 */
 	public static function column_exists( $table, $column ) {
 		global $wpdb;
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Schema check, table name from the plugin.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Schema check, table name from the plugin.
 		return (bool) $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM `{$table}` LIKE %s", $column ) );
 	}
 
@@ -440,6 +440,7 @@ class MemberGlut_Install {
 
 		// Old plan columns → new columns.
 		if ( self::column_exists( $plans, 'plan_billing_cycle' ) ) {
+			// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 			$rows = $wpdb->get_results( "SELECT * FROM `{$plans}`", ARRAY_A );
 			foreach ( $rows as $row ) {
 				$cycle    = isset( $row['plan_billing_cycle'] ) ? $row['plan_billing_cycle'] : 'lifetime';
@@ -469,6 +470,7 @@ class MemberGlut_Install {
 				}
 				$features_table = self::table( 'plan_features' );
 				if ( self::table_exists( $features_table ) && empty( $settings['features'] ) ) {
+					// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 					$settings['features'] = $wpdb->get_col( $wpdb->prepare( "SELECT feature_name FROM `{$features_table}` WHERE plan_id = %d ORDER BY feature_order ASC", $row['id'] ) );
 				}
 				$data['settings'] = wp_json_encode( $settings );
@@ -479,7 +481,9 @@ class MemberGlut_Install {
 		// Old user plans → subscriptions (only once: skip if subscriptions already has rows).
 		$old_subs = self::table( 'user_plans' );
 		$subs     = self::table( 'subscriptions' );
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 		if ( self::table_exists( $old_subs ) && ! (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$subs}`" ) ) {
+			// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 			$rows = $wpdb->get_results( "SELECT * FROM `{$old_subs}`", ARRAY_A );
 			foreach ( $rows as $row ) {
 				$status = in_array( $row['status'], array( 'active', 'expired', 'canceled', 'pending', 'trialing', 'on_hold' ), true ) ? $row['status'] : 'active';
@@ -650,7 +654,7 @@ class MemberGlut_Install {
 		}
 		update_option( 'memberglut_default_plans_v2', 1 );
 		$table = self::table( 'plans' );
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Install check.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Install check.
 		if ( (int) $wpdb->get_var( "SELECT COUNT(*) FROM `{$table}`" ) > 0 ) {
 			return;
 		}

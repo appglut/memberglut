@@ -199,6 +199,7 @@ class MemberGlut_Settings {
 	 * @return array
 	 */
 	private static function with_extensions( $schema, $hook ) {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Hook names are memberglut_* constants passed by the caller.
 		$extra = (array) apply_filters( $hook, array() );
 		foreach ( $extra as $key => $def ) {
 			if ( isset( $schema[ $key ] ) || ! is_array( $def ) || empty( $def['type'] ) || ! array_key_exists( 'default', $def ) ) {
@@ -424,6 +425,7 @@ class MemberGlut_Settings {
 
 		update_option( $option, $values, true );
 		self::$cache = array();
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Hook names are memberglut_* constants passed by the caller.
 		do_action( $action, $values, $old );
 		return $values;
 	}

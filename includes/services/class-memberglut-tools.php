@@ -718,7 +718,7 @@ class MemberGlut_Tools {
 		}
 		foreach ( array_merge( MemberGlut_Install::tables(), MemberGlut_Install::legacy_tables() ) as $t ) {
 			$table = $wpdb->prefix . 'memberglut_' . $t;
-			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Removing our own tables.
+			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Removing our own tables.
 		}
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Removing our own data.
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like( 'memberglut_' ) . '%', $wpdb->esc_like( '_transient_memberglut_' ) . '%', $wpdb->esc_like( '_transient_timeout_memberglut_' ) . '%' ) );

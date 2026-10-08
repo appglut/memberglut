@@ -218,6 +218,21 @@ abstract class MemberGlut_Repository {
 	}
 
 	/**
+	 * Count distinct values of a column.
+	 *
+	 * @param string $column Column.
+	 * @param array  $args   Filters.
+	 * @return int
+	 */
+	public function count_distinct( $column, array $args = array() ) {
+		global $wpdb;
+		if ( ! isset( $this->columns[ $column ] ) ) {
+			return 0;
+		}
+		return (int) $wpdb->get_var( "SELECT COUNT(DISTINCT `{$column}`) FROM `{$this->table()}` WHERE " . $this->where_sql( $args ) );
+	}
+
+	/**
 	 * Count rows grouped by a column.
 	 *
 	 * @param string $column Column.
@@ -318,6 +333,7 @@ abstract class MemberGlut_Repository {
 					continue;
 				}
 				$in      = implode( ',', array_fill( 0, count( $value ), $fmt ) );
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column is whitelisted; one %s/%d/%f placeholder per value.
 				$parts[] = $wpdb->prepare( "`{$col}` " . ( 'NOT IN' === $op || '!=' === $op ? 'NOT IN' : 'IN' ) . " ({$in})", $value );
 				continue;
 			}
@@ -325,6 +341,7 @@ abstract class MemberGlut_Repository {
 				$parts[] = '!=' === $op ? "`{$col}` IS NOT NULL" : "`{$col}` IS NULL";
 				continue;
 			}
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Column and operator are whitelisted; $fmt is %s, %d or %f.
 			$parts[] = $wpdb->prepare( "`{$col}` {$op} {$fmt}", $value );
 		}
 		return $parts ? implode( ' AND ', $parts ) : '1=1';

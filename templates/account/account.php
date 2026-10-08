@@ -22,8 +22,8 @@ defined( 'ABSPATH' ) || exit;
 			<span><?php echo esc_html( $user->display_name ); ?></span>
 		</div>
 		<ul>
-			<?php foreach ( $tabs as $key => $label ) : ?>
-				<li class="<?php echo $key === $current ? 'is-active' : ''; ?>"><a href="<?php echo esc_url( $urls[ $key ] ); ?>"<?php echo $key === $current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $label ); ?></a></li>
+			<?php foreach ( $tabs as $memberglut_key => $memberglut_label ) : ?>
+				<li class="<?php echo $memberglut_key === $current ? 'is-active' : ''; ?>"><a href="<?php echo esc_url( $urls[ $memberglut_key ] ); ?>"<?php echo $memberglut_key === $current ? ' aria-current="page"' : ''; ?>><?php echo esc_html( $memberglut_label ); ?></a></li>
 			<?php endforeach; ?>
 			<li class="mg-account-logout"><a href="<?php echo esc_url( $logout ); ?>"><?php esc_html_e( 'Log out', 'memberglut' ); ?></a></li>
 		</ul>

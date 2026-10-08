@@ -12,6 +12,4 @@ pro_features.html
 vite.config.js
 package.json
 package-lock.json
-composer.json
-composer.lock
 *.map

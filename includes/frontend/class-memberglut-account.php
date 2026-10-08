@@ -966,7 +966,7 @@ class MemberGlut_Account {
 		$fields = array_intersect( array_map( 'trim', explode( ',', strtolower( $atts['fields'] ) ) ), array( 'avatar', 'name', 'plan', 'since' ) );
 		$table  = memberglut_repo( 'subscriptions' )->table();
 		$plans  = $ids ? ' AND s.plan_id IN (' . implode( ',', array_map( 'intval', $ids ) ) . ')' : '';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table; plan IDs are integers, values prepared.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table; plan IDs are integers, values prepared.
 		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT s.user_id, MIN(s.start_date) AS since, MIN(s.plan_id) AS plan_id FROM `{$table}` s INNER JOIN {$wpdb->usermeta} m ON m.user_id = s.user_id AND m.meta_key = %s AND m.meta_value = '1' WHERE s.status IN ('active','trialing','canceled') AND (s.expires_at IS NULL OR s.expires_at > %s){$plans} GROUP BY s.user_id ORDER BY since DESC LIMIT %d", self::DIRECTORY_META, memberglut_now(), max( 1, min( 100, (int) $atts['limit'] ) ) ), ARRAY_A );
 		if ( ! $rows ) {
 			return '<p class="mg-members-empty">' . esc_html__( 'No members to show yet.', 'memberglut' ) . '</p>';
@@ -1014,11 +1014,7 @@ class MemberGlut_Account {
 		$key   = 'memberglut_count_' . md5( wp_json_encode( $where ) );
 		$count = get_transient( $key );
 		if ( false === $count ) {
-			global $wpdb;
-			$repo  = memberglut_repo( 'subscriptions' );
-			$table = $repo->table();
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table; where built by the repository.
-			$count = (int) $wpdb->get_var( "SELECT COUNT(DISTINCT user_id) FROM `{$table}` WHERE " . $repo->build_where( $where ) );
+			$count = memberglut_repo( 'subscriptions' )->count_distinct( 'user_id', array( 'where' => $where ) );
 			set_transient( $key, $count, 10 * MINUTE_IN_SECONDS );
 		}
 		return esc_html( number_format_i18n( (int) $count ) );

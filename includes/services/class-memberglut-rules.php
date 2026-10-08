@@ -678,7 +678,7 @@ class MemberGlut_Rules {
 		}
 		$ids   = array();
 		$types = array_column( MemberGlut_Lookups::post_types(), 'value' );
-		$base  = array( 'fields' => 'ids', 'posts_per_page' => 5000, 'post_status' => array( 'publish', 'private' ), 'no_found_rows' => true, 'suppress_filters' => true, 'memberglut_skip' => true );
+		$base  = array( 'fields' => 'ids', 'posts_per_page' => 5000, 'post_status' => array( 'publish', 'private' ), 'no_found_rows' => true, 'memberglut_skip' => true ); // get_posts() suppresses filters by default.
 		foreach ( $rule['protect'] as $t ) {
 			switch ( $t['type'] ) {
 				case 'post_type':

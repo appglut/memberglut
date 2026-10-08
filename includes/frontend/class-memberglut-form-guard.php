@@ -90,7 +90,7 @@ class MemberGlut_Form_Guard {
 				wp_enqueue_script( 'memberglut-hcaptcha', 'https://js.hcaptcha.com/1/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External service script.
 				return '<div class="mg-captcha h-captcha" data-sitekey="' . esc_attr( $key ) . '"></div>';
 			case 'turnstile':
-				wp_enqueue_script( 'memberglut-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External service script.
+				wp_enqueue_script( 'memberglut-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js', array(), null, true ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion, PluginCheck.CodeAnalysis.EnqueuedResourceOffloading.OffloadedContent -- Captcha service script (must load from the provider), declared in readme “External services”; only when the site owner picks Turnstile.
 				return '<div class="mg-captcha cf-turnstile" data-sitekey="' . esc_attr( $key ) . '"></div>';
 		}
 		return '';
@@ -147,7 +147,7 @@ class MemberGlut_Form_Guard {
 		$urls = array(
 			'recaptcha' => 'https://www.google.com/recaptcha/api/siteverify',
 			'hcaptcha'  => 'https://api.hcaptcha.com/siteverify',
-			'turnstile' => 'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+			'turnstile' => 'https://challenges.cloudflare.com/turnstile/v0/siteverify', // phpcs:ignore PluginCheck.CodeAnalysis.Offloading.OffloadedContent -- Server-side verification API of the captcha service, not an asset.
 		);
 		$res = wp_remote_post(
 			$urls[ $provider ],

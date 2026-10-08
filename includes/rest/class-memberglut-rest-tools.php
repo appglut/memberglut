@@ -70,7 +70,7 @@ class MemberGlut_REST_Tools extends MemberGlut_REST_Controller {
 		);
 		global $wpdb;
 		$table = $repo->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		$sources = $wpdb->get_col( "SELECT DISTINCT source FROM `{$table}` ORDER BY source" );
 		return $this->paginated(
 			$rows,

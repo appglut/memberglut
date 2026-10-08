@@ -908,7 +908,7 @@ class MemberGlut_Roles_Service {
 			} else {
 				$errors->add( 'invalid', __( 'This rescue link is invalid or has expired. Request a new one.', 'memberglut' ) );
 			}
-		} elseif ( 'POST' === ( isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : '' ) ) {
+		} elseif ( memberglut_is_post_request() ) {
 			// Step 1: request a link.
 			$nonce = isset( $_POST['memberglut_rescue_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['memberglut_rescue_nonce'] ) ) : '';
 			$email = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';

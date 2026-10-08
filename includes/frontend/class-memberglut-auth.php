@@ -274,6 +274,7 @@ class MemberGlut_Auth {
 		if ( $new_user && $approved && memberglut_setting( 'auto_login', true ) && ! is_user_logged_in() ) {
 			wp_set_current_user( $user_id );
 			wp_set_auth_cookie( $user_id, false, is_ssl() );
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core / third-party hook fired on purpose.
 			do_action( 'wp_login', get_userdata( $user_id )->user_login, get_userdata( $user_id ) );
 		}
 
@@ -472,7 +473,7 @@ class MemberGlut_Auth {
 	 * @return void
 	 */
 	public static function handle_post() {
-		if ( 'POST' !== ( isset( $_SERVER['REQUEST_METHOD'] ) ? $_SERVER['REQUEST_METHOD'] : '' ) || empty( $_POST['mg_action'] ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( ! memberglut_is_post_request() || empty( $_POST['mg_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce checked below.
 			return;
 		}
 		$action = sanitize_key( wp_unslash( $_POST['mg_action'] ) );

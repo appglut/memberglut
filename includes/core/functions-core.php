@@ -424,3 +424,12 @@ function memberglut_get_flash() {
 		'text' => wp_kses( (string) $flash['text'], array( 'a' => array( 'href' => true ) ) ),
 	);
 }
+
+/**
+ * Whether the current request is a POST.
+ *
+ * @return bool
+ */
+function memberglut_is_post_request() {
+	return isset( $_SERVER['REQUEST_METHOD'] ) && 'POST' === strtoupper( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) );
+}

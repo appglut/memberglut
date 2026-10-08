@@ -745,7 +745,7 @@ class MemberGlut_Plans {
 	public static function member_counts() {
 		global $wpdb;
 		$table = memberglut_repo( 'subscriptions' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared -- Plugin table; access_sql() is prepared.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table; access_sql() is prepared.
 		$rows = $wpdb->get_results( "SELECT plan_id, COUNT(*) AS n FROM `{$table}` WHERE " . self::access_sql() . ' GROUP BY plan_id', ARRAY_A );
 		$out  = array();
 		foreach ( (array) $rows as $r ) {
@@ -762,7 +762,7 @@ class MemberGlut_Plans {
 	public static function revenue_by_plan() {
 		global $wpdb;
 		$table = memberglut_repo( 'payments' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Plugin table.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table.
 		$rows = $wpdb->get_results( "SELECT plan_id, SUM(amount - refunded_amount) AS total FROM `{$table}` WHERE status IN ('completed','refunded') GROUP BY plan_id", ARRAY_A );
 		$out  = array();
 		foreach ( (array) $rows as $r ) {
@@ -783,7 +783,7 @@ class MemberGlut_Plans {
 		}
 		global $wpdb;
 		$table = memberglut_repo( 'subscriptions' )->table();
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared -- Plugin table; access_sql() is prepared.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Plugin table; access_sql() is prepared.
 		$n = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM `{$table}` WHERE plan_id = %d AND (" . self::access_sql() . " OR status = 'pending')", $plan['id'] ) );
 		return $n >= (int) $plan['max_members'];
 	}
@@ -921,19 +921,26 @@ class MemberGlut_Plans {
 	 * @return string
 	 */
 	public static function period_label( $duration ) {
-		$n     = max( 1, (int) $duration['length'] );
-		$units = array(
-			/* translators: %d: number */
-			'day'   => _n( 'day', '%d days', $n, 'memberglut' ),
-			/* translators: %d: number */
-			'week'  => _n( 'week', '%d weeks', $n, 'memberglut' ),
-			/* translators: %d: number */
-			'month' => _n( 'month', '%d months', $n, 'memberglut' ),
-			/* translators: %d: number */
-			'year'  => _n( 'year', '%d years', $n, 'memberglut' ),
-		);
-		$label = isset( $units[ $duration['unit'] ] ) ? $units[ $duration['unit'] ] : $duration['unit'];
-		return sprintf( $label, $n );
+		$n = max( 1, (int) $duration['length'] );
+		if ( 1 === $n ) {
+			$single = array( 'day' => __( 'day', 'memberglut' ), 'week' => __( 'week', 'memberglut' ), 'month' => __( 'month', 'memberglut' ), 'year' => __( 'year', 'memberglut' ) );
+			return isset( $single[ $duration['unit'] ] ) ? $single[ $duration['unit'] ] : $duration['unit'];
+		}
+		switch ( $duration['unit'] ) {
+			case 'day':
+				/* translators: %d: number of days */
+				return sprintf( _n( '%d day', '%d days', $n, 'memberglut' ), $n );
+			case 'week':
+				/* translators: %d: number of weeks */
+				return sprintf( _n( '%d week', '%d weeks', $n, 'memberglut' ), $n );
+			case 'month':
+				/* translators: %d: number of months */
+				return sprintf( _n( '%d month', '%d months', $n, 'memberglut' ), $n );
+			case 'year':
+				/* translators: %d: number of years */
+				return sprintf( _n( '%d year', '%d years', $n, 'memberglut' ), $n );
+		}
+		return $n . ' ' . $duration['unit'];
 	}
 
 	/**

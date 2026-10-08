@@ -24,20 +24,20 @@ $memberglut_button = static function ( $b ) {
 	}
 	return '<a class="mg-button is-' . esc_attr( $b['state'] ) . '" href="' . esc_url( $b['url'] ) . '">' . esc_html( $b['label'] ) . '</a>';
 };
-$memberglut_price = static function ( $p ) {
-	if ( 'free' === $p['type'] || $p['price'] <= 0 ) {
+$memberglut_price = static function ( $memberglut_p ) {
+	if ( 'free' === $memberglut_p['type'] || $memberglut_p['price'] <= 0 ) {
 		return '<span class="mg-amount">' . esc_html__( 'Free', 'memberglut' ) . '</span>';
 	}
-	$period = 'recurring' === $p['billing'] ? '<span class="mg-period">/ ' . esc_html( MemberGlut_Plans::period_label( $p['duration'] ) ) . '</span>' : '<span class="mg-period">' . esc_html( MemberGlut_Plans::access_label( $p ) ) . '</span>';
-	return '<span class="mg-amount">' . esc_html( memberglut_format_price( $p['price'] ) ) . '</span> ' . $period;
+	$period = 'recurring' === $memberglut_p['billing'] ? '<span class="mg-period">/ ' . esc_html( MemberGlut_Plans::period_label( $memberglut_p['duration'] ) ) . '</span>' : '<span class="mg-period">' . esc_html( MemberGlut_Plans::access_label( $memberglut_p ) ) . '</span>';
+	return '<span class="mg-amount">' . esc_html( memberglut_format_price( $memberglut_p['price'] ) ) . '</span> ' . $period;
 };
 $memberglut_class = 'mg-pricing mg-pricing-' . $layout . ( $dark ? ' is-dark' : '' );
 
 if ( 'compare' === $layout ) :
 	$memberglut_all = array();
-	foreach ( $rows as $r ) {
-		foreach ( (array) $r['plan']['features'] as $f ) {
-			$memberglut_all[ $f ] = true;
+	foreach ( $rows as $memberglut_r ) {
+		foreach ( (array) $memberglut_r['plan']['features'] as $memberglut_f ) {
+			$memberglut_all[ $memberglut_f ] = true;
 		}
 	}
 	?>
@@ -46,11 +46,11 @@ if ( 'compare' === $layout ) :
 			<thead>
 				<tr>
 					<th></th>
-					<?php foreach ( $rows as $r ) : ?>
-						<th class="<?php echo $r['plan']['featured'] ? 'is-featured' : ''; ?>" style="--c:<?php echo esc_attr( $r['plan']['color'] ); ?>">
-							<?php if ( $r['plan']['featured'] ) : ?><span class="mg-ribbon"><?php esc_html_e( 'Most popular', 'memberglut' ); ?></span><?php endif; ?>
-							<strong><?php echo esc_html( $r['plan']['name'] ); ?></strong>
-							<div class="mg-price"><?php echo wp_kses_post( $memberglut_price( $r['plan'] ) ); ?></div>
+					<?php foreach ( $rows as $memberglut_r ) : ?>
+						<th class="<?php echo $memberglut_r['plan']['featured'] ? 'is-featured' : ''; ?>" style="--c:<?php echo esc_attr( $memberglut_r['plan']['color'] ); ?>">
+							<?php if ( $memberglut_r['plan']['featured'] ) : ?><span class="mg-ribbon"><?php esc_html_e( 'Most popular', 'memberglut' ); ?></span><?php endif; ?>
+							<strong><?php echo esc_html( $memberglut_r['plan']['name'] ); ?></strong>
+							<div class="mg-price"><?php echo wp_kses_post( $memberglut_price( $memberglut_r['plan'] ) ); ?></div>
 						</th>
 					<?php endforeach; ?>
 				</tr>
@@ -59,15 +59,15 @@ if ( 'compare' === $layout ) :
 				<?php foreach ( array_keys( $memberglut_all ) as $memberglut_feature ) : ?>
 					<tr>
 						<th scope="row"><?php echo esc_html( $memberglut_feature ); ?></th>
-						<?php foreach ( $rows as $r ) : ?>
-							<td><?php echo in_array( $memberglut_feature, (array) $r['plan']['features'], true ) ? '<span class="mg-yes" aria-label="' . esc_attr__( 'Included', 'memberglut' ) . '">✓</span>' : '<span class="mg-no" aria-label="' . esc_attr__( 'Not included', 'memberglut' ) . '">—</span>'; ?></td>
+						<?php foreach ( $rows as $memberglut_r ) : ?>
+							<td><?php echo in_array( $memberglut_feature, (array) $memberglut_r['plan']['features'], true ) ? '<span class="mg-yes" aria-label="' . esc_attr__( 'Included', 'memberglut' ) . '">✓</span>' : '<span class="mg-no" aria-label="' . esc_attr__( 'Not included', 'memberglut' ) . '">—</span>'; ?></td>
 						<?php endforeach; ?>
 					</tr>
 				<?php endforeach; ?>
 				<tr class="mg-buttons">
 					<th></th>
-					<?php foreach ( $rows as $r ) : ?>
-						<td><?php echo $memberglut_button( $r['button'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure. ?></td>
+					<?php foreach ( $rows as $memberglut_r ) : ?>
+						<td><?php echo $memberglut_button( $memberglut_r['button'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure. ?></td>
 					<?php endforeach; ?>
 				</tr>
 			</tbody>
@@ -75,30 +75,30 @@ if ( 'compare' === $layout ) :
 	</div>
 <?php else : ?>
 	<div class="<?php echo esc_attr( $memberglut_class ); ?>" style="--mg-cols:<?php echo esc_attr( 'list' === $layout ? 1 : $columns ); ?>">
-		<?php foreach ( $rows as $r ) : $p = $r['plan']; // phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace ?>
-			<div class="mg-plan<?php echo $p['featured'] ? ' is-featured' : ''; ?><?php echo 'current' === $r['button']['state'] ? ' is-current' : ''; ?>" style="--c:<?php echo esc_attr( $p['color'] ); ?>">
-				<?php if ( $p['featured'] ) : ?><span class="mg-ribbon"><?php esc_html_e( 'Most popular', 'memberglut' ); ?></span><?php endif; ?>
+		<?php foreach ( $rows as $memberglut_r ) : $memberglut_p = $memberglut_r['plan']; // phpcs:ignore Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace ?>
+			<div class="mg-plan<?php echo $memberglut_p['featured'] ? ' is-featured' : ''; ?><?php echo 'current' === $memberglut_r['button']['state'] ? ' is-current' : ''; ?>" style="--c:<?php echo esc_attr( $memberglut_p['color'] ); ?>">
+				<?php if ( $memberglut_p['featured'] ) : ?><span class="mg-ribbon"><?php esc_html_e( 'Most popular', 'memberglut' ); ?></span><?php endif; ?>
 				<div class="mg-plan-head">
-					<h3 class="mg-plan-name"><?php echo esc_html( $p['name'] ); ?></h3>
-					<div class="mg-price"><?php echo wp_kses_post( $memberglut_price( $p ) ); ?></div>
-					<?php if ( 'paid' === $p['type'] && $p['trial'] ) : ?>
-						<div class="mg-plan-trial"><?php echo esc_html( sprintf( /* translators: %s: trial length */ __( '%s free trial', 'memberglut' ), MemberGlut_Plans::period_label( $p['trial_length'] ) ) ); ?></div>
+					<h3 class="mg-plan-name"><?php echo esc_html( $memberglut_p['name'] ); ?></h3>
+					<div class="mg-price"><?php echo wp_kses_post( $memberglut_price( $memberglut_p ) ); ?></div>
+					<?php if ( 'paid' === $memberglut_p['type'] && $memberglut_p['trial'] ) : ?>
+						<div class="mg-plan-trial"><?php echo esc_html( sprintf( /* translators: %s: trial length */ __( '%s free trial', 'memberglut' ), MemberGlut_Plans::period_label( $memberglut_p['trial_length'] ) ) ); ?></div>
 					<?php endif; ?>
-					<?php if ( $p['signup_fee'] > 0 ) : ?>
-						<div class="mg-plan-fee"><?php echo esc_html( sprintf( /* translators: %s: amount */ __( '+ %s sign-up fee', 'memberglut' ), memberglut_format_price( $p['signup_fee'] ) ) ); ?></div>
+					<?php if ( $memberglut_p['signup_fee'] > 0 ) : ?>
+						<div class="mg-plan-fee"><?php echo esc_html( sprintf( /* translators: %s: amount */ __( '+ %s sign-up fee', 'memberglut' ), memberglut_format_price( $memberglut_p['signup_fee'] ) ) ); ?></div>
 					<?php endif; ?>
 				</div>
-				<?php if ( $p['description'] ) : ?>
-					<p class="mg-plan-desc"><?php echo esc_html( $p['description'] ); ?></p>
+				<?php if ( $memberglut_p['description'] ) : ?>
+					<p class="mg-plan-desc"><?php echo esc_html( $memberglut_p['description'] ); ?></p>
 				<?php endif; ?>
-				<?php if ( $features && $p['features'] ) : ?>
+				<?php if ( $features && $memberglut_p['features'] ) : ?>
 					<ul class="mg-plan-features">
-						<?php foreach ( $p['features'] as $f ) : ?>
-							<li><?php echo esc_html( $f ); ?></li>
+						<?php foreach ( $memberglut_p['features'] as $memberglut_f ) : ?>
+							<li><?php echo esc_html( $memberglut_f ); ?></li>
 						<?php endforeach; ?>
 					</ul>
 				<?php endif; ?>
-				<div class="mg-plan-cta"><?php echo $memberglut_button( $r['button'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure. ?></div>
+				<div class="mg-plan-cta"><?php echo $memberglut_button( $memberglut_r['button'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in the closure. ?></div>
 			</div>
 		<?php endforeach; ?>
 	</div>

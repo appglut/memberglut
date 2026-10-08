@@ -528,6 +528,7 @@ class MemberGlut_Payments {
 		$repo  = memberglut_repo( 'payments' );
 		$table = $repo->table();
 		global $wpdb;
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 		$rows  = $wpdb->get_results( "SELECT status, COUNT(*) AS n, COALESCE(SUM(amount),0) AS total, COALESCE(SUM(refunded_amount),0) AS refunded FROM `{$table}` WHERE " . self::where_for( $args ) . ' GROUP BY status', ARRAY_A );
 		$out   = array();
 		foreach ( array( 'completed', 'pending', 'failed', 'refunded' ) as $s ) {

@@ -107,6 +107,7 @@ class MemberGlut_Members {
 	public static function query( $f ) {
 		global $wpdb;
 		$sql   = self::rows_sql( $f );
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 		$total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM ({$sql}) t" );
 		$map   = array( 'name' => 'display_name', 'started' => 'start_date', 'expires' => 'expires_at', 'spent' => 'total_spent', 'plan' => 'plan_id', 'status' => 'status' );
 		$col   = isset( $f['orderby'], $map[ $f['orderby'] ] ) ? $map[ $f['orderby'] ] : 'created_at';
@@ -117,6 +118,7 @@ class MemberGlut_Members {
 			$page  = max( 1, (int) $f['page'] );
 			$limit = $wpdb->prepare( 'LIMIT %d OFFSET %d', (int) $f['per_page'], ( $page - 1 ) * (int) $f['per_page'] );
 		}
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 		$rows = $wpdb->get_results( "SELECT * FROM ({$sql}) t {$order} {$limit}", ARRAY_A );
 		return array( array_map( array( __CLASS__, 'row' ), (array) $rows ), $total );
 	}
@@ -162,6 +164,7 @@ class MemberGlut_Members {
 	public static function counts( $f = array() ) {
 		global $wpdb;
 		unset( $f['status'], $f['ids'] );
+		// phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table names are built from $wpdb->prefix and the plugin table list; values are prepared.
 		$rows = $wpdb->get_results( 'SELECT status, COUNT(*) AS n FROM (' . self::rows_sql( $f ) . ') t GROUP BY status', ARRAY_A );
 		$out  = array_fill_keys( array( 'active', 'trialing', 'pending', 'on_hold', 'canceled', 'expired' ), 0 );
 		foreach ( (array) $rows as $r ) {

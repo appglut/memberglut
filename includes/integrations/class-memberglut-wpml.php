@@ -67,6 +67,7 @@ class MemberGlut_WPML {
 			if ( function_exists( 'pll_register_string' ) ) {
 				pll_register_string( $name, $value, self::CONTEXT, false );
 			} else {
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core / third-party hook fired on purpose.
 				do_action( 'wpml_register_single_string', self::CONTEXT, $name, $value );
 			}
 		}
@@ -83,6 +84,7 @@ class MemberGlut_WPML {
 		if ( function_exists( 'pll__' ) ) {
 			return pll__( $value );
 		}
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core / third-party hook fired on purpose.
 		return (string) apply_filters( 'wpml_translate_single_string', $value, self::CONTEXT, $name );
 	}
 

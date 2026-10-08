@@ -17,17 +17,17 @@ defined( 'ABSPATH' ) || exit;
 	<p><?php esc_html_e( 'No logins recorded yet.', 'memberglut' ); ?></p>
 <?php else : ?>
 	<ul class="mg-logins">
-		<?php foreach ( $rows as $r ) : ?>
-			<li class="<?php echo $r['active'] ? 'is-active' : ''; ?>">
-				<strong><?php echo esc_html( $r['device'] ); ?></strong>
-				<?php if ( $r['current'] ) : ?>
+		<?php foreach ( $rows as $memberglut_r ) : ?>
+			<li class="<?php echo $memberglut_r['active'] ? 'is-active' : ''; ?>">
+				<strong><?php echo esc_html( $memberglut_r['device'] ); ?></strong>
+				<?php if ( $memberglut_r['current'] ) : ?>
 					<span class="mg-badge mg-badge-active"><?php esc_html_e( 'This device', 'memberglut' ); ?></span>
-				<?php elseif ( $r['active'] ) : ?>
+				<?php elseif ( $memberglut_r['active'] ) : ?>
 					<span class="mg-badge"><?php esc_html_e( 'Logged in', 'memberglut' ); ?></span>
 				<?php endif; ?>
 				<div class="mg-muted">
-					<?php echo esc_html( memberglut_format_date( $r['date'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ); ?>
-					· <?php echo esc_html( $r['ip'] ); ?>
+					<?php echo esc_html( memberglut_format_date( $memberglut_r['date'], get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ); ?>
+					· <?php echo esc_html( $memberglut_r['ip'] ); ?>
 				</div>
 			</li>
 		<?php endforeach; ?>

@@ -33,7 +33,7 @@ function memberglut_uninstall_site() {
 	wp_clear_scheduled_hook( 'memberglut_daily' );
 	$as = $wpdb->prefix . 'actionscheduler_actions';
 	if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $as ) ) === $as ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall.
-		$wpdb->query( $wpdb->prepare( "DELETE FROM `{$as}` WHERE hook LIKE %s AND status = 'pending'", $wpdb->esc_like( 'memberglut_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Uninstall.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM `{$as}` WHERE hook LIKE %s AND status = 'pending'", $wpdb->esc_like( 'memberglut_' ) . '%' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Uninstall.
 	}
 	if ( $wanted ) {
 		MemberGlut_Tools::delete_all_data();
