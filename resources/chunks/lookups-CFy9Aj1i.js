@@ -11,6 +11,7 @@ const L = {
   ...admin.lookups || {}
 };
 admin.user || {};
+const planOptions = (filter) => L.plans.filter(() => true).map((p) => ({ value: p.id, label: p.status === "active" ? p.name : `${p.name} (inactive)` }));
 const roleOptions = (filter) => L.roles.filter(filter || (() => true)).map((r) => ({ value: r.slug, label: r.name }));
 const roleName = (slug) => (L.roles.find((r) => r.slug === slug) || {}).name || slug;
 const pageOptions = () => L.pages;
@@ -20,7 +21,8 @@ const signupUrl = (slug) => {
 };
 export {
   L,
-  roleOptions as a,
+  planOptions as a,
+  roleOptions as b,
   pageOptions as p,
   roleName as r,
   signupUrl as s

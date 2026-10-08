@@ -1,18 +1,17 @@
 import { a8 as __, bO as faSliders, bN as faShieldHalved, br as faLayerGroup, c4 as faUserTag, bI as faRightToBracket, c2 as faUserSecret, bY as faUserCheck, bv as faMessage, aJ as faArrowRightFromBracket, bU as faTags, bd as faEyeSlash, c7 as faVial, cU as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, c9 as faXmark, bE as faPlus, d7 as reactExports, P as Page, b as App, d5 as queryArg, aZ as faChevronLeft, cV as link, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel } from "./chunks/SettingsPanel-JeHdAjF2.js";
-import { S as Select, h as Space, _ as getRule, al as saveRule } from "./chunks/api-fY3e1Vcq.js";
-import { P as PAGES, b as PLANS, R as ROLES } from "./chunks/demoData-BM0HoCev.js";
+import { S as SettingsPanel } from "./chunks/SettingsPanel-Bd9zSiBf.js";
+import { S as Select, h as Space, a7 as getRule, av as saveRule } from "./chunks/api-Bis6erdL.js";
+import { P as PAGES, a as PLANS, R as ROLES } from "./chunks/demoData-DGZGffIB.js";
 import { I as Input } from "./chunks/index-B1n7UfX_.js";
 import { A as Alert } from "./chunks/index-Dxdfeq7i.js";
 import { S as Spin } from "./chunks/index-CIIETatw.js";
 import "./chunks/dayjs.min-Cgo1VKL0.js";
-import "./chunks/index-YNfV1lQJ.js";
-import "./chunks/index-C4fpz-4h.js";
-import "./chunks/index-C0jBAFnu.js";
+import "./chunks/index-DF-oAOW3.js";
+import "./chunks/index-DIYjU850.js";
+import "./chunks/index-BgGiENMb.js";
 import "./chunks/index-wYjIfrAo.js";
-import "./chunks/index-CeqreKgZ.js";
-import "./chunks/index-CQ9IQMWb.js";
+import "./chunks/index-DEtLiZPs.js";
 import "./chunks/index-Dfx4LXY8.js";
 const TARGETS = [
   { value: "site", label: __("Whole site", "memberglut") },

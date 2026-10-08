@@ -70,6 +70,7 @@ final class MemberGlut_Plugin {
 			'MemberGlut_Settings_Hooks',
 			'MemberGlut_Roles_Service',
 			'MemberGlut_Subscription_Service',
+			'MemberGlut_Members',
 			'MemberGlut_Mailer',
 			'MemberGlut_Email_Triggers',
 			'MemberGlut_Access',

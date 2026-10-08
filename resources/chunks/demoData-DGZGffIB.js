@@ -33,7 +33,7 @@ const MEMBERS = FIRST.map((first, i) => {
     approved: status !== "pending"
   };
 });
-const PAYMENTS = MEMBERS.filter((m) => m.gateway !== "free").slice(0, 18).map((m, i) => ({
+MEMBERS.filter((m) => m.gateway !== "free").slice(0, 18).map((m, i) => ({
   id: 5e3 + i,
   member_id: m.id,
   name: m.name,
@@ -123,6 +123,5 @@ export {
   MEMBERS as M,
   PAGES as P,
   ROLES as R,
-  PAYMENTS as a,
-  PLANS as b
+  PLANS as a
 };

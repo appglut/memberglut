@@ -1,19 +1,18 @@
 import { cU as jsxRuntimeExports, P as Page, d7 as reactExports, E as PageHeader, c as Button, a8 as __, cV as link, q as FontAwesomeIcon, bN as faShieldHalved, br as faLayerGroup, bE as faPlus, a0 as Skeleton, a1 as StatCard, c6 as faUsers, bL as faSackDollar, c1 as faUserPlus, bn as faHourglassHalf, aI as faArrowRight, a$ as faCircleCheck, a_ as faCircle, bI as faRightToBracket, bZ as faUserClock, c5 as faUserXmark, b5 as faCreditCard, b2 as faClockRotateLeft, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode } from "./chunks/SettingsPanel-JeHdAjF2.js";
-import { a2 as getStats, X as getPlans, w as getActivity, a1 as getSetupChecklist, E as Empty, T as Tooltip } from "./chunks/api-fY3e1Vcq.js";
-import { m as money, f as fromNow } from "./chunks/format-HbjcUD4E.js";
+import { C as CopyCode } from "./chunks/SettingsPanel-Bd9zSiBf.js";
+import { ab as getStats, a4 as getPlans, H as getActivity, aa as getSetupChecklist, E as Empty, T as Tooltip } from "./chunks/api-Bis6erdL.js";
+import { m as money, f as fromNow } from "./chunks/format-DY4jIcju.js";
 import { S as Segmented } from "./chunks/index-wYjIfrAo.js";
-import { P as Progress } from "./chunks/progress-CrZNUm8K.js";
+import { P as Progress } from "./chunks/progress-Dk_fv2PJ.js";
 import "./chunks/dayjs.min-Cgo1VKL0.js";
-import "./chunks/index-YNfV1lQJ.js";
-import "./chunks/index-C4fpz-4h.js";
+import "./chunks/index-DF-oAOW3.js";
+import "./chunks/index-DIYjU850.js";
 import "./chunks/index-B1n7UfX_.js";
-import "./chunks/index-C0jBAFnu.js";
-import "./chunks/index-CeqreKgZ.js";
-import "./chunks/index-CQ9IQMWb.js";
+import "./chunks/index-BgGiENMb.js";
+import "./chunks/index-DEtLiZPs.js";
 import "./chunks/index-Dfx4LXY8.js";
-import "./chunks/lookups-DHSS-Myl.js";
+import "./chunks/lookups-CFy9Aj1i.js";
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function BarChart({ data, field, format }) {
   const max = Math.max(...data.map((d) => d[field]), 1);

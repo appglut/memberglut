@@ -382,3 +382,43 @@ function memberglut_parse_date( $value, $end_of_day = false ) {
 	$date->setTimezone( new DateTimeZone( 'UTC' ) );
 	return $date->format( 'Y-m-d H:i:s' );
 }
+
+/**
+ * Queue a one-time front-end message (shown by the next MemberGlut form), stored in a short-lived cookie.
+ *
+ * @param string $type success|error|info.
+ * @param string $text Message (may contain simple HTML links).
+ * @return void
+ */
+function memberglut_flash( $type, $text ) {
+	$GLOBALS['memberglut_flash'] = array( 'type' => $type, 'text' => $text );
+	if ( ! headers_sent() ) {
+		setcookie( 'memberglut_flash', base64_encode( wp_json_encode( $GLOBALS['memberglut_flash'] ) ), time() + 120, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, is_ssl(), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- Cookie-safe encoding of a JSON message.
+	}
+}
+
+/**
+ * Read and clear the queued front-end message.
+ *
+ * @return array|null [ type, text ]
+ */
+function memberglut_get_flash() {
+	if ( ! empty( $GLOBALS['memberglut_flash'] ) ) {
+		$flash = $GLOBALS['memberglut_flash'];
+	} elseif ( ! empty( $_COOKIE['memberglut_flash'] ) ) {
+		$flash = json_decode( base64_decode( sanitize_text_field( wp_unslash( $_COOKIE['memberglut_flash'] ) ) ), true ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- See memberglut_flash().
+	} else {
+		return null;
+	}
+	$GLOBALS['memberglut_flash'] = null;
+	if ( ! headers_sent() && isset( $_COOKIE['memberglut_flash'] ) ) {
+		setcookie( 'memberglut_flash', '', time() - 3600, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, is_ssl(), true );
+	}
+	if ( ! is_array( $flash ) || empty( $flash['text'] ) ) {
+		return null;
+	}
+	return array(
+		'type' => in_array( isset( $flash['type'] ) ? $flash['type'] : '', array( 'success', 'error', 'info' ), true ) ? $flash['type'] : 'info',
+		'text' => wp_kses( (string) $flash['text'], array( 'a' => array( 'href' => true ) ) ),
+	);
+}

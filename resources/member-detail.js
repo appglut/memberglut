@@ -1,80 +1,202 @@
-import { cU as jsxRuntimeExports, P as Page, b as App, d7 as reactExports, d5 as queryArg, a0 as Skeleton, q as FontAwesomeIcon, aZ as faChevronLeft, a8 as __, cV as link, c as Button, bY as faUserCheck, b9 as faEnvelope, c0 as faUserPen, bE as faPlus, a2 as StatusBadge, by as faNoteSticky, bV as faTrashCan, bq as faKey, bH as faRightFromBracket, b8 as faEllipsis, br as faLayerGroup, aW as faCalendarPlus, aO as faBan, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
+import { cU as jsxRuntimeExports, P as Page, b as App, d5 as queryArg, d7 as reactExports, a8 as __, cV as link, a0 as Skeleton, q as FontAwesomeIcon, aZ as faChevronLeft, c as Button, bY as faUserCheck, c5 as faUserXmark, b9 as faEnvelope, c0 as faUserPen, bE as faPlus, bz as faPaperPlane, by as faNoteSticky, bV as faTrashCan, bq as faKey, bH as faRightFromBracket, a2 as StatusBadge, b8 as faEllipsis, br as faLayerGroup, aW as faCalendarPlus, aO as faBan, aD as createRoot } from "./chunks/Page-uv7jJYOd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { d as dayjs } from "./chunks/dayjs.min-Cgo1VKL0.js";
-import { K as getMember, S as Select } from "./chunks/api-fY3e1Vcq.js";
-import { i as initials, d as date, G as GATEWAY, P as PAY_STATUS, m as money, a as dateTime, f as fromNow, S as SUB_STATUS, b as planPrice } from "./chunks/format-HbjcUD4E.js";
-import { a as PAYMENTS, b as PLANS } from "./chunks/demoData-BM0HoCev.js";
-import { A as Avatar } from "./chunks/index-kG9o8XN2.js";
-import { T as Tabs } from "./chunks/index-YNfV1lQJ.js";
-import { F as ForwardTable, D as Dropdown } from "./chunks/Table-2b7eYoRI.js";
-import { T as Timeline, D as Descriptions } from "./chunks/Timeline-BA7_DK87.js";
-import { T as Tag } from "./chunks/index-C4fpz-4h.js";
+import { A as Avatar, E as EditSubscriptionModal, C as ChangePlanModal } from "./chunks/MemberModals-BODex2tW.js";
+import { ak as memberAction, E as Empty, s as deleteNote, m as addNote, aD as subscriptionAction, Z as getMember, v as deleteSubscription, a0 as getPayments, U as getEvents, X as getLogins, l as addMember, aG as updateSubscription } from "./chunks/api-Bis6erdL.js";
+import { i as initials, d as date, f as fromNow, m as money, a as dateTime, S as SUB_STATUS, G as GATEWAY, b as planPrice, P as PAY_STATUS } from "./chunks/format-DY4jIcju.js";
+import { r as roleName } from "./chunks/lookups-CFy9Aj1i.js";
+import { A as Alert } from "./chunks/index-Dxdfeq7i.js";
+import { T as Tag } from "./chunks/index-DIYjU850.js";
+import { P as Popconfirm } from "./chunks/index-D2idIAPA.js";
+import { T as Tabs } from "./chunks/index-DF-oAOW3.js";
+import { D as Descriptions, T as Timeline } from "./chunks/Timeline-B0hqm8mK.js";
 import { I as Input } from "./chunks/index-B1n7UfX_.js";
-import { P as Popconfirm } from "./chunks/index-BmsXoRfb.js";
-import { M as Modal } from "./chunks/index-X7sZdAeO.js";
-import { F as Form } from "./chunks/index-D28DLv47.js";
-import { D as DatePicker } from "./chunks/index-CQ9IQMWb.js";
-import "./chunks/lookups-DHSS-Myl.js";
-import "./chunks/useBreakpoint-I0WrFief.js";
-import "./chunks/index-C0jBAFnu.js";
+import { D as Dropdown, F as ForwardTable } from "./chunks/Table-BSiHada8.js";
+import "./chunks/useBreakpoint-D8Ns16_a.js";
+import "./chunks/index-BgGiENMb.js";
+import "./chunks/dayjs.min-Cgo1VKL0.js";
+import "./chunks/index-C1Nz3hrP.js";
+import "./chunks/index-DEtLiZPs.js";
+import "./chunks/index-sZSO_VI9.js";
 import "./chunks/index-CIIETatw.js";
-function SubscriptionCard({ m, onAction }) {
-  const plan = PLANS.find((p) => p.id === m.plan_id);
+const EVENT_COLOR = { grant: "green", activate: "green", approve: "green", payment: "blue", renew: "blue", cancel: "orange", hold: "orange", expire: "red", revoke: "red", reject: "red", pending: "gray" };
+function SubscriptionCard({ s, onAction }) {
+  const plan = s.plan || { name: `#${s.plan_id}`, color: "#94a3b8" };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-sub-card", style: { "--c": plan.color }, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-sub-head", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-sub-name", children: [
           plan.name,
           " ",
-          /* @__PURE__ */ jsxRuntimeExports.jsx(StatusBadge, { status: m.status, label: SUB_STATUS[m.status] })
+          /* @__PURE__ */ jsxRuntimeExports.jsx(StatusBadge, { status: s.status, label: SUB_STATUS[s.status] || s.status })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-muted", children: [
-          planPrice(plan),
+          s.plan ? planPrice(s.plan) : "",
           " · ",
-          GATEWAY[m.gateway]
+          GATEWAY[s.gateway] || s.gateway,
+          s.gateway_managed ? ` · ${s.gateway_subscription_id}` : ""
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Dropdown, { trigger: ["click"], menu: {
         items: [
           { key: "change", label: __("Change plan", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faLayerGroup }) },
-          { key: "extend", label: __("Change dates", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faCalendarPlus }) },
-          { key: "cancel", label: __("Cancel (keep access until it ends)", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faBan }) },
-          { key: "expire", label: __("Expire now", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faBan }), danger: true }
+          { key: "edit", label: __("Change dates / status", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faCalendarPlus }) },
+          { key: "activate", label: __("Activate", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserCheck }), disabled: !["pending", "on_hold", "expired"].includes(s.status) },
+          { key: "cancel", label: __("Cancel (keep access until it ends)", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faBan }), disabled: ["canceled", "expired"].includes(s.status) },
+          { key: "expire", label: __("Expire now", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faBan }), danger: true, disabled: s.status === "expired" },
+          { type: "divider" },
+          { key: "delete", label: __("Remove membership", "memberglut"), icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }), danger: true }
         ],
-        onClick: ({ key }) => onAction(key)
+        onClick: ({ key }) => onAction(key, s)
       }, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faEllipsis }), children: __("Manage", "memberglut") }) })
     ] }),
+    s.scheduled_plan && /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { type: "info", showIcon: true, style: { margin: "10px 0" }, message: sprintf(__("Moves to %1$s on %2$s.", "memberglut"), s.scheduled_plan.name, date(s.expires)) }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-sub-grid", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Started", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: date(m.started) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: date(s.started) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Expires", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: m.expires ? date(m.expires) : __("Never", "memberglut") })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: s.status === "canceled" ? __("Access until", "memberglut") : __("Expires", "memberglut") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: s.expires ? date(s.expires) : __("Never", "memberglut") })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Next payment", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: plan.billing === "recurring" && m.status === "active" ? `${money(plan.price)} · ${date(m.expires)}` : "—" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: s.next_payment && ["active", "trialing"].includes(s.status) ? `${money(s.billing_amount)} · ${date(s.next_payment)}` : "—" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Role given", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: plan.role.replace("memberglut_", "") })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: s.plan && s.plan.role ? roleName(s.plan.role) : "—" })
+      ] }),
+      s.cycles_total > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Payments", "memberglut") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: sprintf(__("%1$d of %2$d", "memberglut"), s.cycles_done, s.cycles_total) })
+      ] }),
+      s.trial_ends && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Trial ends", "memberglut") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: date(s.trial_ends) })
       ] })
     ] })
   ] });
 }
-function MemberDetail() {
-  const { message } = App.useApp();
-  const [m, setM] = reactExports.useState(null);
-  const [notes, setNotes] = reactExports.useState([{ id: 1, author: "admin", text: "Asked for an invoice with company VAT number.", date: dayjs().subtract(3, "day").format() }]);
-  const [note, setNote] = reactExports.useState("");
-  const [editOpen, setEditOpen] = reactExports.useState(null);
+function PaymentsTab({ userId }) {
+  const [rows, setRows] = reactExports.useState(null);
   reactExports.useEffect(() => {
-    getMember(queryArg("id")).then(setM);
+    getPayments({ user: userId, per_page: 50 }).then((r) => setRows(r.items || [])).catch(() => setRows([]));
+  }, [userId]);
+  if (!rows) return /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ForwardTable, { size: "middle", rowKey: "id", pagination: false, dataSource: rows, locale: { emptyText: __("No payments yet.", "memberglut") }, columns: [
+    { title: "#", dataIndex: "id", render: (v) => /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: link("payments", { payment: v }), children: [
+      "#",
+      v
+    ] }) },
+    { title: __("Date", "memberglut"), dataIndex: "date", render: date },
+    { title: __("Plan", "memberglut"), dataIndex: "plan" },
+    { title: __("Method", "memberglut"), dataIndex: "gateway", render: (v) => GATEWAY[v] || v },
+    { title: __("Status", "memberglut"), dataIndex: "status", render: (v) => /* @__PURE__ */ jsxRuntimeExports.jsx(StatusBadge, { status: v, label: PAY_STATUS[v] }) },
+    { title: __("Amount", "memberglut"), dataIndex: "amount", align: "right", render: (v, r) => money(v, r.currency) }
+  ] });
+}
+function ActivityTab({ userId }) {
+  const [items, setItems] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    getEvents({ user: userId, per_page: 50 }).then((r) => setItems(r.items)).catch(() => setItems([]));
+  }, [userId]);
+  if (!items) return /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true });
+  if (!items.length) return /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: __("No activity yet.", "memberglut") });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Timeline, { style: { marginTop: 12 }, items: items.map((e) => ({
+    color: EVENT_COLOR[e.type] || "gray",
+    children: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: e.text }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-muted", children: [
+        dateTime(e.date),
+        " · ",
+        e.by
+      ] })
+    ] })
+  })) });
+}
+function LoginsTab({ userId }) {
+  const [rows, setRows] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    getLogins({ user: userId }).then(setRows).catch(() => setRows([]));
+  }, [userId]);
+  if (!rows) return /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ForwardTable, { size: "middle", rowKey: "id", pagination: false, dataSource: rows, locale: { emptyText: __("No logins recorded yet.", "memberglut") }, columns: [
+    { title: __("When", "memberglut"), dataIndex: "date", render: (v) => fromNow(v) },
+    { title: __("Device", "memberglut"), dataIndex: "device", render: (v, r) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+      v || __("Unknown device", "memberglut"),
+      " ",
+      r.current && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "green", bordered: false, children: __("Active now", "memberglut") })
+    ] }) },
+    { title: "IP", dataIndex: "ip" }
+  ] });
+}
+function MemberDetail() {
+  const { message, modal } = App.useApp();
+  const userId = Number(queryArg("user") || queryArg("id"));
+  const [m, setM] = reactExports.useState(null);
+  const [error, setError] = reactExports.useState("");
+  const [note, setNote] = reactExports.useState("");
+  const [edit, setEdit] = reactExports.useState(null);
+  const [changePlan, setChangePlan] = reactExports.useState(null);
+  const load = () => getMember(userId).then(setM).catch((e) => setError(e.message));
+  reactExports.useEffect(() => {
+    load();
   }, []);
+  if (error) return /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { type: "error", showIcon: true, message: error, action: /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: link("members"), children: __("All members", "memberglut") }) });
   if (!m) return /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true, avatar: true, paragraph: { rows: 10 } });
-  const payments = PAYMENTS.filter((p) => p.member_id === m.id).concat(PAYMENTS.slice(0, 2).map((p) => ({ ...p, id: p.id + 900, name: m.name })));
+  const run = async (fn, ok) => {
+    try {
+      const r = await fn();
+      if (r && r.user) setM(r);
+      else load();
+      if (ok) message.success(ok);
+    } catch (e) {
+      message.error(e.message);
+    }
+  };
+  const subAction = (key, s) => {
+    if (key === "change") setChangePlan(s);
+    else if (key === "edit") setEdit({ sub: s, isNew: false });
+    else if (key === "activate") run(() => subscriptionAction(s.id, "activate"), __("Subscription activated.", "memberglut"));
+    else if (key === "cancel") {
+      modal.confirm({
+        title: __("Cancel this subscription?", "memberglut"),
+        content: s.gateway_managed ? __("Automatic renewal is stopped at the payment gateway too.", "memberglut") : __("Automatic renewal stops.", "memberglut"),
+        okText: __("Cancel subscription", "memberglut"),
+        cancelText: __("Keep", "memberglut"),
+        okButtonProps: { danger: true },
+        onOk: () => run(() => subscriptionAction(s.id, "cancel"), __("Subscription canceled.", "memberglut"))
+      });
+    } else if (key === "expire") {
+      modal.confirm({
+        title: __("Expire now?", "memberglut"),
+        content: __("Access ends immediately.", "memberglut"),
+        okButtonProps: { danger: true },
+        onOk: () => run(() => subscriptionAction(s.id, "expire"), __("Subscription expired.", "memberglut"))
+      });
+    } else if (key === "delete") {
+      modal.confirm({
+        title: __("Remove this membership?", "memberglut"),
+        content: __("The subscription is deleted. Payments are kept.", "memberglut"),
+        okButtonProps: { danger: true },
+        onOk: () => run(async () => {
+          await deleteSubscription(s.id);
+        }, __("Membership removed.", "memberglut"))
+      });
+    }
+  };
+  const saveEdit = async (v) => {
+    const fmt = (d) => d ? d.format("YYYY-MM-DD") : "";
+    if (edit.isNew) {
+      await run(() => addMember({ who: "existing", user_id: userId, plan_id: v.plan_id, status: v.status, start: fmt(v.start), expiry: v.expiry, expiry_date: fmt(v.expiry_date), send_email: true }), __("Plan added.", "memberglut"));
+    } else {
+      await run(() => updateSubscription(edit.sub.id, { plan_id: v.plan_id, status: v.status, start: fmt(v.start), expires: fmt(v.expires) }), __("Subscription updated.", "memberglut"));
+    }
+    setEdit(null);
+  };
+  const pending = ["pending_email", "pending_admin"].includes(m.account_status);
+  const u = m.user;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: link("members"), className: "mg-back-link", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faChevronLeft }),
@@ -82,102 +204,55 @@ function MemberDetail() {
       __("All members", "memberglut")
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-member-hero", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar, { size: 64, style: { background: "#e94560", fontSize: 22, fontWeight: 700 }, children: initials(m.name) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Avatar, { size: 64, src: u.avatar, style: { background: "#e94560", fontSize: 22, fontWeight: 700 }, children: initials(u.name) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-member-hero-main", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-page-title", children: m.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-page-title", children: [
+          u.name,
+          " ",
+          m.account_status === "rejected" && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "red", bordered: false, children: __("Rejected", "memberglut") })
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-member-meta", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: m.email }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: u.email }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
             "@",
-            m.username
+            u.username
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: sprintf(__("Member since %s", "memberglut"), date(m.started)) })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: sprintf(__("Registered %s", "memberglut"), date(u.registered)) })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-page-actions", children: [
-        m.status === "pending" && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserCheck }), children: __("Approve", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faEnvelope }), href: `mailto:${m.email}`, children: __("Email", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserPen }), href: `user-edit.php?user_id=${m.user_id}`, children: __("Edit user", "memberglut") }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPlus }), onClick: () => setEditOpen("add"), children: __("Add plan", "memberglut") })
+        pending && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserCheck }), onClick: () => run(() => memberAction(userId, "approve"), __("Member approved.", "memberglut")), children: __("Approve", "memberglut") }),
+        pending && /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: __("Reject this registration?", "memberglut"), okButtonProps: { danger: true }, onConfirm: () => run(() => memberAction(userId, "reject"), __("Registration rejected.", "memberglut")), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { danger: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserXmark }), children: __("Reject", "memberglut") }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faEnvelope }), href: `mailto:${u.email}`, children: __("Email", "memberglut") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserPen }), href: u.edit_url, children: __("Edit user", "memberglut") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPlus }), onClick: () => setEdit({ sub: null, isNew: true }), children: __("Add plan", "memberglut") })
       ] })
     ] }),
+    m.account_status === "pending_email" && /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { style: { marginBottom: 16 }, type: "warning", showIcon: true, message: __("This member has not confirmed their email address yet.", "memberglut"), action: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "small", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPaperPlane }), onClick: () => run(() => memberAction(userId, "resend-activation"), __("Confirmation email sent again.", "memberglut")), children: __("Resend", "memberglut") }) }),
+    m.account_status === "pending_admin" && /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { style: { marginBottom: 16 }, type: "warning", showIcon: true, message: __("This account is waiting for your approval. It cannot log in yet.", "memberglut") }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-detail-grid", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-card", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-card-title", children: __("Subscriptions", "memberglut") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(SubscriptionCard, { m, onAction: (k) => setEditOpen(k) })
+          m.subscriptions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: __("No plan yet.", "memberglut") }) : m.subscriptions.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsx(SubscriptionCard, { s, onAction: subAction }, s.id))
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-card mg-card-tabs", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tabs, { items: [
-          {
-            key: "payments",
-            label: __("Payments", "memberglut"),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ForwardTable, { size: "middle", rowKey: "id", pagination: false, dataSource: payments, columns: [
-              { title: "#", dataIndex: "id" },
-              { title: __("Date", "memberglut"), dataIndex: "date", render: date },
-              { title: __("Plan", "memberglut"), dataIndex: "plan" },
-              { title: __("Method", "memberglut"), dataIndex: "gateway", render: (v) => GATEWAY[v] },
-              { title: __("Status", "memberglut"), dataIndex: "status", render: (v) => /* @__PURE__ */ jsxRuntimeExports.jsx(StatusBadge, { status: v, label: PAY_STATUS[v] }) },
-              { title: __("Amount", "memberglut"), dataIndex: "amount", align: "right", render: (v) => money(v) }
-            ] })
-          },
-          {
-            key: "activity",
-            label: __("Activity", "memberglut"),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Timeline, { style: { marginTop: 12 }, items: [
-              { color: "green", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Subscription activated", "memberglut") }),
-                " · Silver",
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", children: dateTime(m.started) })
-              ] }) },
-              { color: "blue", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Payment completed", "memberglut") }),
-                " · $9.00 Stripe",
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", children: dateTime(m.started) })
-              ] }) },
-              { color: "gray", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Email sent", "memberglut") }),
-                " · ",
-                __("Welcome / registration", "memberglut"),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", children: dateTime(m.started) })
-              ] }) },
-              { color: "gray", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Account created", "memberglut") }),
-                " · ",
-                __("via registration form", "memberglut"),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-muted", children: dateTime(m.started) })
-              ] }) }
-            ] })
-          },
-          {
-            key: "logins",
-            label: __("Logins", "memberglut"),
-            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ForwardTable, { size: "middle", rowKey: "t", pagination: false, dataSource: [
-              { t: 1, date: m.last_login, ip: "103.48.17.22", device: "Chrome · Windows", current: true },
-              { t: 2, date: dayjs(m.last_login).subtract(2, "day").format(), ip: "103.48.17.22", device: "Safari · iPhone" },
-              { t: 3, date: dayjs(m.last_login).subtract(9, "day").format(), ip: "182.160.3.9", device: "Firefox · Linux" }
-            ], columns: [
-              { title: __("When", "memberglut"), dataIndex: "date", render: (v) => fromNow(v) },
-              { title: __("Device", "memberglut"), dataIndex: "device", render: (v, r) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-                v,
-                " ",
-                r.current && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "green", bordered: false, children: __("Active now", "memberglut") })
-              ] }) },
-              { title: "IP", dataIndex: "ip" }
-            ] })
-          }
+          { key: "payments", label: __("Payments", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(PaymentsTab, { userId }) },
+          { key: "activity", label: __("Activity", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(ActivityTab, { userId }) },
+          { key: "logins", label: __("Logins", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoginsTab, { userId }) }
         ] }) })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-card", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-card-title", children: __("Profile", "memberglut") }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Descriptions, { column: 1, size: "small", className: "mg-desc", items: [
-            { label: __("User ID", "memberglut"), children: m.user_id },
-            { label: __("Role", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: m.role }) },
-            { label: __("Registered", "memberglut"), children: date(m.started) },
-            { label: __("Last login", "memberglut"), children: fromNow(m.last_login) },
-            { label: __("Lifetime value", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: money(m.total_spent) }) },
-            { label: __("Phone", "memberglut"), children: "+880 1711-000000" },
-            { label: __("Consent", "memberglut"), children: sprintf(__("Terms & privacy accepted on %s", "memberglut"), date(m.started)) }
+            { label: __("User ID", "memberglut"), children: u.id },
+            { label: __("Roles", "memberglut"), children: u.roles.map((r) => /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { bordered: false, children: r }, r)) },
+            { label: __("Registered", "memberglut"), children: date(u.registered) },
+            { label: __("Last login", "memberglut"), children: u.last_login ? fromNow(u.last_login) : "—" },
+            { label: __("Lifetime value", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: money(m.ltv) }) },
+            ...m.fields.map((f) => ({ label: f.label, children: f.value || "—" })),
+            { label: __("Consent", "memberglut"), children: m.consents.length ? m.consents.map((c, i) => /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: sprintf(__("%1$s accepted on %2$s", "memberglut"), c.label || c.type, dateTime(c.time)) }, i)) : "—" }
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-card", children: [
@@ -187,51 +262,42 @@ function MemberDetail() {
             " ",
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-notes-hint", children: __("Only admins see these", "memberglut") })
           ] }),
-          notes.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-note", children: [
+          m.notes.map((n) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-note", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-note-head", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: n.author }),
               " · ",
               fromNow(n.date),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", className: "mg-note-del", onClick: () => setNotes(notes.filter((x) => x.id !== n.id)), children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }) })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("button", { type: "button", className: "mg-note-del", onClick: () => deleteNote(userId, n.id).then((notes) => setM({ ...m, notes })), children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }) })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-note-text", children: n.text })
           ] }, n.id)),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Input.TextArea, { rows: 3, value: note, onChange: (e) => setNote(e.target.value), placeholder: __("Add a private note…", "memberglut") }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { style: { marginTop: 8 }, disabled: !note.trim(), onClick: () => {
-            setNotes([...notes, { id: Date.now(), author: "admin", text: note, date: dayjs().format() }]);
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { style: { marginTop: 8 }, disabled: !note.trim(), onClick: () => addNote(userId, note).then((notes) => {
+            setM({ ...m, notes });
             setNote("");
-          }, children: __("Add note", "memberglut") })
+          }).catch((e) => message.error(e.message)), children: __("Add note", "memberglut") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-card mg-danger-card", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-card-title", children: __("Account", "memberglut") }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-danger-list", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { block: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faKey }), onClick: () => message.success(__("Password reset email sent.", "memberglut")), children: __("Send password reset", "memberglut") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { block: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faRightFromBracket }), onClick: () => message.success(__("Logged out of all devices.", "memberglut")), children: __("Log out everywhere", "memberglut") }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: __("Remove all memberships of this user?", "memberglut"), onConfirm: () => message.success(__("Memberships removed.", "memberglut")), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { block: true, danger: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }), children: __("Remove memberships", "memberglut") }) })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { block: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faKey }), onClick: () => run(() => memberAction(userId, "password-reset"), __("Password reset email sent.", "memberglut")), children: __("Send password reset", "memberglut") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { block: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faRightFromBracket }), disabled: !m.sessions, onClick: () => run(() => memberAction(userId, "logout-all"), __("Logged out of all devices.", "memberglut")), children: sprintf(__("Log out everywhere (%d)", "memberglut"), m.sessions) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: __("Remove all memberships of this user?", "memberglut"), okButtonProps: { danger: true }, onConfirm: () => run(() => memberAction(userId, "remove-all"), __("Memberships removed.", "memberglut")), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { block: true, danger: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }), disabled: !m.subscriptions.length, children: __("Remove memberships", "memberglut") }) })
           ] })
         ] })
       ] })
     ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(EditSubscriptionModal, { open: !!edit, sub: edit && edit.sub, isNew: edit && edit.isNew, statuses: SUB_STATUS, onCancel: () => setEdit(null), onOk: saveEdit }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Modal,
+      ChangePlanModal,
       {
-        open: !!editOpen,
-        onCancel: () => setEditOpen(null),
-        onOk: () => {
-          setEditOpen(null);
-          message.success(__("Subscription updated.", "memberglut"));
-        },
-        title: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-modal-title", children: editOpen === "add" ? __("Add a plan", "memberglut") : __("Edit subscription", "memberglut") }),
-        okText: __("Save", "memberglut"),
-        destroyOnClose: true,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Form, { layout: "vertical", initialValues: { plan_id: m.plan_id, status: m.status, start: dayjs(m.started), end: m.expires ? dayjs(m.expires) : null }, children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "plan_id", label: __("Plan", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { options: PLANS.map((p) => ({ value: p.id, label: p.name })) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "status", label: __("Status", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { options: Object.entries(SUB_STATUS).map(([value, label]) => ({ value, label })) }) }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-form-grid", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "start", label: __("Start", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DatePicker, { style: { width: "100%" } }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "end", label: __("Expires", "memberglut"), extra: __("Empty = never", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(DatePicker, { style: { width: "100%" } }) })
-          ] })
-        ] })
+        open: !!changePlan,
+        gatewayManaged: changePlan && changePlan.gateway_managed,
+        onCancel: () => setChangePlan(null),
+        onOk: async (planId) => {
+          await run(() => subscriptionAction(changePlan.id, "change-plan", { plan_id: planId }), __("Plan changed.", "memberglut"));
+          setChangePlan(null);
+        }
       }
     )
   ] });

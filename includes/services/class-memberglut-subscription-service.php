@@ -252,7 +252,7 @@ class MemberGlut_Subscription_Service {
 				'expires_at'              => $expires,
 				'trial_ends_at'           => $trial,
 				'next_payment_at'         => $recurring ? $expires : null,
-				'gateway'                 => sanitize_key( $args['gateway'] ),
+				'gateway'                 => $args['gateway'] ? sanitize_key( $args['gateway'] ) : ( 'free' === $plan['type'] ? 'free' : 'manual' ),
 				'gateway_customer_id'     => (string) $args['gateway_customer_id'],
 				'gateway_subscription_id' => (string) $args['gateway_subscription_id'],
 				'billing_amount'          => (float) $args['billing_amount'],
