@@ -1,18 +1,20 @@
 import { cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, d6 as queryArg, a8 as __, cW as link, q as FontAwesomeIcon, bd as faEye, bZ as faUserCheck, ba as faEnvelope, bW as faTrashCan, a2 as StatusBadge, c as Button, b9 as faEllipsis, bs as faLayerGroup, aX as faCalendarPlus, aP as faBan, E as PageHeader, bF as faPlus, a1 as StatCard, c7 as faUsers, b0 as faCircleCheck, b_ as faUserClock, bn as faHourglassEnd, aj as _n, ca as faXmark, bv as faMagnifyingGlass, bf as faFileExport, bA as faPaperPlane, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { h as PLANS, K as getMembers, S as Select, T as Tooltip, q as dayjs, a9 as saveMember } from "./chunks/api-Brv-883T.js";
-import { S as SUB_STATUS, d as date, i as initials, G as GATEWAY, m as money } from "./chunks/format-DUqbTEWL.js";
-import { A as Avatar } from "./chunks/index-a_klCc8e.js";
-import { P as Popconfirm } from "./chunks/index-ZXRyaDui.js";
-import { D as Dropdown } from "./chunks/index-DOVNlVrd.js";
+import { R as Radio, d as dayjs } from "./chunks/index-CeeYjpwl.js";
+import { y as getMembers, S as Select, T as Tooltip } from "./chunks/api-BB7d3L8U.js";
+import { S as SUB_STATUS, d as date, i as initials, G as GATEWAY, m as money } from "./chunks/format-pGmZIQcp.js";
+import { b as PLANS } from "./chunks/demoData-DdpKZU_N.js";
+import { A as Avatar } from "./chunks/index-C0qYHCLv.js";
+import { P as Popconfirm } from "./chunks/index-CKF9N8du.js";
+import { D as Dropdown } from "./chunks/index-bTvZrssX.js";
 import { I as Input } from "./chunks/index-DR_RfPho.js";
-import { F as ForwardTable, C as Checkbox } from "./chunks/Table-Dszdb13s.js";
-import { F as Form } from "./chunks/index-CATG0Lu4.js";
-import { M as Modal } from "./chunks/index-f93o2WLB.js";
-import { R as Radio } from "./chunks/index-CJWEZhJV.js";
-import { D as DatePicker } from "./chunks/index-dboLsXN4.js";
-import "./chunks/useBreakpoint-DMP4aqmU.js";
-import "./chunks/index-CjCriZ9v.js";
+import { F as ForwardTable, C as Checkbox } from "./chunks/Table-DA1U2jgW.js";
+import { F as Form } from "./chunks/index-CpI3hVNv.js";
+import { M as Modal } from "./chunks/index-DYh7TOe4.js";
+import { D as DatePicker } from "./chunks/index-D0vDDvb0.js";
+import "./chunks/lookups-BPwJCRM2.js";
+import "./chunks/useBreakpoint-BRPI9HCX.js";
+import "./chunks/index-wzDtlKHr.js";
 import "./chunks/index-DYg9RGnF.js";
 const planOptions = PLANS.map((p) => ({ value: p.id, label: p.name }));
 function AddMemberModal({ open, onClose, onSaved }) {
@@ -24,7 +26,7 @@ function AddMemberModal({ open, onClose, onSaved }) {
   const submit = async () => {
     const v = await form.validateFields();
     setSaving(true);
-    await saveMember(v);
+    await (void 0)(v);
     setSaving(false);
     message.success(__("Member added.", "memberglut"));
     form.resetFields();

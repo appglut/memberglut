@@ -8,22 +8,24 @@ import {
 import Page from '../components/Page';
 import SettingsPanel, { CopyCode } from '../components/SettingsPanel';
 import * as api from '../services/api';
-import { ROLES, PLANS, PAGES } from '../services/demoData';
+import { L, roleOptions as lookupRoles, pageOptions as lookupPages } from '../services/lookups';
 
-const roleOptions = ROLES.map((r) => ({ value: r.slug, label: r.name }));
-const planOptions = PLANS.map((p) => ({ value: p.id, label: p.name }));
-const pageOptions = PAGES;
-const site = (typeof memberglut_admin !== 'undefined' && memberglut_admin.site_url) || 'https://yoursite.com';
+const roleOptions = lookupRoles();
+// Decision D4: only active free plans can be given to every new user.
+const freePlanOptions = L.plans.filter((p) => p.type === 'free' && p.status === 'active').map((p) => ({ value: p.id, label: p.name }));
+const pageOptions = lookupPages();
+const site = (L.site.url || 'https://yoursite.com/').replace(/\/$/, '');
 
 export const DEFAULTS = {
   // General
   default_plan: null,
   private_site: false,
   private_site_exceptions: [],
+  private_site_paths: [],
   private_feed: false,
   hide_admin_bar_roles: ['subscriber', 'memberglut_basic', 'memberglut_premium', 'memberglut_vip'],
   block_admin_roles: ['subscriber', 'memberglut_basic', 'memberglut_premium', 'memberglut_vip'],
-  admin_redirect_page: 13,
+  admin_redirect_page: 0,
   // Content restriction
   restrict_action: 'message',
   restrict_redirect_url: '',
@@ -47,9 +49,9 @@ export const DEFAULTS = {
   password_strength: 'medium',
   show_password_toggle: true,
   terms_required: false,
-  terms_page: 19,
+  terms_page: 0,
   privacy_required: true,
-  privacy_page: 3,
+  privacy_page: 0,
   email_whitelist: [],
   email_blacklist: [],
   // Redirects
@@ -84,7 +86,7 @@ export const DEFAULTS = {
   decimal_sep: '.',
   decimals: 2,
   test_mode: true,
-  stripe_enabled: true,
+  stripe_enabled: false,
   stripe_mode: 'test',
   stripe_test_publishable: '',
   stripe_test_secret: '',
@@ -97,6 +99,7 @@ export const DEFAULTS = {
   paypal_mode: 'sandbox',
   paypal_client_id: '',
   paypal_secret: '',
+  paypal_webhook_id: '',
   bank_enabled: false,
   bank_title: 'Bank transfer',
   bank_instructions: 'Account name: …\nIBAN: …\nUse your order number as the reference.',
@@ -144,8 +147,9 @@ export const DEFAULTS = {
   load_assets: 'needed',
   exclude_cache: true,
   debug_log: false,
+  log_retention_days: 30,
+  log_debug: false,
   renewals_engine: 'action_scheduler',
-  admin_bypass: true,
 };
 
 const currencyOptions = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'NZD', 'CHF', 'SEK', 'NOK', 'DKK', 'PLN', 'CZK', 'INR', 'BDT', 'PKR', 'SGD', 'HKD', 'MYR', 'IDR', 'ZAR', 'BRL', 'MXN', 'AED', 'SAR', 'QAR', 'KWD', 'TRY', 'EGP', 'NGN', 'JPY', 'KRW']
@@ -185,13 +189,14 @@ function RoleRedirects({ values, setValues }) {
 const SECTIONS = [
   {
     key: 'general', title: __( 'General', 'memberglut' ), icon: faGear, desc: __( 'Site-wide membership behaviour.', 'memberglut' ), fields: [
-      { key: 'default_plan', type: 'select', label: __( 'Plan for new users', 'memberglut' ), tip: __( 'Give this plan to every new WordPress user, including users created by other plugins. Leave empty to give none.', 'memberglut' ), options: [{ value: null, label: __( '— None —', 'memberglut' ) }, ...planOptions.filter((p) => p.value === 1)] },
+      { key: 'default_plan', type: 'select', label: __( 'Plan for new users', 'memberglut' ), tip: __( 'Give this plan to every new WordPress user, including users created by other plugins. Leave empty to give none.', 'memberglut' ), options: [{ value: 0, label: __( '— None —', 'memberglut' ) }, ...freePlanOptions] },
       { key: 'private_site', type: 'switch', label: __( 'Members-only site', 'memberglut' ), tip: __( 'Only logged-in users can see the site. The login, registration and password pages always stay open.', 'memberglut' ) },
       { key: 'private_site_exceptions', type: 'multiselect', label: __( 'Pages that stay public', 'memberglut' ), tip: __( 'Extra pages visitors can open while the site is members-only (e.g. Pricing, About).', 'memberglut' ), options: pageOptions, show: (v) => v.private_site },
+      { key: 'private_site_paths', type: 'tags', label: __( 'Other public addresses', 'memberglut' ), tip: __( 'Paths that are not pages, e.g. /shop/ or /events/*. A * at the end matches everything below.', 'memberglut' ), placeholder: '/events/*', show: (v) => v.private_site },
       { key: 'private_feed', type: 'switch', label: __( 'Private RSS feed', 'memberglut' ), tip: __( 'Also lock the RSS feeds while the site is members-only.', 'memberglut' ), show: (v) => v.private_site },
       { key: 'hide_admin_bar_roles', type: 'multiselect', label: __( 'Hide the admin bar for', 'memberglut' ), tip: __( 'Roles that do not see the WordPress toolbar on the front end. Administrators always see it.', 'memberglut' ), options: roleOptions.filter((r) => r.value !== 'administrator') },
       { key: 'block_admin_roles', type: 'multiselect', label: __( 'Block wp-admin for', 'memberglut' ), tip: __( 'These roles are sent to the page below when they open /wp-admin. AJAX requests keep working.', 'memberglut' ), options: roleOptions.filter((r) => r.value !== 'administrator') },
-      { key: 'admin_redirect_page', type: 'select', label: __( 'Send blocked users to', 'memberglut' ), options: pageOptions },
+      { key: 'admin_redirect_page', type: 'select', label: __( 'Send blocked users to', 'memberglut' ), tip: __( 'A user is blocked only when all of their roles are in the list above.', 'memberglut' ), options: [{ value: 0, label: __( 'My Account page (Forms & Pages)', 'memberglut' ) }, ...pageOptions] },
     ],
   },
   {
@@ -222,7 +227,7 @@ const SECTIONS = [
       },
       { key: 'protect_rest', type: 'switch', label: __( 'Protect the REST API', 'memberglut' ), tip: __( 'Restricted posts are not returned in full by /wp-json/wp/v2 to users without access.', 'memberglut' ) },
       { key: 'protect_feed', type: 'switch', label: __( 'Protect RSS feeds', 'memberglut' ), tip: __( 'Feeds show only the teaser of restricted posts.', 'memberglut' ) },
-      { key: 'protect_search', type: 'switch', label: __( 'Remove from search results', 'memberglut' ), tip: __( 'Restricted posts never appear in site search for users without access.', 'memberglut' ) },
+      { key: 'protect_search', type: 'switch', label: __( 'Remove from search results', 'memberglut' ), tip: __( 'Restricted posts never appear in site search for users without access, even when lists show them with a teaser.', 'memberglut' ) },
       { key: 'restrict_comments', type: 'switch', label: __( 'Lock comments on restricted posts', 'memberglut' ), tip: __( 'Hide the comments and comment form when the content is locked.', 'memberglut' ) },
       { key: 'members_only_comments', type: 'switch', label: __( 'Only members can comment anywhere', 'memberglut' ), tip: __( 'Users without an active plan cannot comment on any post.', 'memberglut' ) },
     ],
@@ -247,9 +252,9 @@ const SECTIONS = [
       { key: 'show_password_toggle', type: 'switch', label: __( 'Show / hide password button', 'memberglut' ) },
       { type: 'heading', key: 'h_legal', label: __( 'Agreements', 'memberglut' ) },
       { key: 'terms_required', type: 'switch', label: __( 'Require Terms & Conditions', 'memberglut' ), tip: __( 'Adds a required checkbox to every registration form. The time of consent is saved.', 'memberglut' ) },
-      { key: 'terms_page', type: 'select', label: __( 'Terms page', 'memberglut' ), options: pageOptions, show: (v) => v.terms_required },
+      { key: 'terms_page', type: 'select', label: __( 'Terms page', 'memberglut' ), options: [{ value: 0, label: __( '— Choose a page —', 'memberglut' ) }, ...pageOptions], show: (v) => v.terms_required },
       { key: 'privacy_required', type: 'switch', label: __( 'Require Privacy Policy consent', 'memberglut' ) },
-      { key: 'privacy_page', type: 'select', label: __( 'Privacy page', 'memberglut' ), options: pageOptions, show: (v) => v.privacy_required },
+      { key: 'privacy_page', type: 'select', label: __( 'Privacy page', 'memberglut' ), options: [{ value: 0, label: __( 'WordPress privacy policy page', 'memberglut' ) }, ...pageOptions], show: (v) => v.privacy_required },
       { type: 'heading', key: 'h_emails', label: __( 'Allowed email addresses', 'memberglut' ) },
       { key: 'email_whitelist', type: 'tags', label: __( 'Only allow', 'memberglut' ), tip: __( 'Registration is limited to these emails or domains (e.g. @company.com). Empty allows everyone.', 'memberglut' ), placeholder: '@company.com' },
       { key: 'email_blacklist', type: 'tags', label: __( 'Block', 'memberglut' ), tip: __( 'Emails or domains that cannot register (e.g. @mailinator.com).', 'memberglut' ), placeholder: '@mailinator.com' },
@@ -297,7 +302,7 @@ const SECTIONS = [
           { key: 'thousand_sep', type: 'text', label: __( 'Thousand separator', 'memberglut' ) },
           { key: 'decimal_sep', type: 'text', label: __( 'Decimal separator', 'memberglut' ) },
           { key: 'decimals', type: 'number', label: __( 'Decimals', 'memberglut' ), min: 0, max: 4 },
-          { key: 'test_mode', type: 'switch', label: __( 'Test mode', 'memberglut' ), tip: __( 'All gateways use their sandbox / test keys. A notice is shown in the admin while this is on.', 'memberglut' ) },
+          { key: 'test_mode', type: 'switch', label: __( 'Test mode', 'memberglut' ), tip: __( 'All gateways use their sandbox / test keys, whatever their own Mode says. A notice is shown in the admin while any gateway is in test mode.', 'memberglut' ) },
         ],
       },
       {
@@ -320,7 +325,8 @@ const SECTIONS = [
           { key: 'paypal_mode', type: 'radio', label: __( 'Mode', 'memberglut' ), options: [{ value: 'sandbox', label: __( 'Sandbox', 'memberglut' ) }, { value: 'live', label: __( 'Live', 'memberglut' ) }], show: (v) => v.paypal_enabled },
           { key: 'paypal_client_id', type: 'text', label: __( 'Client ID', 'memberglut' ), show: (v) => v.paypal_enabled },
           { key: 'paypal_secret', type: 'password', label: __( 'Client secret', 'memberglut' ), show: (v) => v.paypal_enabled },
-          { key: 'paypal_webhook_url', type: 'custom', label: __( 'Webhook URL', 'memberglut' ), render: () => <CopyCode code={site + '/wp-json/memberglut/v1/webhook/paypal'} />, show: (v) => v.paypal_enabled },
+          { key: 'paypal_webhook_url', type: 'custom', label: __( 'Webhook URL', 'memberglut' ), tip: __( 'Add this URL in PayPal Developer › Apps › your app › Webhooks, with all billing and payment events.', 'memberglut' ), render: () => <CopyCode code={site + '/wp-json/memberglut/v1/webhook/paypal'} />, show: (v) => v.paypal_enabled },
+          { key: 'paypal_webhook_id', type: 'text', label: __( 'Webhook ID', 'memberglut' ), tip: __( 'Shown by PayPal after you add the webhook. Needed to verify that notifications really come from PayPal.', 'memberglut' ), show: (v) => v.paypal_enabled },
         ],
       },
       {
@@ -335,7 +341,7 @@ const SECTIONS = [
         key: 'renewals', title: __( 'Renewals', 'memberglut' ), desc: __( 'What happens when a recurring payment fails.', 'memberglut' ), fields: [
           { key: 'retry_failed', type: 'switch', label: __( 'Retry failed payments', 'memberglut' ) },
           { key: 'retry_max', type: 'number', label: __( 'Maximum retries', 'memberglut' ), min: 1, max: 10, show: (v) => v.retry_failed },
-          { key: 'retry_interval', type: 'number', label: __( 'Days between retries', 'memberglut' ), min: 1, max: 30, suffix: __( 'days', 'memberglut' ), show: (v) => v.retry_failed },
+          { key: 'retry_interval', type: 'number', label: __( 'Days between retries', 'memberglut' ), tip: __( 'Stripe and PayPal retry on their own schedule; this applies to bank-transfer renewals. For all gateways, MemberGlut ends the plan after the maximum number of failed payments.', 'memberglut' ), min: 1, max: 30, suffix: __( 'days', 'memberglut' ), show: (v) => v.retry_failed },
           { key: 'retry_status', type: 'select', label: __( 'Access while retrying', 'memberglut' ), options: [{ value: 'on_hold', label: __( 'Pause access (on hold)', 'memberglut' ) }, { value: 'active', label: __( 'Keep access', 'memberglut' ) }], show: (v) => v.retry_failed },
           { key: 'refund_revokes', type: 'switch', label: __( 'A full refund ends access', 'memberglut' ) },
         ],
@@ -393,7 +399,9 @@ const SECTIONS = [
       { key: 'load_assets', type: 'radio', label: __( 'Load MemberGlut CSS & JS', 'memberglut' ), options: [{ value: 'needed', label: __( 'Only where used', 'memberglut' ) }, { value: 'everywhere', label: __( 'On every page', 'memberglut' ) }] },
       { key: 'exclude_cache', type: 'switch', label: __( 'Exclude member pages from cache', 'memberglut' ), tip: __( 'Sends no-cache headers on account, checkout and restricted pages so one member never sees another member’s data.', 'memberglut' ) },
       { key: 'renewals_engine', type: 'select', label: __( 'Run renewals and expirations with', 'memberglut' ), options: [{ value: 'action_scheduler', label: __( 'Action Scheduler (hourly, recommended)', 'memberglut' ) }, { value: 'wp_cron', label: __( 'WP-Cron (daily)', 'memberglut' ) }] },
-      { key: 'debug_log', type: 'switch', label: __( 'Debug log', 'memberglut' ), tip: __( 'Log payments, webhooks and access decisions to Data & Logs. Turn off when not needed.', 'memberglut' ) },
+      { key: 'debug_log', type: 'switch', label: __( 'Debug log', 'memberglut' ), tip: __( 'Log payments, webhooks and access decisions to Data & Logs. Errors are always logged. Same switch as “Logging on” in Data & Logs.', 'memberglut' ) },
+      { key: 'log_retention_days', type: 'number', label: __( 'Keep logs for', 'memberglut' ), suffix: __( 'days', 'memberglut' ), min: 1, max: 365 },
+      { key: 'log_debug', type: 'switch', label: __( 'Include debug messages', 'memberglut' ), show: (v) => v.debug_log },
       { key: 'delete_on_uninstall', type: 'switch', label: __( 'Delete data on uninstall', 'memberglut' ), tip: __( 'When the plugin is deleted (not just deactivated), remove plans, members, payments, rules, logs and settings. Custom roles are removed too. This cannot be undone.', 'memberglut' ) },
     ],
   },
@@ -404,19 +412,35 @@ export default function Settings() {
   const [values, setValues] = useState(DEFAULTS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState({});
 
-  useEffect(() => { api.getSettings(DEFAULTS).then(setValues).finally(() => setLoading(false)); }, []);
+  useEffect(() => {
+    api.getSettings()
+      .then((r) => setValues({ ...DEFAULTS, ...r.values }))
+      .catch((e) => message.error(e.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   const save = async (v) => {
     if (v.sender_email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.sender_email)) {
+      setErrors({ sender_email: __( 'Enter a valid sender email address.', 'memberglut' ) });
       message.error(__( 'Enter a valid sender email address.', 'memberglut' ));
       return false;
     }
     setSaving(true);
-    await api.saveSettings(v);
-    setSaving(false);
-    message.success(__( 'Global settings saved.', 'memberglut' ));
-    return true;
+    try {
+      const r = await api.saveSettings(v);
+      setValues({ ...DEFAULTS, ...r.values });
+      setErrors({});
+      message.success(__( 'Global settings saved.', 'memberglut' ));
+      return true;
+    } catch (e) {
+      setErrors(e.fields || {});
+      message.error(e.message);
+      return false;
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading) return <div className="mg-loading"><Spin size="large" /></div>;
@@ -430,6 +454,7 @@ export default function Settings() {
       setValues={setValues}
       onSave={save}
       saving={saving}
+      errors={errors}
     />
   );
 }

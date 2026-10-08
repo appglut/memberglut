@@ -1,5 +1,5 @@
 import { cs as genStyleHooks, c_ as merge, dl as unit, db as resetComponent, F as FastColor, d8 as reactExports, j as ConfigContext, ax as classNames, ct as genSubStyleComponent, d1 as omit, dn as useClosable, da as replaceElement, d4 as pickClosable, a6 as Wave } from "./Page-DwAue1bn.js";
-import { s as genPresetColor, a4 as isPresetColor, a5 as isPresetStatusColor } from "./api-Brv-883T.js";
+import { k as genPresetColor, X as isPresetColor, Y as isPresetStatusColor } from "./api-BB7d3L8U.js";
 const genBaseStyle = (token) => {
   const {
     paddingXXS,

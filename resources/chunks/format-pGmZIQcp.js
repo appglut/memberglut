@@ -1,5 +1,6 @@
-import { q as dayjs } from "./api-Brv-883T.js";
+import { d as dayjs } from "./index-CeeYjpwl.js";
 import { aA as commonjsGlobal, cB as getDefaultExportFromCjs, a8 as __ } from "./Page-DwAue1bn.js";
+import { L } from "./lookups-BPwJCRM2.js";
 var relativeTime$1 = { exports: {} };
 (function(module, exports) {
   !function(r, e) {
@@ -45,11 +46,25 @@ var relativeTime$1 = { exports: {} };
 var relativeTimeExports = relativeTime$1.exports;
 const relativeTime = /* @__PURE__ */ getDefaultExportFromCjs(relativeTimeExports);
 dayjs.extend(relativeTime);
-function money(amount, currency = "USD") {
-  try {
-    return new Intl.NumberFormat(void 0, { style: "currency", currency, maximumFractionDigits: amount % 1 ? 2 : 0 }).format(amount || 0);
-  } catch (e) {
-    return "$" + Number(amount || 0).toFixed(2);
+function money(amount, currency) {
+  const c = L.currency || {};
+  const code = currency || c.code || "USD";
+  const decimals = code === c.code ? c.decimals ?? 2 : 2;
+  const n = Number(amount || 0);
+  const fixed = Math.abs(n).toFixed(decimals);
+  const [int, frac] = fixed.split(".");
+  const grouped = int.replace(/\B(?=(\d{3})+(?!\d))/g, c.thousand ?? ",");
+  const number = (n < 0 ? "-" : "") + grouped + (frac ? (c.decimal ?? ".") + frac : "");
+  const symbol = code === c.code ? c.symbol || code : code;
+  switch (c.position) {
+    case "before_space":
+      return `${symbol} ${number}`;
+    case "after":
+      return `${number}${symbol}`;
+    case "after_space":
+      return `${number} ${symbol}`;
+    default:
+      return `${symbol}${number}`;
   }
 }
 const date = (v) => v ? dayjs(v).format("MMM D, YYYY") : "—";

@@ -117,7 +117,7 @@ export const UNITS = [
 const WIDE_TYPES = ['textarea', 'editor', 'code', 'cards', 'custom'];
 
 /** Rows of one section, filtered by their `show` condition. */
-export function FieldRows({ fields, values, update }) {
+export function FieldRows({ fields, values, update, errors = {} }) {
   return fields.filter((f) => !f.show || f.show(values)).map((f) => {
     if (f.type === 'heading') {
       return <div key={f.key} className="mg-fs-subhead">{f.label}{f.tip && <span>{f.tip}</span>}</div>;
@@ -131,6 +131,7 @@ export function FieldRows({ fields, values, update }) {
         </div>
         <div className="mg-fs-control">
           <FieldControl f={f} value={values[f.key]} values={values} onChange={(v) => update(f.key, v)} />
+          {errors[f.key] && <div className="mg-fs-error">{errors[f.key]}</div>}
           {f.after && <div className="mg-fs-after">{typeof f.after === 'function' ? f.after(values) : f.after}</div>}
         </div>
       </div>
@@ -142,11 +143,31 @@ export function FieldRows({ fields, values, update }) {
  * Full settings screen with title bar, save button, side nav and section card.
  */
 export default function SettingsPanel({
-  title, subtitle, titleExtra, back, sections, values, setValues, onSave, saving, saveLabel, initialSection, headerActions,
+  title, subtitle, titleExtra, back, sections, values, setValues, onSave, saving, saveLabel, initialSection, headerActions, errors = {},
 }) {
   const [dirty, setDirty] = useState(false);
   const [active, setActive] = useState(initialSection || new URLSearchParams(window.location.search).get('tab') || sections[0].key);
-  const [subs, setSubs] = useState({});
+  const [subs, setSubs] = useState(() => {
+    const sub = new URLSearchParams(window.location.search).get('sub');
+    return sub ? { [initialSection || new URLSearchParams(window.location.search).get('tab') || sections[0].key]: sub } : {};
+  });
+
+  /** Keys of every field in a section (incl. sub-tabs), to flag sections that have errors. */
+  const sectionKeys = (s) => [...(s.fields || []), ...((s.subs || []).flatMap((x) => x.fields || []))].map((f) => f.key).concat(s.errorKeys || []);
+  const hasError = (s) => sectionKeys(s).some((k) => errors[k]);
+  const subHasError = (x) => (x.fields || []).some((f) => errors[f.key]);
+
+  // Jump to the first section with an error after a failed save.
+  useEffect(() => {
+    const first = sections.find(hasError);
+    if (first && !hasError(sections.find((s) => s.key === active) || {})) {
+      setActive(first.key);
+      if (first.subs) {
+        const sub = first.subs.find(subHasError);
+        if (sub) setSubs((p) => ({ ...p, [first.key]: sub.key }));
+      }
+    }
+  }, [errors]);
 
   useEffect(() => {
     const warn = (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } };
@@ -192,6 +213,7 @@ export default function SettingsPanel({
             <button key={s.key} type="button" className={s.key === section.key ? 'active' : ''} onClick={() => setActive(s.key)}>
               <span className="ic"><FontAwesomeIcon icon={s.icon} /></span>
               <span>{s.title}</span>
+              {hasError(s) && <span className="mg-fs-nav-error" />}
             </button>
           ))}
         </nav>
@@ -206,12 +228,12 @@ export default function SettingsPanel({
           </div>
 
           {section.subs && (
-            <Tabs activeKey={subSection.key} onChange={(k) => setSubs((p) => ({ ...p, [section.key]: k }))} items={section.subs.map((x) => ({ key: x.key, label: x.title }))} />
+            <Tabs activeKey={subSection.key} onChange={(k) => setSubs((p) => ({ ...p, [section.key]: k }))} items={section.subs.map((x) => ({ key: x.key, label: subHasError(x) ? <span className="mg-fs-tab-error">{x.title}</span> : x.title }))} />
           )}
           {subSection && subSection.desc && <div className="mg-fs-note" style={{ margin: '0 0 14px' }}>{subSection.desc}</div>}
 
           {section.renderTop && section.renderTop(ctx)}
-          <FieldRows fields={fields} values={values} update={update} />
+          <FieldRows fields={fields} values={values} update={update} errors={errors} />
           {(subSection || section).render && (subSection || section).render(ctx)}
 
           {section.hint && <div className="mg-fs-note" style={{ margin: '4px 0 18px' }}>{section.hint}</div>}

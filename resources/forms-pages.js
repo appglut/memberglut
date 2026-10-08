@@ -1,20 +1,21 @@
 import { a8 as __, bh as faFileLines, c2 as faUserPlus, bJ as faRightToBracket, bp as faIdCard, bS as faTableColumns, b4 as faCode, cV as jsxRuntimeExports, b as App, c as Button, q as FontAwesomeIcon, c9 as faWandMagicSparkles, aZ as faCheck, aM as faArrowUpRightFromSquare, d8 as reactExports, aL as faArrowUp, aI as faArrowDown, bu as faLock, bW as faTrashCan, bF as faPlus, P as Page, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CwFaDHbp.js";
-import { h as PLANS, S as Select, P as PAGES, T as Tooltip, H as getFormsConfig, a8 as saveFormsConfig } from "./chunks/api-Brv-883T.js";
-import { T as Tag } from "./chunks/index-DCZRJZ7q.js";
-import { F as Form } from "./chunks/index-CATG0Lu4.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-XQcr7b1d.js";
+import { S as Select, T as Tooltip, v as getFormsConfig, $ as saveFormsConfig } from "./chunks/api-BB7d3L8U.js";
+import { b as PLANS, P as PAGES } from "./chunks/demoData-DdpKZU_N.js";
+import { T as Tag } from "./chunks/index-DAwOKiJ9.js";
+import { F as Form } from "./chunks/index-CpI3hVNv.js";
 import { I as Input } from "./chunks/index-DR_RfPho.js";
 import { S as Switch } from "./chunks/index-BdHVDZgL.js";
-import { M as Modal } from "./chunks/index-f93o2WLB.js";
+import { M as Modal } from "./chunks/index-DYh7TOe4.js";
 import { S as Spin } from "./chunks/index-DYg9RGnF.js";
-import "./chunks/index-DbvrDALF.js";
-import "./chunks/index-CjCriZ9v.js";
+import "./chunks/index-CeeYjpwl.js";
+import "./chunks/index-7xpZ3r7T.js";
+import "./chunks/index-wzDtlKHr.js";
 import "./chunks/index-jcrWDM9i.js";
-import "./chunks/index-BzZf0YwZ.js";
-import "./chunks/index-dboLsXN4.js";
-import "./chunks/index-CJWEZhJV.js";
-import "./chunks/useBreakpoint-DMP4aqmU.js";
+import "./chunks/index-D6__SY_c.js";
+import "./chunks/index-D0vDDvb0.js";
+import "./chunks/useBreakpoint-BRPI9HCX.js";
 const PAGE_SLOTS = [
   ["page_register", __("Registration & checkout", "memberglut"), "[memberglut_register]", __("Account fields, plan choice and payment.", "memberglut")],
   ["page_login", __("Login", "memberglut"), "[memberglut_login]", __("Replaces wp-login.php when that option is on.", "memberglut")],
@@ -272,7 +273,7 @@ function FormsPages() {
   const [loading, setLoading] = reactExports.useState(true);
   const [saving, setSaving] = reactExports.useState(false);
   reactExports.useEffect(() => {
-    getFormsConfig(DEFAULTS).then(setValues).finally(() => setLoading(false));
+    getFormsConfig().then(setValues).finally(() => setLoading(false));
   }, []);
   const save = async (v) => {
     setSaving(true);

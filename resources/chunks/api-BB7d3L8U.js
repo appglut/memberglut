@@ -1,4 +1,4 @@
-import { J as PresetColors, R as React, x as Keyframe, cP as initMotion, d8 as reactExports, k as ConfigProvider, dB as useMergedState, j as ConfigContext, ax as classNames, as as _typeof, ap as _slicedToArray, K as KeyCode, al as _objectWithoutProperties, af as _extends, ak as _objectSpread2, _ as RefResizeObserver, dV as wrapperRaf, du as useEvent, d7 as reactDomExports, dx as useLayoutEffect$1, dO as warning, aB as composeRef, d3 as pickAttrs, ae as _defineProperty, C as CSSMotion, dg as supportRef, cb as fillRef, ds as useComposeRef, cE as getNodeRef, cR as isDOM, cU as isVisible, ar as _toConsumableArray, cH as getShadowRoot, dw as useId$1, H as Portal, dP as warningOnce, aq as _toArray, ac as _createClass, ab as _classCallCheck, dA as useMemo, d1 as omit, aw as canUseDom, di as toArray$3, dK as useToken, dz as useLocale, F as FastColor, cs as genStyleHooks, c_ as merge, dr as useComponentConfig, db as resetComponent, dh as textEllipsis, dl as unit, dc as resetIcon, ch as genCompactItemStyle, I as Icon$1, T as RefIcon$3, W as RefIcon$4, X as RefIcon$5, Z as RefIcon$6, n as ContextIsolator, dq as useCompactItemContext, dL as useVariant, dm as useCSSVarCls, t as FormItemInputContext, dH as useSize, D as DisabledContext, cI as getStatusClassNames, dN as useZIndex, cK as getTransitionName, cD as getMergedStatus, cQ as initZoomMotion, cw as generateColor, cT as isFragment, az as cloneElement, dW as zIndexContext, aH as devUseWarning, cS as isEqual, ah as _inherits, ad as _createSuper, aA as commonjsGlobal, cB as getDefaultExportFromCjs, dv as useForm$1, cA as getDOM, i as Compact } from "./Page-DwAue1bn.js";
+import { J as PresetColors, R as React, x as Keyframe, cP as initMotion, d8 as reactExports, k as ConfigProvider, dB as useMergedState, j as ConfigContext, ax as classNames, as as _typeof, ap as _slicedToArray, K as KeyCode, al as _objectWithoutProperties, af as _extends, ak as _objectSpread2, _ as RefResizeObserver, dV as wrapperRaf, du as useEvent, d7 as reactDomExports, dx as useLayoutEffect$1, dO as warning, aB as composeRef, d3 as pickAttrs, ae as _defineProperty, C as CSSMotion, dg as supportRef, cb as fillRef, ds as useComposeRef, cE as getNodeRef, cR as isDOM, cU as isVisible, ar as _toConsumableArray, cH as getShadowRoot, dw as useId$1, H as Portal, dP as warningOnce, aq as _toArray, ac as _createClass, ab as _classCallCheck, dA as useMemo, d1 as omit, aw as canUseDom, di as toArray$3, dK as useToken, dz as useLocale, F as FastColor, cs as genStyleHooks, c_ as merge, dr as useComponentConfig, db as resetComponent, dh as textEllipsis, dl as unit, dc as resetIcon, ch as genCompactItemStyle, I as Icon$1, T as RefIcon$3, W as RefIcon$4, X as RefIcon$5, Z as RefIcon$6, n as ContextIsolator, dq as useCompactItemContext, dL as useVariant, dm as useCSSVarCls, t as FormItemInputContext, dH as useSize, D as DisabledContext, cI as getStatusClassNames, dN as useZIndex, cK as getTransitionName, cD as getMergedStatus, cQ as initZoomMotion, cw as generateColor, cT as isFragment, az as cloneElement, dW as zIndexContext, aH as devUseWarning, cS as isEqual, ah as _inherits, ad as _createSuper, dv as useForm$1, cA as getDOM, i as Compact } from "./Page-DwAue1bn.js";
 function genPresetColor(token, genCss) {
   return PresetColors.reduce((prev, colorKey) => {
     const lightColor = token[`${colorKey}1`];
@@ -33,9 +33,9 @@ const t = (t2) => "object" == typeof t2 && null != t2 && 1 === t2.nodeType, e$1 
   const e2 = t2.parentElement;
   return null == e2 ? t2.getRootNode().host || null : e2;
 }, r = (e2, r2) => {
-  var i, s, d2, h;
+  var i, s, d, h;
   if ("undefined" == typeof document) return [];
-  const { scrollMode: c, block: f2, inline: u, boundary: a, skipOverflowHiddenElements: g } = r2, p = "function" == typeof a ? a : (t2) => t2 !== a;
+  const { scrollMode: c, block: f, inline: u, boundary: a, skipOverflowHiddenElements: g } = r2, p = "function" == typeof a ? a : (t2) => t2 !== a;
   if (!t(e2)) throw new TypeError("Invalid target");
   const m = document.scrollingElement || document.documentElement, w = [];
   let W = e2;
@@ -46,21 +46,21 @@ const t = (t2) => "object" == typeof t2 && null != t2 && 1 === t2.nodeType, e$1 
     }
     null != W && W === document.body && n(W) && !n(document.documentElement) || null != W && n(W, g) && w.push(W);
   }
-  const b = null != (s = null == (i = window.visualViewport) ? void 0 : i.width) ? s : innerWidth, H = null != (h = null == (d2 = window.visualViewport) ? void 0 : d2.height) ? h : innerHeight, { scrollX: y, scrollY: M } = window, { height: v, width: E2, top: x, right: C, bottom: I, left: R } = e2.getBoundingClientRect(), { top: T, right: B, bottom: F, left: V } = ((t2) => {
+  const b = null != (s = null == (i = window.visualViewport) ? void 0 : i.width) ? s : innerWidth, H = null != (h = null == (d = window.visualViewport) ? void 0 : d.height) ? h : innerHeight, { scrollX: y, scrollY: M } = window, { height: v, width: E, top: x, right: C, bottom: I, left: R } = e2.getBoundingClientRect(), { top: T, right: B, bottom: F, left: V } = ((t2) => {
     const e3 = window.getComputedStyle(t2);
     return { top: parseFloat(e3.scrollMarginTop) || 0, right: parseFloat(e3.scrollMarginRight) || 0, bottom: parseFloat(e3.scrollMarginBottom) || 0, left: parseFloat(e3.scrollMarginLeft) || 0 };
   })(e2);
-  let k = "start" === f2 || "nearest" === f2 ? x - T : "end" === f2 ? I + F : x + v / 2 - T + F, D = "center" === u ? R + E2 / 2 - V + B : "end" === u ? C + B : R - V;
+  let k = "start" === f || "nearest" === f ? x - T : "end" === f ? I + F : x + v / 2 - T + F, D = "center" === u ? R + E / 2 - V + B : "end" === u ? C + B : R - V;
   const L = [];
   for (let t2 = 0; t2 < w.length; t2++) {
-    const e3 = w[t2], { height: l2, width: r3, top: i2, right: s2, bottom: d3, left: h2 } = e3.getBoundingClientRect();
-    if ("if-needed" === c && x >= 0 && R >= 0 && I <= H && C <= b && (e3 === m && !n(e3) || x >= i2 && I <= d3 && R >= h2 && C <= s2)) return L;
+    const e3 = w[t2], { height: l2, width: r3, top: i2, right: s2, bottom: d2, left: h2 } = e3.getBoundingClientRect();
+    if ("if-needed" === c && x >= 0 && R >= 0 && I <= H && C <= b && (e3 === m && !n(e3) || x >= i2 && I <= d2 && R >= h2 && C <= s2)) return L;
     const a2 = getComputedStyle(e3), g2 = parseInt(a2.borderLeftWidth, 10), p2 = parseInt(a2.borderTopWidth, 10), W2 = parseInt(a2.borderRightWidth, 10), T2 = parseInt(a2.borderBottomWidth, 10);
     let B2 = 0, F2 = 0;
     const V2 = "offsetWidth" in e3 ? e3.offsetWidth - e3.clientWidth - g2 - W2 : 0, S = "offsetHeight" in e3 ? e3.offsetHeight - e3.clientHeight - p2 - T2 : 0, X = "offsetWidth" in e3 ? 0 === e3.offsetWidth ? 0 : r3 / e3.offsetWidth : 0, Y = "offsetHeight" in e3 ? 0 === e3.offsetHeight ? 0 : l2 / e3.offsetHeight : 0;
-    if (m === e3) B2 = "start" === f2 ? k : "end" === f2 ? k - H : "nearest" === f2 ? o$1(M, M + H, H, p2, T2, M + k, M + k + v, v) : k - H / 2, F2 = "start" === u ? D : "center" === u ? D - b / 2 : "end" === u ? D - b : o$1(y, y + b, b, g2, W2, y + D, y + D + E2, E2), B2 = Math.max(0, B2 + M), F2 = Math.max(0, F2 + y);
+    if (m === e3) B2 = "start" === f ? k : "end" === f ? k - H : "nearest" === f ? o$1(M, M + H, H, p2, T2, M + k, M + k + v, v) : k - H / 2, F2 = "start" === u ? D : "center" === u ? D - b / 2 : "end" === u ? D - b : o$1(y, y + b, b, g2, W2, y + D, y + D + E, E), B2 = Math.max(0, B2 + M), F2 = Math.max(0, F2 + y);
     else {
-      B2 = "start" === f2 ? k - i2 - p2 : "end" === f2 ? k - d3 + T2 + S : "nearest" === f2 ? o$1(i2, d3, l2, p2, T2 + S, k, k + v, v) : k - (i2 + l2 / 2) + S / 2, F2 = "start" === u ? D - h2 - g2 : "center" === u ? D - (h2 + r3 / 2) + V2 / 2 : "end" === u ? D - s2 + W2 + V2 : o$1(h2, s2, r3, g2, W2 + V2, D, D + E2, E2);
+      B2 = "start" === f ? k - i2 - p2 : "end" === f ? k - d2 + T2 + S : "nearest" === f ? o$1(i2, d2, l2, p2, T2 + S, k, k + v, v) : k - (i2 + l2 / 2) + S / 2, F2 = "start" === u ? D - h2 - g2 : "center" === u ? D - (h2 + r3 / 2) + V2 / 2 : "end" === u ? D - s2 + W2 + V2 : o$1(h2, s2, r3, g2, W2 + V2, D, D + E, E);
       const { scrollLeft: t3, scrollTop: n2 } = e3;
       B2 = 0 === Y ? 0 : Math.max(0, Math.min(n2 + B2 / Y, e3.scrollHeight - l2 / Y + S)), F2 = 0 === X ? 0 : Math.max(0, Math.min(t3 + F2 / X, e3.scrollWidth - r3 / X + V2)), k += n2 - B2, D += t3 - F2;
     }
@@ -2630,7 +2630,7 @@ function injectPropsWithOption(option) {
   var newOption = _objectSpread2({}, option);
   if (!("props" in newOption)) {
     Object.defineProperty(newOption, "props", {
-      get: function get() {
+      get: function get2() {
         warningOnce(false, "Return type is option instead of Option instance. Please read value directly instead of reading from `props`.");
         return newOption;
       }
@@ -3351,7 +3351,7 @@ var CacheMap = /* @__PURE__ */ function() {
     }
   }, {
     key: "get",
-    value: function get(key) {
+    value: function get2(key) {
       return this.maps[key];
     }
     /**
@@ -8279,7 +8279,7 @@ var _excluded$6 = ["item"];
 function warnItemProp(_ref) {
   var item = _ref.item, restInfo = _objectWithoutProperties(_ref, _excluded$6);
   Object.defineProperty(restInfo, "item", {
-    get: function get() {
+    get: function get2() {
       warningOnce(false, "`info.item` is deprecated since we will move to function component that not provides React Node instance in future.");
       return item;
     }
@@ -9193,284 +9193,6 @@ var EllipsisOutlined = function EllipsisOutlined2(props, ref) {
   }));
 };
 var RefIcon = /* @__PURE__ */ reactExports.forwardRef(EllipsisOutlined);
-var dayjs_min = { exports: {} };
-(function(module, exports) {
-  !function(t2, e2) {
-    module.exports = e2();
-  }(commonjsGlobal, function() {
-    var t2 = 1e3, e2 = 6e4, n2 = 36e5, r2 = "millisecond", i = "second", s = "minute", u = "hour", a = "day", o2 = "week", c = "month", f2 = "quarter", h = "year", d2 = "date", l2 = "Invalid Date", $ = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/, y = /\[([^\]]+)]|Y{1,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g, M = { name: "en", weekdays: "Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"), months: "January_February_March_April_May_June_July_August_September_October_November_December".split("_"), ordinal: function(t3) {
-      var e3 = ["th", "st", "nd", "rd"], n3 = t3 % 100;
-      return "[" + t3 + (e3[(n3 - 20) % 10] || e3[n3] || e3[0]) + "]";
-    } }, m = function(t3, e3, n3) {
-      var r3 = String(t3);
-      return !r3 || r3.length >= e3 ? t3 : "" + Array(e3 + 1 - r3.length).join(n3) + t3;
-    }, v = { s: m, z: function(t3) {
-      var e3 = -t3.utcOffset(), n3 = Math.abs(e3), r3 = Math.floor(n3 / 60), i2 = n3 % 60;
-      return (e3 <= 0 ? "+" : "-") + m(r3, 2, "0") + ":" + m(i2, 2, "0");
-    }, m: function t3(e3, n3) {
-      if (e3.date() < n3.date()) return -t3(n3, e3);
-      var r3 = 12 * (n3.year() - e3.year()) + (n3.month() - e3.month()), i2 = e3.clone().add(r3, c), s2 = n3 - i2 < 0, u2 = e3.clone().add(r3 + (s2 ? -1 : 1), c);
-      return +(-(r3 + (n3 - i2) / (s2 ? i2 - u2 : u2 - i2)) || 0);
-    }, a: function(t3) {
-      return t3 < 0 ? Math.ceil(t3) || 0 : Math.floor(t3);
-    }, p: function(t3) {
-      return { M: c, y: h, w: o2, d: a, D: d2, h: u, m: s, s: i, ms: r2, Q: f2 }[t3] || String(t3 || "").toLowerCase().replace(/s$/, "");
-    }, u: function(t3) {
-      return void 0 === t3;
-    } }, g = "en", D = {};
-    D[g] = M;
-    var p = "$isDayjsObject", S = function(t3) {
-      return t3 instanceof _ || !(!t3 || !t3[p]);
-    }, w = function t3(e3, n3, r3) {
-      var i2;
-      if (!e3) return g;
-      if ("string" == typeof e3) {
-        var s2 = e3.toLowerCase();
-        D[s2] && (i2 = s2), n3 && (D[s2] = n3, i2 = s2);
-        var u2 = e3.split("-");
-        if (!i2 && u2.length > 1) return t3(u2[0]);
-      } else {
-        var a2 = e3.name;
-        D[a2] = e3, i2 = a2;
-      }
-      return !r3 && i2 && (g = i2), i2 || !r3 && g;
-    }, O = function(t3, e3) {
-      if (S(t3)) return t3.clone();
-      var n3 = "object" == typeof e3 ? e3 : {};
-      return n3.date = t3, n3.args = arguments, new _(n3);
-    }, b = v;
-    b.l = w, b.i = S, b.w = function(t3, e3) {
-      return O(t3, { locale: e3.$L, utc: e3.$u, x: e3.$x, $offset: e3.$offset });
-    };
-    var _ = function() {
-      function M2(t3) {
-        this.$L = w(t3.locale, null, true), this.parse(t3), this.$x = this.$x || t3.x || {}, this[p] = true;
-      }
-      var m2 = M2.prototype;
-      return m2.parse = function(t3) {
-        this.$d = function(t4) {
-          var e3 = t4.date, n3 = t4.utc;
-          if (null === e3) return /* @__PURE__ */ new Date(NaN);
-          if (b.u(e3)) return /* @__PURE__ */ new Date();
-          if (e3 instanceof Date) return new Date(e3);
-          if ("string" == typeof e3 && !/Z$/i.test(e3)) {
-            var r3 = e3.match($);
-            if (r3) {
-              var i2 = r3[2] - 1 || 0, s2 = (r3[7] || "0").substring(0, 3);
-              return n3 ? new Date(Date.UTC(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2)) : new Date(r3[1], i2, r3[3] || 1, r3[4] || 0, r3[5] || 0, r3[6] || 0, s2);
-            }
-          }
-          return new Date(e3);
-        }(t3), this.init();
-      }, m2.init = function() {
-        var t3 = this.$d;
-        this.$y = t3.getFullYear(), this.$M = t3.getMonth(), this.$D = t3.getDate(), this.$W = t3.getDay(), this.$H = t3.getHours(), this.$m = t3.getMinutes(), this.$s = t3.getSeconds(), this.$ms = t3.getMilliseconds();
-      }, m2.$utils = function() {
-        return b;
-      }, m2.isValid = function() {
-        return !(this.$d.toString() === l2);
-      }, m2.isSame = function(t3, e3) {
-        var n3 = O(t3);
-        return this.startOf(e3) <= n3 && n3 <= this.endOf(e3);
-      }, m2.isAfter = function(t3, e3) {
-        return O(t3) < this.startOf(e3);
-      }, m2.isBefore = function(t3, e3) {
-        return this.endOf(e3) < O(t3);
-      }, m2.$g = function(t3, e3, n3) {
-        return b.u(t3) ? this[e3] : this.set(n3, t3);
-      }, m2.unix = function() {
-        return Math.floor(this.valueOf() / 1e3);
-      }, m2.valueOf = function() {
-        return this.$d.getTime();
-      }, m2.startOf = function(t3, e3) {
-        var n3 = this, r3 = !!b.u(e3) || e3, f3 = b.p(t3), l3 = function(t4, e4) {
-          var i2 = b.w(n3.$u ? Date.UTC(n3.$y, e4, t4) : new Date(n3.$y, e4, t4), n3);
-          return r3 ? i2 : i2.endOf(a);
-        }, $2 = function(t4, e4) {
-          return b.w(n3.toDate()[t4].apply(n3.toDate("s"), (r3 ? [0, 0, 0, 0] : [23, 59, 59, 999]).slice(e4)), n3);
-        }, y2 = this.$W, M3 = this.$M, m3 = this.$D, v2 = "set" + (this.$u ? "UTC" : "");
-        switch (f3) {
-          case h:
-            return r3 ? l3(1, 0) : l3(31, 11);
-          case c:
-            return r3 ? l3(1, M3) : l3(0, M3 + 1);
-          case o2:
-            var g2 = this.$locale().weekStart || 0, D2 = (y2 < g2 ? y2 + 7 : y2) - g2;
-            return l3(r3 ? m3 - D2 : m3 + (6 - D2), M3);
-          case a:
-          case d2:
-            return $2(v2 + "Hours", 0);
-          case u:
-            return $2(v2 + "Minutes", 1);
-          case s:
-            return $2(v2 + "Seconds", 2);
-          case i:
-            return $2(v2 + "Milliseconds", 3);
-          default:
-            return this.clone();
-        }
-      }, m2.endOf = function(t3) {
-        return this.startOf(t3, false);
-      }, m2.$set = function(t3, e3) {
-        var n3, o3 = b.p(t3), f3 = "set" + (this.$u ? "UTC" : ""), l3 = (n3 = {}, n3[a] = f3 + "Date", n3[d2] = f3 + "Date", n3[c] = f3 + "Month", n3[h] = f3 + "FullYear", n3[u] = f3 + "Hours", n3[s] = f3 + "Minutes", n3[i] = f3 + "Seconds", n3[r2] = f3 + "Milliseconds", n3)[o3], $2 = o3 === a ? this.$D + (e3 - this.$W) : e3;
-        if (o3 === c || o3 === h) {
-          var y2 = this.clone().set(d2, 1);
-          y2.$d[l3]($2), y2.init(), this.$d = y2.set(d2, Math.min(this.$D, y2.daysInMonth())).$d;
-        } else l3 && this.$d[l3]($2);
-        return this.init(), this;
-      }, m2.set = function(t3, e3) {
-        return this.clone().$set(t3, e3);
-      }, m2.get = function(t3) {
-        return this[b.p(t3)]();
-      }, m2.add = function(r3, f3) {
-        var d3, l3 = this;
-        r3 = Number(r3);
-        var $2 = b.p(f3), y2 = function(t3) {
-          var e3 = O(l3);
-          return b.w(e3.date(e3.date() + Math.round(t3 * r3)), l3);
-        };
-        if ($2 === c) return this.set(c, this.$M + r3);
-        if ($2 === h) return this.set(h, this.$y + r3);
-        if ($2 === a) return y2(1);
-        if ($2 === o2) return y2(7);
-        var M3 = (d3 = {}, d3[s] = e2, d3[u] = n2, d3[i] = t2, d3)[$2] || 1, m3 = this.$d.getTime() + r3 * M3;
-        return b.w(m3, this);
-      }, m2.subtract = function(t3, e3) {
-        return this.add(-1 * t3, e3);
-      }, m2.format = function(t3) {
-        var e3 = this, n3 = this.$locale();
-        if (!this.isValid()) return n3.invalidDate || l2;
-        var r3 = t3 || "YYYY-MM-DDTHH:mm:ssZ", i2 = b.z(this), s2 = this.$H, u2 = this.$m, a2 = this.$M, o3 = n3.weekdays, c2 = n3.months, f3 = n3.meridiem, h2 = function(t4, n4, i3, s3) {
-          return t4 && (t4[n4] || t4(e3, r3)) || i3[n4].slice(0, s3);
-        }, d3 = function(t4) {
-          return b.s(s2 % 12 || 12, t4, "0");
-        }, $2 = f3 || function(t4, e4, n4) {
-          var r4 = t4 < 12 ? "AM" : "PM";
-          return n4 ? r4.toLowerCase() : r4;
-        };
-        return r3.replace(y, function(t4, r4) {
-          return r4 || function(t5) {
-            switch (t5) {
-              case "YY":
-                return String(e3.$y).slice(-2);
-              case "YYYY":
-                return b.s(e3.$y, 4, "0");
-              case "M":
-                return a2 + 1;
-              case "MM":
-                return b.s(a2 + 1, 2, "0");
-              case "MMM":
-                return h2(n3.monthsShort, a2, c2, 3);
-              case "MMMM":
-                return h2(c2, a2);
-              case "D":
-                return e3.$D;
-              case "DD":
-                return b.s(e3.$D, 2, "0");
-              case "d":
-                return String(e3.$W);
-              case "dd":
-                return h2(n3.weekdaysMin, e3.$W, o3, 2);
-              case "ddd":
-                return h2(n3.weekdaysShort, e3.$W, o3, 3);
-              case "dddd":
-                return o3[e3.$W];
-              case "H":
-                return String(s2);
-              case "HH":
-                return b.s(s2, 2, "0");
-              case "h":
-                return d3(1);
-              case "hh":
-                return d3(2);
-              case "a":
-                return $2(s2, u2, true);
-              case "A":
-                return $2(s2, u2, false);
-              case "m":
-                return String(u2);
-              case "mm":
-                return b.s(u2, 2, "0");
-              case "s":
-                return String(e3.$s);
-              case "ss":
-                return b.s(e3.$s, 2, "0");
-              case "SSS":
-                return b.s(e3.$ms, 3, "0");
-              case "Z":
-                return i2;
-            }
-            return null;
-          }(t4) || i2.replace(":", "");
-        });
-      }, m2.utcOffset = function() {
-        return 15 * -Math.round(this.$d.getTimezoneOffset() / 15);
-      }, m2.diff = function(r3, d3, l3) {
-        var $2, y2 = this, M3 = b.p(d3), m3 = O(r3), v2 = (m3.utcOffset() - this.utcOffset()) * e2, g2 = this - m3, D2 = function() {
-          return b.m(y2, m3);
-        };
-        switch (M3) {
-          case h:
-            $2 = D2() / 12;
-            break;
-          case c:
-            $2 = D2();
-            break;
-          case f2:
-            $2 = D2() / 3;
-            break;
-          case o2:
-            $2 = (g2 - v2) / 6048e5;
-            break;
-          case a:
-            $2 = (g2 - v2) / 864e5;
-            break;
-          case u:
-            $2 = g2 / n2;
-            break;
-          case s:
-            $2 = g2 / e2;
-            break;
-          case i:
-            $2 = g2 / t2;
-            break;
-          default:
-            $2 = g2;
-        }
-        return l3 ? $2 : b.a($2);
-      }, m2.daysInMonth = function() {
-        return this.endOf(c).$D;
-      }, m2.$locale = function() {
-        return D[this.$L];
-      }, m2.locale = function(t3, e3) {
-        if (!t3) return this.$L;
-        var n3 = this.clone(), r3 = w(t3, e3, true);
-        return r3 && (n3.$L = r3), n3;
-      }, m2.clone = function() {
-        return b.w(this.$d, this);
-      }, m2.toDate = function() {
-        return new Date(this.valueOf());
-      }, m2.toJSON = function() {
-        return this.isValid() ? this.toISOString() : null;
-      }, m2.toISOString = function() {
-        return this.$d.toISOString();
-      }, m2.toString = function() {
-        return this.$d.toUTCString();
-      }, M2;
-    }(), k = _.prototype;
-    return O.prototype = k, [["$ms", r2], ["$s", i], ["$m", s], ["$H", u], ["$W", a], ["$M", c], ["$y", h], ["$D", d2]].forEach(function(t3) {
-      k[t3[1]] = function(e3) {
-        return this.$g(e3, t3[0], t3[1]);
-      };
-    }), O.extend = function(t3, e3) {
-      return t3.$i || (t3(e3, _, O), t3.$i = true), O;
-    }, O.locale = w, O.isDayjs = S, O.unix = function(t3) {
-      return O(1e3 * t3);
-    }, O.en = D[g], O.Ls = D, O.p = {}, O;
-  });
-})(dayjs_min);
-var dayjs_minExports = dayjs_min.exports;
-const dayjs = /* @__PURE__ */ getDefaultExportFromCjs(dayjs_minExports);
 const formItemNameBlackList = ["parentNode"];
 const defaultItemNamePrefixCls = "form_item";
 function toArray(candidate) {
@@ -9865,328 +9587,129 @@ const InternalSpace = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
 const Space = InternalSpace;
 Space.Compact = Compact;
 Space.Addon = SpaceAddon;
-const d = (days) => dayjs().subtract(days, "day").format("YYYY-MM-DD HH:mm:ss");
-const f = (days) => dayjs().add(days, "day").format("YYYY-MM-DD HH:mm:ss");
-const PLANS = [
-  { id: 1, name: "Free", slug: "free", status: "active", group: "Main", tier: 1, type: "free", price: 0, signup_fee: 0, billing: "one_time", duration_type: "unlimited", duration: { length: 1, unit: "month" }, trial: false, role: "memberglut_basic", members: 412, revenue: 0, color: "#64748b", description: "Read free articles and join the newsletter." },
-  { id: 2, name: "Silver", slug: "silver", status: "active", group: "Main", tier: 2, type: "paid", price: 9, signup_fee: 0, billing: "recurring", duration_type: "fixed", duration: { length: 1, unit: "month" }, trial: true, trial_length: { length: 7, unit: "day" }, role: "memberglut_premium", members: 186, revenue: 1674, color: "#94a3b8", description: "All premium articles and monthly Q&A." },
-  { id: 3, name: "Gold", slug: "gold", status: "active", group: "Main", tier: 3, type: "paid", price: 89, signup_fee: 10, billing: "recurring", duration_type: "fixed", duration: { length: 1, unit: "year" }, trial: false, role: "memberglut_vip", members: 73, revenue: 6497, color: "#f59e0b", featured: true, description: "Everything in Silver plus courses and downloads." },
-  { id: 4, name: "Lifetime", slug: "lifetime", status: "inactive", group: "Main", tier: 4, type: "paid", price: 299, signup_fee: 0, billing: "one_time", duration_type: "unlimited", duration: { length: 1, unit: "year" }, trial: false, role: "memberglut_vip", members: 12, revenue: 3588, color: "#7c3aed", description: "Pay once, keep Gold access forever." }
-];
-const FIRST = ["Aisha", "Omar", "Fatima", "Yusuf", "Maryam", "Ibrahim", "Zainab", "Hamza", "Khadija", "Bilal", "Sara", "Ali", "Noor", "Hassan", "Amina", "Musa", "Layla", "Idris", "Huda", "Zayd", "Ruqayya", "Tariq", "Safiya", "Anas", "Hafsa"];
-const LAST = ["Rahman", "Khan", "Hossain", "Ahmed", "Malik", "Siddiqui", "Chowdhury", "Karim", "Islam", "Haque"];
-const STATUSES = ["active", "active", "active", "active", "trialing", "pending", "canceled", "expired", "active", "on_hold"];
-const GATEWAYS = ["stripe", "paypal", "bank", "manual", "stripe"];
-const MEMBERS = FIRST.map((first, i) => {
-  const last = LAST[i % LAST.length];
-  const p = PLANS[[1, 2, 0, 1, 2, 3, 1, 0][i % 8]];
-  const status = STATUSES[i % STATUSES.length];
-  return {
-    id: 100 + i,
-    user_id: 20 + i,
-    name: `${first} ${last}`,
-    username: `${first.toLowerCase()}${i}`,
-    email: `${first.toLowerCase()}.${last.toLowerCase()}@example.com`,
-    plan_id: p.id,
-    plan: p.name,
-    status,
-    gateway: p.type === "free" ? "free" : GATEWAYS[i % GATEWAYS.length],
-    started: d(5 + i * 9),
-    expires: p.duration_type === "unlimited" ? null : status === "expired" ? d(i + 1) : f(3 + i * 4),
-    role: p.role,
-    total_spent: p.price * (i % 4 + 1),
-    last_login: d(i % 6),
-    approved: status !== "pending"
-  };
-});
-const PAYMENTS = MEMBERS.filter((m) => m.gateway !== "free").slice(0, 18).map((m, i) => ({
-  id: 5e3 + i,
-  member_id: m.id,
-  name: m.name,
-  email: m.email,
-  plan: m.plan,
-  amount: PLANS.find((p) => p.id === m.plan_id).price + (i === 2 ? 10 : 0),
-  currency: "USD",
-  gateway: m.gateway,
-  status: ["completed", "completed", "completed", "pending", "failed", "refunded", "completed"][i % 7],
-  type: i % 3 === 0 ? "renewal" : "new",
-  transaction_id: m.gateway === "stripe" ? `pi_3P${(918273 + i * 77).toString(36)}` : m.gateway === "paypal" ? `PAY-${83920 + i}` : "",
-  coupon: i === 4 ? "WELCOME20" : "",
-  date: d(i * 2)
-}));
-const COUPONS = [
-  { id: 1, code: "WELCOME20", type: "percent", amount: 20, plans: [2, 3], uses: 41, max_uses: 100, per_user: 1, new_users_only: true, recurring: false, starts: "", expires: f(40), status: "active" },
-  { id: 2, code: "RAMADAN", type: "percent", amount: 30, plans: [], uses: 128, max_uses: 0, per_user: 1, new_users_only: false, recurring: true, starts: "", expires: d(5), status: "expired" },
-  { id: 3, code: "GOLD10", type: "fixed", amount: 10, plans: [3], uses: 7, max_uses: 50, per_user: 1, new_users_only: false, recurring: false, starts: f(2), expires: "", status: "scheduled" }
-];
-const RULES = [
-  { id: 1, title: "Premium articles", status: "active", priority: 10, protect: [{ type: "taxonomy", taxonomy: "category", terms: ["Premium"] }], exclude: [], access: { who: "plans", plans: [2, 3, 4], roles: [] }, action: "message", teaser: "excerpt", updated: d(2) },
-  { id: 2, title: "Courses (Gold only)", status: "active", priority: 20, protect: [{ type: "post_type", post_type: "course" }], exclude: [{ type: "posts", posts: ["Course intro (free)"] }], access: { who: "plans", plans: [3, 4], roles: [] }, action: "redirect", redirect: "/pricing/", teaser: "none", updated: d(6) },
-  { id: 3, title: "Members area", status: "active", priority: 5, protect: [{ type: "pages", posts: ["Members Area", "Downloads"] }], exclude: [], access: { who: "logged_in", plans: [], roles: [] }, action: "login", teaser: "none", updated: d(12) },
-  { id: 4, title: "Partner resources", status: "inactive", priority: 0, protect: [{ type: "url", pattern: "/partners/*" }], exclude: [], access: { who: "roles", plans: [], roles: ["editor"] }, action: "message", teaser: "none", updated: d(30) }
-];
-const ROLES = [
-  { slug: "administrator", name: "Administrator", users: 2, builtin: true, protected: true, level: 10 },
-  { slug: "editor", name: "Editor", users: 3, builtin: true, level: 7 },
-  { slug: "author", name: "Author", users: 5, builtin: true, level: 2 },
-  { slug: "contributor", name: "Contributor", users: 1, builtin: true, level: 1 },
-  { slug: "subscriber", name: "Subscriber", users: 214, builtin: true, isDefault: true, level: 0 },
-  { slug: "memberglut_basic", name: "Basic Member", users: 412, builtin: false, level: 0 },
-  { slug: "memberglut_premium", name: "Premium Member", users: 186, builtin: false, level: 0 },
-  { slug: "memberglut_vip", name: "VIP Member", users: 85, builtin: false, level: 0 }
-];
-const CAP_GROUPS = [
-  { key: "general", label: "General", caps: ["read", "edit_dashboard", "upload_files", "unfiltered_html", "manage_options", "export", "import"] },
-  { key: "posts", label: "Posts", caps: ["edit_posts", "edit_others_posts", "edit_published_posts", "publish_posts", "delete_posts", "delete_others_posts", "delete_published_posts", "read_private_posts", "manage_categories"] },
-  { key: "pages", label: "Pages", caps: ["edit_pages", "edit_others_pages", "edit_published_pages", "publish_pages", "delete_pages", "delete_others_pages", "read_private_pages"] },
-  { key: "users", label: "Users", caps: ["list_users", "create_users", "edit_users", "delete_users", "promote_users", "remove_users"] },
-  { key: "appearance", label: "Appearance", caps: ["switch_themes", "edit_theme_options", "edit_themes", "install_themes", "customize"] },
-  { key: "plugins", label: "Plugins", caps: ["activate_plugins", "install_plugins", "edit_plugins", "update_plugins", "delete_plugins"] },
-  { key: "memberglut", label: "MemberGlut", caps: ["memberglut_manage_members", "memberglut_manage_plans", "memberglut_manage_rules", "memberglut_view_payments", "memberglut_manage_settings", "memberglut_basic_access", "memberglut_premium_access", "memberglut_vip_access"] },
-  { key: "custom", label: "Custom", caps: ["access_course_library", "view_member_directory"] }
-];
-const ROLE_CAPS = {
-  administrator: Object.fromEntries(CAP_GROUPS.flatMap((g) => g.caps).map((c) => [c, "grant"])),
-  editor: { read: "grant", upload_files: "grant", unfiltered_html: "grant", edit_posts: "grant", edit_others_posts: "grant", edit_published_posts: "grant", publish_posts: "grant", delete_posts: "grant", delete_others_posts: "grant", delete_published_posts: "grant", read_private_posts: "grant", manage_categories: "grant", edit_pages: "grant", edit_others_pages: "grant", edit_published_pages: "grant", publish_pages: "grant", delete_pages: "grant", delete_others_pages: "grant", read_private_pages: "grant" },
-  author: { read: "grant", upload_files: "grant", edit_posts: "grant", edit_published_posts: "grant", publish_posts: "grant", delete_posts: "grant", delete_published_posts: "grant" },
-  contributor: { read: "grant", edit_posts: "grant", delete_posts: "grant", upload_files: "deny" },
-  subscriber: { read: "grant" },
-  memberglut_basic: { read: "grant", memberglut_basic_access: "grant" },
-  memberglut_premium: { read: "grant", memberglut_basic_access: "grant", memberglut_premium_access: "grant", access_course_library: "grant" },
-  memberglut_vip: { read: "grant", memberglut_basic_access: "grant", memberglut_premium_access: "grant", memberglut_vip_access: "grant", access_course_library: "grant", view_member_directory: "grant", edit_dashboard: "deny" }
-};
-const EMAIL_TAGS = [
-  { tag: "{display_name}", label: "Member display name" },
-  { tag: "{first_name}", label: "First name" },
-  { tag: "{last_name}", label: "Last name" },
-  { tag: "{username}", label: "Username" },
-  { tag: "{user_email}", label: "Member email" },
-  { tag: "{plan_name}", label: "Plan name" },
-  { tag: "{plan_price}", label: "Plan price" },
-  { tag: "{plan_duration}", label: "Plan duration" },
-  { tag: "{start_date}", label: "Subscription start date" },
-  { tag: "{expiration_date}", label: "Expiration date" },
-  { tag: "{subscription_status}", label: "Subscription status" },
-  { tag: "{payment_id}", label: "Payment ID" },
-  { tag: "{payment_amount}", label: "Payment amount" },
-  { tag: "{payment_gateway}", label: "Payment method" },
-  { tag: "{bank_details}", label: "Bank transfer instructions" },
-  { tag: "{account_url}", label: "My Account page link" },
-  { tag: "{login_url}", label: "Login page link" },
-  { tag: "{reset_link}", label: "Password reset link" },
-  { tag: "{activation_link}", label: "Email activation link" },
-  { tag: "{site_name}", label: "Site title" },
-  { tag: "{site_url}", label: "Site address" },
-  { tag: "{admin_email}", label: "Admin email" }
-];
-const E = (key, group, recipient, name, desc, subject, enabled = true) => ({ key, group, recipient, name, desc, subject, enabled, body: "" });
-const EMAILS = [
-  E("register", "account", "member", "Welcome / registration", "Sent when a new account is created.", "Welcome to {site_name}, {display_name}!"),
-  E("activation", "account", "member", "Email activation", "Sent when the plan or form requires the email address to be confirmed.", "Please confirm your email address"),
-  E("pending_review", "account", "member", "Account pending review", "Sent when registration needs admin approval.", "Your account is awaiting approval"),
-  E("approved", "account", "member", "Account approved", "Sent when an admin approves the account.", "Your account at {site_name} is now active"),
-  E("rejected", "account", "member", "Account rejected", "Sent when an admin rejects the registration.", "Your registration was not approved", false),
-  E("reset_password", "account", "member", "Password reset", "Sent from the lost-password form.", "Reset your password for {site_name}"),
-  E("password_changed", "account", "member", "Password changed", "Sent after the password is changed.", "Your {site_name} password was changed", false),
-  E("email_change", "account", "member", "Confirm email change", "Sent to the new address when a member changes their email.", "Confirm your new email address"),
-  E("account_deleted", "account", "member", "Account deleted", "Sent after a member deletes their account.", "Your account has been deleted", false),
-  E("activated", "subscription", "member", "Subscription activated", "Sent when a plan becomes active.", "Your {plan_name} membership is active"),
-  E("renewed", "subscription", "member", "Subscription renewed", "Sent after a successful renewal.", "Your {plan_name} membership was renewed"),
-  E("canceled", "subscription", "member", "Subscription canceled", "Sent when a subscription is canceled or abandoned.", "Your {plan_name} membership was canceled"),
-  E("expired", "subscription", "member", "Subscription expired", "Sent when access ends.", "Your {plan_name} membership has expired"),
-  E("expiring_soon", "subscription", "member", "Expiration reminder", "Sent a set number of days before a non-renewing plan expires.", "Your {plan_name} membership expires on {expiration_date}"),
-  E("renewal_reminder", "subscription", "member", "Renewal reminder", "Sent a set number of days before an automatic renewal.", "Your {plan_name} membership renews soon"),
-  E("trial_ending", "subscription", "member", "Trial ending", "Sent before a free trial converts to paid.", "Your free trial ends on {expiration_date}"),
-  E("receipt", "payment", "member", "Payment receipt", "Sent after every completed payment.", "Receipt for your payment #{payment_id}"),
-  E("payment_failed", "payment", "member", "Payment failed", "Sent when a renewal charge fails.", "Your latest payment failed"),
-  E("pending_manual", "payment", "member", "Pending bank transfer", "Sent with bank details after a bank-transfer checkout.", "Complete your order with a bank transfer"),
-  E("admin_new_member", "admin", "admin", "New member", "Sent to the admin for every new member.", "[{site_name}] New member: {display_name}"),
-  E("admin_new_payment", "admin", "admin", "New payment", "Sent to the admin for every completed payment.", "[{site_name}] New payment of {payment_amount}"),
-  E("admin_pending_review", "admin", "admin", "Account needs review", "Sent when a registration is waiting for approval.", "[{site_name}] New user awaiting review"),
-  E("admin_canceled", "admin", "admin", "Subscription canceled", "Sent when a member cancels.", "[{site_name}] {display_name} canceled {plan_name}", false)
-];
-const PAGES = [
-  { value: 11, label: "Register" },
-  { value: 12, label: "Login" },
-  { value: 13, label: "My Account" },
-  { value: 14, label: "Lost Password" },
-  { value: 15, label: "Pricing" },
-  { value: 16, label: "Thank You" },
-  { value: 17, label: "Members Area" },
-  { value: 18, label: "Downloads" },
-  { value: 2, label: "Sample Page" },
-  { value: 3, label: "Privacy Policy" },
-  { value: 19, label: "Terms & Conditions" }
-];
-const ACTIVITY = [
-  { id: 1, type: "grant", text: "Aisha Rahman joined Silver", date: d(0) },
-  { id: 2, type: "payment", text: "Payment #5003 of $89.00 received from Yusuf Ahmed (Stripe)", date: d(0) },
-  { id: 3, type: "cancel", text: "Zainab Siddiqui canceled Gold (access until period end)", date: d(1) },
-  { id: 4, type: "expire", text: "Hamza Chowdhury’s Silver plan expired", date: d(1) },
-  { id: 5, type: "pending", text: "Khadija Karim is waiting for approval", date: d(2) },
-  { id: 6, type: "grant", text: "Admin added Bilal Islam to Gold manually", date: d(3) },
-  { id: 7, type: "login", text: "Blocked a third concurrent login for omar1", date: d(3) }
-];
-const LOGS = Array.from({ length: 24 }, (_, i) => ({
-  id: i + 1,
-  level: ["info", "info", "warning", "error", "info", "debug"][i % 6],
-  source: ["subscription", "payment", "access", "email", "login", "cron"][i % 6],
-  message: [
-    "Subscription #212 activated for user 31 (Silver)",
-    "Stripe webhook invoice.paid processed for sub_1P8x…",
-    "Denied access to “Premium Guide” for a guest: rule #1",
-    "Email “Payment failed” could not be sent: wp_mail returned false",
-    "Login blocked: active session limit (2) reached for user 27",
-    "Expiration sweep: 3 subscriptions expired, roles updated"
-  ][i % 6],
-  date: d(i * 0.4)
-}));
-typeof memberglut_admin !== "undefined" ? memberglut_admin : {};
-const wait = (v, ms = 250) => new Promise((r2) => setTimeout(() => r2(structuredClone(v)), ms));
-function store(key, fallback) {
-  try {
-    const v = localStorage.getItem("memberglut_demo_" + key);
-    return v ? JSON.parse(v) : fallback;
-  } catch (e2) {
-    return fallback;
-  }
+const admin = typeof memberglut_admin !== "undefined" ? memberglut_admin : {};
+function qs(params = {}) {
+  const parts = [];
+  Object.entries(params).forEach(([k, v]) => {
+    if (v === void 0 || v === null || v === "" || Array.isArray(v) && !v.length) return;
+    if (Array.isArray(v)) v.forEach((x) => parts.push(`${encodeURIComponent(k)}[]=${encodeURIComponent(x)}`));
+    else parts.push(`${encodeURIComponent(k)}=${encodeURIComponent(v)}`);
+  });
+  return parts.length ? `?${parts.join("&")}` : "";
 }
-function keep(key, value) {
-  try {
-    localStorage.setItem("memberglut_demo_" + key, JSON.stringify(value));
-  } catch (e2) {
+async function request(path, { method = "GET", body, query } = {}) {
+  const base = admin.rest_url || "/wp-json/memberglut/v1/";
+  const res = await fetch(base + path.replace(/^\//, "") + qs(query), {
+    method,
+    headers: { "Content-Type": "application/json", "X-WP-Nonce": admin.rest_nonce || "" },
+    body: body !== void 0 ? JSON.stringify(body) : void 0,
+    credentials: "same-origin"
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(data.message || `Request failed (${res.status})`);
+    err.status = res.status;
+    err.code = data.code;
+    err.fields = data.data && data.data.fields || {};
+    throw err;
   }
+  return data;
 }
-const getStats = () => wait({
-  active_members: 671,
-  new_members_30d: 94,
-  new_members_change: 12.4,
-  revenue_month: 3842,
-  revenue_change: 8.1,
-  mrr: 4120,
-  pending: 6,
-  expiring_7d: 14,
-  canceled_30d: 9,
-  churn: 2.3,
-  chart: Array.from({ length: 12 }, (_, i) => ({ month: i, members: 420 + i * 21 + i % 3 * 9, revenue: 2100 + i * 160 + i % 4 * 90 }))
-});
-const getActivity = () => wait(ACTIVITY);
-const getSetupChecklist = () => wait([
-  { key: "pages", label: "Create the membership pages", done: true },
-  { key: "plan", label: "Create your first paid plan", done: true },
-  { key: "gateway", label: "Connect a payment gateway", done: false },
-  { key: "rule", label: "Protect some content", done: true },
-  { key: "emails", label: "Review the member emails", done: false }
-]);
-const getPlans = () => wait(PLANS);
-const getPlan = (id) => wait(PLANS.find((p) => p.id === Number(id)) || null);
-const savePlan = (plan) => wait({ ...plan, id: plan.id || Date.now() }, 500);
-const getMembers = () => wait(MEMBERS);
-const getMember = (id) => wait(MEMBERS.find((m) => m.id === Number(id)) || MEMBERS[0]);
-const saveMember = (m) => wait(m, 500);
-const getRules = () => wait(RULES);
-const getRule = (id) => wait(RULES.find((r2) => r2.id === Number(id)) || null);
-const saveRule = (r2) => wait({ ...r2, id: r2.id || Date.now() }, 500);
-const getRoles = () => wait(ROLES);
-const getCapabilities = () => wait({ groups: CAP_GROUPS, roleCaps: ROLE_CAPS });
-const saveRole = (r2) => wait(r2, 500);
-const getPayments = () => wait(PAYMENTS);
-const getCoupons = () => wait(COUPONS);
-const saveCoupon = (c) => wait({ ...c, id: c.id || Date.now() }, 400);
-const getEmails = () => wait(store("emails", EMAILS));
-const saveEmails = (list) => {
-  keep("emails", list);
-  return wait(true, 400);
-};
-const getSettings = (defaults) => wait({ ...defaults, ...store("settings", {}) });
-const saveSettings = (values) => {
-  keep("settings", values);
-  return wait(true, 500);
-};
-const getFormsConfig = (defaults) => wait({ ...defaults, ...store("forms", {}) });
-const saveFormsConfig = (values) => {
-  keep("forms", values);
-  return wait(true, 500);
-};
-const getLogs = () => wait(LOGS);
+const get = (path, query) => request(path, { query });
+const post = (path, body) => request(path, { method: "POST", body: body || {} });
+const put = (path, body) => request(path, { method: "PUT", body: body || {} });
+const getStats = () => get("dashboard/stats");
+const getActivity = (limit = 7) => get("events", { per_page: limit }).then((r2) => r2.items);
+const getSetupChecklist = () => get("dashboard/checklist");
+const getPlans = (query) => get("plans", query);
+const getPlan = (id) => get(`plans/${id}`);
+const savePlan = (plan) => plan.id ? put(`plans/${plan.id}`, plan) : post("plans", plan);
+const getMembers = (query) => get("members", query);
+const getMember = (userId) => get(`members/user/${userId}`);
+const getRules = (query) => get("rules", query);
+const getRule = (id) => get(`rules/${id}`);
+const saveRule = (r2) => r2.id ? put(`rules/${r2.id}`, r2) : post("rules", r2);
+const getRoles = () => get("roles");
+const getCapabilities = () => get("capabilities");
+const saveRole = (r2) => put(`roles/${r2.slug}`, r2);
+const getPayments = (query) => get("payments", query);
+const getCoupons = (query) => get("coupons", query);
+const saveCoupon = (c) => c.id ? put(`coupons/${c.id}`, c) : post("coupons", c);
+const getEmails = () => get("emails");
+const saveEmails = (list) => put("emails", { emails: list });
+const getSettings = () => get("settings");
+const saveSettings = (values) => put("settings", { values });
+const getFormsConfig = () => get("forms");
+const saveFormsConfig = (values) => put("forms", { values });
+const getLogs = (query) => get("logs", query);
 export {
-  getStats as $,
-  ACTIVITY as A,
-  getCoupons as B,
-  getEmails as C,
+  saveFormsConfig as $,
+  getPayments as A,
+  getPlacements as B,
+  getPlan as C,
   DefaultRenderEmpty as D,
-  EMAIL_TAGS as E,
+  Empty as E,
   ForwardOverflow as F,
-  getFieldId as G,
-  getFormsConfig as H,
-  getLogs as I,
-  getMember as J,
-  getMembers as K,
+  getPlans as G,
+  getRoles as H,
+  getRule as I,
+  getRules as J,
+  getSettings as K,
   List as L,
-  MEMBERS as M,
-  getMultipleSelectorUnit as N,
-  getPayments as O,
-  PAGES as P,
-  getPlacements as Q,
-  ROLES as R,
+  MenuItem$1 as M,
+  getSetupChecklist as N,
+  getStats as O,
+  Popup as P,
+  getStatus as Q,
+  RefIcon$2 as R,
   Select as S,
   Tooltip2 as T,
-  getPlan as U,
-  getPlans as V,
-  getRoles as W,
-  getRule as X,
-  getRules as Y,
-  getSettings as Z,
-  getSetupChecklist as _,
+  initMoveMotion as U,
+  initSlideMotion as V,
+  isMobile as W,
+  isPresetColor as X,
+  isPresetStatusColor as Y,
+  saveCoupon as Z,
+  saveEmails as _,
   Divider as a,
-  getStatus as a0,
-  initMoveMotion as a1,
-  initSlideMotion as a2,
-  isMobile as a3,
-  isPresetColor as a4,
-  isPresetStatusColor as a5,
-  saveCoupon as a6,
-  saveEmails as a7,
-  saveFormsConfig as a8,
-  saveMember as a9,
-  savePlan as aa,
-  saveRole as ab,
-  saveRule as ac,
-  saveSettings as ad,
-  slideDownIn as ae,
-  slideDownOut as af,
-  slideUpIn as ag,
-  slideUpOut as ah,
-  toArray as ai,
-  toNamePathStr as aj,
-  useForceUpdate as ak,
-  useForm as al,
-  useFullPath as am,
-  useIcons as an,
-  withPureRenderTheme as ao,
+  savePlan as a0,
+  saveRole as a1,
+  saveRule as a2,
+  saveSettings as a3,
+  slideDownIn as a4,
+  slideDownOut as a5,
+  slideUpIn as a6,
+  slideUpOut as a7,
+  toArray as a8,
+  toNamePathStr as a9,
+  useForceUpdate as aa,
+  useForm as ab,
+  useFullPath as ac,
+  useIcons as ad,
+  withPureRenderTheme as ae,
   Dropdown$1 as b,
-  Empty as c,
-  ExportMenu as d,
-  MenuItem$1 as e,
-  MenuItemGroup as f,
-  PAYMENTS as g,
-  PLANS as h,
-  Popup as i,
-  RULES as j,
-  RefIcon$2 as k,
-  RefIcon$1 as l,
-  RefIcon as m,
-  Space as n,
-  SubMenu as o,
-  Trigger as p,
-  dayjs as q,
-  genOverflowStyle as r,
-  genPresetColor as s,
-  genPurePanel as t,
-  genRoundedArrow as u,
-  getActivity as v,
-  getArrowOffsetToken as w,
-  getArrowStyle as x,
-  getArrowToken as y,
-  getCapabilities as z
+  ExportMenu as c,
+  MenuItemGroup as d,
+  RefIcon$1 as e,
+  RefIcon as f,
+  Space as g,
+  SubMenu as h,
+  Trigger as i,
+  genOverflowStyle as j,
+  genPresetColor as k,
+  genPurePanel as l,
+  genRoundedArrow as m,
+  getActivity as n,
+  getArrowOffsetToken as o,
+  getArrowStyle as p,
+  getArrowToken as q,
+  getCapabilities as r,
+  getCoupons as s,
+  getEmails as t,
+  getFieldId as u,
+  getFormsConfig as v,
+  getLogs as w,
+  getMember as x,
+  getMembers as y,
+  getMultipleSelectorUnit as z
 };

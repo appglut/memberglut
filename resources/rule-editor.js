@@ -1,16 +1,17 @@
 import { cs as genStyleHooks, db as resetComponent, dl as unit, d8 as reactExports, dr as useComponentConfig, ax as classNames, d3 as pickAttrs, C as CSSMotion, aB as composeRef, da as replaceElement, S as RefIcon, T as RefIcon$1, U as RefIcon$2, V as RefIcon$3, W as RefIcon$4, ag as _getPrototypeOf, am as _possibleConstructorReturn, ai as _isNativeReflectConstruct, ah as _inherits, ac as _createClass, ab as _classCallCheck, a8 as __, bP as faSliders, bO as faShieldHalved, bs as faLayerGroup, c5 as faUserTag, bJ as faRightToBracket, c3 as faUserSecret, bZ as faUserCheck, bw as faMessage, aK as faArrowRightFromBracket, bV as faTags, be as faEyeSlash, c8 as faVial, cV as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, ca as faXmark, bF as faPlus, P as Page, b as App, d6 as queryArg, a_ as faChevronLeft, cW as link, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel } from "./chunks/SettingsPanel-CwFaDHbp.js";
-import { P as PAGES, h as PLANS, R as ROLES, S as Select, n as Space, X as getRule, ac as saveRule } from "./chunks/api-Brv-883T.js";
+import { S as SettingsPanel } from "./chunks/SettingsPanel-XQcr7b1d.js";
+import { S as Select, g as Space, I as getRule, a2 as saveRule } from "./chunks/api-BB7d3L8U.js";
+import { P as PAGES, b as PLANS, R as ROLES } from "./chunks/demoData-DdpKZU_N.js";
 import { I as Input } from "./chunks/index-DR_RfPho.js";
 import { S as Spin } from "./chunks/index-DYg9RGnF.js";
-import "./chunks/index-DbvrDALF.js";
-import "./chunks/index-DCZRJZ7q.js";
-import "./chunks/index-CjCriZ9v.js";
+import "./chunks/index-CeeYjpwl.js";
+import "./chunks/index-7xpZ3r7T.js";
+import "./chunks/index-DAwOKiJ9.js";
+import "./chunks/index-wzDtlKHr.js";
 import "./chunks/index-jcrWDM9i.js";
-import "./chunks/index-BzZf0YwZ.js";
-import "./chunks/index-dboLsXN4.js";
-import "./chunks/index-CJWEZhJV.js";
+import "./chunks/index-D6__SY_c.js";
+import "./chunks/index-D0vDDvb0.js";
 import "./chunks/index-BdHVDZgL.js";
 const genAlertTypeStyle = (bgColor, borderColor, iconColor, token, alertCls) => ({
   background: bgColor,

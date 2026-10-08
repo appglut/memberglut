@@ -1,17 +1,19 @@
 import { bt as faLink, a8 as __, bj as faFolderTree, bh as faFileLines, bm as faGlobe, aK as faArrowRightFromBracket, bJ as faRightToBracket, bw as faMessage, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bC as faPenToSquare, b5 as faCopy, bW as faTrashCan, E as PageHeader, c as Button, bF as faPlus, a1 as StatCard, bO as faShieldHalved, c0 as faUserLock, bv as faMagnifyingGlass, b8 as faCubes, aQ as faBars, b4 as faCode, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { Y as getRules, h as PLANS } from "./chunks/api-Brv-883T.js";
-import { f as fromNow } from "./chunks/format-DUqbTEWL.js";
-import { P as Popconfirm } from "./chunks/index-ZXRyaDui.js";
+import { J as getRules } from "./chunks/api-BB7d3L8U.js";
+import { f as fromNow } from "./chunks/format-pGmZIQcp.js";
+import { b as PLANS } from "./chunks/demoData-DdpKZU_N.js";
+import { P as Popconfirm } from "./chunks/index-CKF9N8du.js";
 import { S as Switch } from "./chunks/index-BdHVDZgL.js";
-import { T as Tabs } from "./chunks/index-DbvrDALF.js";
+import { T as Tabs } from "./chunks/index-7xpZ3r7T.js";
 import { I as Input } from "./chunks/index-DR_RfPho.js";
-import { F as ForwardTable } from "./chunks/Table-Dszdb13s.js";
-import { T as Tag } from "./chunks/index-DCZRJZ7q.js";
-import "./chunks/index-CjCriZ9v.js";
-import "./chunks/index-CJWEZhJV.js";
-import "./chunks/index-DOVNlVrd.js";
-import "./chunks/useBreakpoint-DMP4aqmU.js";
+import { F as ForwardTable } from "./chunks/Table-DA1U2jgW.js";
+import { T as Tag } from "./chunks/index-DAwOKiJ9.js";
+import "./chunks/index-CeeYjpwl.js";
+import "./chunks/lookups-BPwJCRM2.js";
+import "./chunks/index-wzDtlKHr.js";
+import "./chunks/index-bTvZrssX.js";
+import "./chunks/useBreakpoint-BRPI9HCX.js";
 import "./chunks/index-DYg9RGnF.js";
 const PROTECT_LABEL = {
   site: [faGlobe, __("Whole site", "memberglut")],

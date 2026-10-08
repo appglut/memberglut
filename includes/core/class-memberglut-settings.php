@@ -327,7 +327,7 @@ class MemberGlut_Settings {
 	}
 
 	/**
-	 * Update global settings. Unknown keys are ignored; empty secrets keep the stored value.
+	 * Update global settings. Unknown keys are ignored; masked secrets keep the stored value.
 	 *
 	 * @param array $input  Raw values.
 	 * @param bool  $merge  Merge with stored values (true) or replace everything (false).
@@ -370,8 +370,9 @@ class MemberGlut_Settings {
 			}
 			$def = $schema[ $key ];
 			if ( 'secret' === $def['type'] ) {
-				// Masked value sent back unchanged, or empty: keep what is stored.
-				if ( ! is_string( $raw ) || '' === $raw || self::is_masked( $raw ) ) {
+				// The client sends the masked value back when the field was not touched: keep what is stored.
+				// An empty string means the admin cleared the field.
+				if ( ! is_string( $raw ) || self::is_masked( $raw ) ) {
 					$values[ $key ] = isset( $stored[ $key ] ) ? $stored[ $key ] : $def['default'];
 					continue;
 				}

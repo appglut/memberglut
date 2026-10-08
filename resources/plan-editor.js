@@ -1,16 +1,17 @@
 import { b1 as faCircleInfo, bl as faGift, by as faMoneyBill, bU as faTag, bq as faInfinity, bH as faRepeat, aW as faCalendarDays, aV as faCalendarCheck, bo as faHourglassHalf, br as faKey, aN as faArrowUpWideShort, c2 as faUserPlus, a8 as __, cV as jsxRuntimeExports, ao as _siteUrl, d6 as queryArg, cW as link, c as Button, q as FontAwesomeIcon, aL as faArrowUp, aI as faArrowDown, P as Page, b as App, d8 as reactExports, a_ as faChevronLeft, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CwFaDHbp.js";
-import { R as ROLES, h as PLANS, P as PAGES, j as RULES, U as getPlan, aa as savePlan } from "./chunks/api-Brv-883T.js";
-import { T as Tag } from "./chunks/index-DCZRJZ7q.js";
+import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-XQcr7b1d.js";
+import { C as getPlan, a0 as savePlan } from "./chunks/api-BB7d3L8U.js";
+import { R as ROLES, b as PLANS, P as PAGES, c as RULES } from "./chunks/demoData-DdpKZU_N.js";
+import { T as Tag } from "./chunks/index-DAwOKiJ9.js";
 import { S as Spin } from "./chunks/index-DYg9RGnF.js";
-import "./chunks/index-DbvrDALF.js";
+import "./chunks/index-CeeYjpwl.js";
+import "./chunks/index-7xpZ3r7T.js";
 import "./chunks/index-DR_RfPho.js";
-import "./chunks/index-CjCriZ9v.js";
+import "./chunks/index-wzDtlKHr.js";
 import "./chunks/index-jcrWDM9i.js";
-import "./chunks/index-BzZf0YwZ.js";
-import "./chunks/index-dboLsXN4.js";
-import "./chunks/index-CJWEZhJV.js";
+import "./chunks/index-D6__SY_c.js";
+import "./chunks/index-D0vDDvb0.js";
 import "./chunks/index-BdHVDZgL.js";
 const NEW_PLAN = {
   name: "",

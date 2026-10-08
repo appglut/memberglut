@@ -1,13 +1,13 @@
 import { d8 as reactExports, ap as _slicedToArray, R as React, ax as classNames, ae as _defineProperty, ak as _objectSpread2, du as useEvent, av as calculateColor, au as calcOffset, dB as useMergedState, cv as generateColor, e as Color, g as ColorPickerPrefixCls, af as _extends, f as ColorBlock, aF as defaultColor, cs as genStyleHooks, c_ as merge, db as resetComponent, dl as unit, dr as useComponentConfig, dH as useSize, cw as generateColor$1, cz as getColorAlpha, dj as toHexFormat, w as Input, cF as getRoundNumber, al as _objectWithoutProperties, K as KeyCode, d7 as reactDomExports, dx as useLayoutEffect, ar as _toConsumableArray, as as _typeof, cS as isEqual, dP as warningOnce, aB as composeRef, dV as wrapperRaf, F as FastColor, D as DisabledContext, cC as getGradientPercentColor, a as AggregationColor, cc as genAlphaColor, h as ColorPresets, dz as useLocale, d3 as pickAttrs, ch as genCompactItemStyle, j as ConfigContext, t as FormItemInputContext, dq as useCompactItemContext, dm as useCSSVarCls, cI as getStatusClassNames, n as ContextIsolator, a8 as __, cV as jsxRuntimeExports, q as FontAwesomeIcon, aZ as faCheck, b5 as faCopy, c as Button, bi as faFloppyDisk, bV as faTags } from "./Page-DwAue1bn.js";
-import { S as Select, T as Tooltip, ak as useForceUpdate, t as genPurePanel, q as dayjs, n as Space } from "./api-Brv-883T.js";
-import { T as Tabs } from "./index-DbvrDALF.js";
-import { T as Tag } from "./index-DCZRJZ7q.js";
+import { d as dayjs, R as Radio } from "./index-CeeYjpwl.js";
+import { T as Tabs } from "./index-7xpZ3r7T.js";
+import { T as Tag } from "./index-DAwOKiJ9.js";
 import { I as Input$1 } from "./index-DR_RfPho.js";
-import { P as Popover } from "./index-CjCriZ9v.js";
+import { S as Select, T as Tooltip, aa as useForceUpdate, l as genPurePanel, g as Space } from "./api-BB7d3L8U.js";
+import { P as Popover } from "./index-wzDtlKHr.js";
 import { S as Segmented } from "./index-jcrWDM9i.js";
-import { T as TypedInputNumber } from "./index-BzZf0YwZ.js";
-import { D as DatePicker } from "./index-dboLsXN4.js";
-import { R as Radio } from "./index-CJWEZhJV.js";
+import { T as TypedInputNumber } from "./index-D6__SY_c.js";
+import { D as DatePicker } from "./index-D0vDDvb0.js";
 import { S as Switch } from "./index-BdHVDZgL.js";
 function getPosition$1(e) {
   var obj = "touches" in e ? e.touches[0] : e;
@@ -3924,7 +3924,7 @@ const UNITS = [
   { value: "year", label: __("Year(s)", "memberglut") }
 ];
 const WIDE_TYPES = ["textarea", "editor", "code", "cards", "custom"];
-function FieldRows({ fields, values, update }) {
+function FieldRows({ fields, values, update, errors = {} }) {
   return fields.filter((f) => !f.show || f.show(values)).map((f) => {
     if (f.type === "heading") {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-subhead", children: [
@@ -3943,6 +3943,7 @@ function FieldRows({ fields, values, update }) {
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-control", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(FieldControl, { f, value: values[f.key], values, onChange: (v) => update(f.key, v) }),
+        errors[f.key] && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-error", children: errors[f.key] }),
         f.after && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-after", children: typeof f.after === "function" ? f.after(values) : f.after })
       ] })
     ] }, f.key);
@@ -3960,11 +3961,28 @@ function SettingsPanel({
   saving,
   saveLabel,
   initialSection,
-  headerActions
+  headerActions,
+  errors = {}
 }) {
   const [dirty, setDirty] = reactExports.useState(false);
   const [active, setActive] = reactExports.useState(initialSection || new URLSearchParams(window.location.search).get("tab") || sections[0].key);
-  const [subs, setSubs] = reactExports.useState({});
+  const [subs, setSubs] = reactExports.useState(() => {
+    const sub = new URLSearchParams(window.location.search).get("sub");
+    return sub ? { [initialSection || new URLSearchParams(window.location.search).get("tab") || sections[0].key]: sub } : {};
+  });
+  const sectionKeys = (s) => [...s.fields || [], ...(s.subs || []).flatMap((x) => x.fields || [])].map((f) => f.key).concat(s.errorKeys || []);
+  const hasError = (s) => sectionKeys(s).some((k) => errors[k]);
+  const subHasError = (x) => (x.fields || []).some((f) => errors[f.key]);
+  reactExports.useEffect(() => {
+    const first = sections.find(hasError);
+    if (first && !hasError(sections.find((s) => s.key === active) || {})) {
+      setActive(first.key);
+      if (first.subs) {
+        const sub = first.subs.find(subHasError);
+        if (sub) setSubs((p) => ({ ...p, [first.key]: sub.key }));
+      }
+    }
+  }, [errors]);
   reactExports.useEffect(() => {
     const warn = (e) => {
       if (dirty) {
@@ -4009,7 +4027,8 @@ function SettingsPanel({
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-layout", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "mg-fs-nav", children: sections.map((s) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { type: "button", className: s.key === section.key ? "active" : "", onClick: () => setActive(s.key), children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ic", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: s.icon }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: s.title })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: s.title }),
+        hasError(s) && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-fs-nav-error" })
       ] }, s.key)) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mg-fs-card", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-card-head", children: [
@@ -4019,10 +4038,10 @@ function SettingsPanel({
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: section.desc })
           ] })
         ] }),
-        section.subs && /* @__PURE__ */ jsxRuntimeExports.jsx(Tabs, { activeKey: subSection.key, onChange: (k) => setSubs((p) => ({ ...p, [section.key]: k })), items: section.subs.map((x) => ({ key: x.key, label: x.title })) }),
+        section.subs && /* @__PURE__ */ jsxRuntimeExports.jsx(Tabs, { activeKey: subSection.key, onChange: (k) => setSubs((p) => ({ ...p, [section.key]: k })), items: section.subs.map((x) => ({ key: x.key, label: subHasError(x) ? /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "mg-fs-tab-error", children: x.title }) : x.title })) }),
         subSection && subSection.desc && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-note", style: { margin: "0 0 14px" }, children: subSection.desc }),
         section.renderTop && section.renderTop(ctx),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(FieldRows, { fields, values, update }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(FieldRows, { fields, values, update, errors }),
         (subSection || section).render && (subSection || section).render(ctx),
         section.hint && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-note", style: { margin: "4px 0 18px" }, children: section.hint })
       ] })

@@ -1,16 +1,16 @@
 import { aZ as faCheck, bx as faMinus, aP as faBan, a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, q as FontAwesomeIcon, bg as faFileImport, bf as faFileExport, bF as faPlus, bu as faLock, b9 as faEllipsis, b5 as faCopy, c4 as faUserShield, bW as faTrashCan, bi as faFloppyDisk, b1 as faCircleInfo, bv as faMagnifyingGlass, aE as createRoot } from "./chunks/Page-DwAue1bn.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { W as getRoles, z as getCapabilities, c as Empty, ab as saveRole, T as Tooltip, S as Select } from "./chunks/api-Brv-883T.js";
-import { U as Upload } from "./chunks/index-C46497LZ.js";
-import { T as Tag } from "./chunks/index-DCZRJZ7q.js";
+import { H as getRoles, r as getCapabilities, E as Empty, a1 as saveRole, T as Tooltip, S as Select } from "./chunks/api-BB7d3L8U.js";
+import { U as Upload } from "./chunks/index-CrP_DJ4h.js";
+import { T as Tag } from "./chunks/index-DAwOKiJ9.js";
 import { S as Switch } from "./chunks/index-BdHVDZgL.js";
-import { D as Dropdown } from "./chunks/index-DOVNlVrd.js";
+import { D as Dropdown } from "./chunks/index-bTvZrssX.js";
 import { S as Segmented } from "./chunks/index-jcrWDM9i.js";
 import { I as Input } from "./chunks/index-DR_RfPho.js";
-import { F as Form } from "./chunks/index-CATG0Lu4.js";
-import { M as Modal } from "./chunks/index-f93o2WLB.js";
-import "./chunks/progress-D4jg5yhU.js";
-import "./chunks/useBreakpoint-DMP4aqmU.js";
+import { F as Form } from "./chunks/index-CpI3hVNv.js";
+import { M as Modal } from "./chunks/index-DYh7TOe4.js";
+import "./chunks/progress-DzecuOuN.js";
+import "./chunks/useBreakpoint-BRPI9HCX.js";
 const STATE_OPTS = [
   { value: "grant", icon: faCheck, label: __("Grant", "memberglut") },
   { value: "unset", icon: faMinus, label: __("Not set", "memberglut") },

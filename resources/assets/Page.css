@@ -928,6 +928,12 @@ body {
 .mg-mig-results svg { margin-top: 3px; }
 .mg-mig-actions { margin-top: 16px; }
 .mg-fs-help.mg-fs-warn { color: #b45309; }
+/* Field-level validation errors (SettingsPanel) */
+.mg-fs-error { color: #dc2626; font-size: 12.5px; margin-top: 6px; }
+.mg-fs-nav button { position: relative; }
+.mg-fs-nav-error { width: 8px; height: 8px; border-radius: 50%; background: #dc2626; margin-left: auto; flex: none; }
+.mg-fs-tab-error { color: #dc2626; }
+.mg-fs-tab-error::after { content: ' •'; }
 /* Three-bar menu button (left of every header) and its side menu */
 .mg-hamburger {
   display: inline-flex; flex-direction: column; justify-content: center; gap: 4px;
