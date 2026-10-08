@@ -12,7 +12,7 @@ const PRO_GROUPS = [
       { name: "Metered paywall", desc: "Let visitors read a few locked articles each month before the paywall appears, with a “2 of 3 free articles left” banner." },
       { name: "AND / OR / NOT rules", desc: "Build rules from several conditions at once: plan, role, registration date, profile fields, email domain and more." },
       { name: "Scheduled rules", desc: "Turn a rule on or off between two dates, or show members only the posts published after they joined." },
-      { name: "Hide everywhere", desc: "Remove locked content from the blog, search, archives, sitemaps, custom lists and the REST API, not just the single post." },
+      { name: "Hide everywhere", desc: "Also remove locked content from sitemaps, custom queries, feeds and the REST API." },
       { name: "Advanced block visibility", desc: "Combine plan, schedule and device conditions on any block, and drip individual blocks." },
       { name: "Custom field restriction", desc: "Lock posts based on their ACF or Meta Box field values." },
       { name: "Search engine access", desc: "Let verified search engine bots index locked content while visitors still see the paywall, with the right structured data." }
@@ -30,13 +30,12 @@ const PRO_GROUPS = [
       { name: "PDF invoices", desc: "A numbered PDF invoice for every payment with your company details and logo, downloadable by you and the member.", top: true },
       { name: "Multiple currencies", desc: "Show prices in the visitor’s own currency, detected from their location or chosen from a switcher." },
       { name: "Pay what you want", desc: "Let members choose their price above a minimum. Great for donations and supporters." },
-      { name: "Fixed-period plans", desc: "Plans that all end on the same date, such as a season pass, whatever day members join." },
       { name: "Gift memberships", desc: "Buy a plan for someone else with a delivery date and message. The recipient claims it from an email link." },
       { name: "Pause subscriptions", desc: "Members pause billing for a few months instead of canceling, within limits you set." },
       { name: "Order bumps", desc: "Offer an extra plan or add-on at checkout that members add with one click." },
       { name: "Auto-renew choice", desc: "Let members choose at checkout whether their plan renews automatically." },
-      { name: "Advanced coupons", desc: "Auto-apply coupons from a link, one use per email, and gift / redemption codes." },
-      { name: "Plan limits & schedules", desc: "Sell a plan only between two dates, cap the number of members (“Sold out”), and move members to another plan when theirs ends." },
+      { name: "Advanced coupons", desc: "Auto-apply coupons from a link, bulk-generated single-use codes, and gift / redemption codes." },
+      { name: "Plan schedules", desc: "Sell a plan only between two dates, and move members to another plan automatically when theirs ends." },
       { name: "Pay per post", desc: "Sell access to one post, page or file without a full membership, with an optional access window." },
       { name: "Pricing fields", desc: "Add paid options and add-ons to the registration form with a live total." }
     ]
@@ -65,7 +64,7 @@ const PRO_GROUPS = [
       { name: "Two-factor authentication", desc: "Authenticator app or email codes, backup codes and a “remember this device” option. Require it for some roles.", top: true },
       { name: "Passwordless login", desc: "Members log in with a one-time link sent to their email." },
       { name: "Invite codes", desc: "Only people with a valid code can register. Codes can have limits, dates and their own plan." },
-      { name: "Session control per role", desc: "Different device limits for each role, and a “log out other devices” button for members." },
+      { name: "Session control per role", desc: "Different device limits for each role instead of one limit for everyone." },
       { name: "Password policies", desc: "Force a password change on first login or after a number of days." },
       { name: "More spam protection", desc: "Akismet checks on registrations, phone verification by SMS code, and a math captcha." }
     ]
@@ -75,7 +74,7 @@ const PRO_GROUPS = [
     icon: faPeopleGroup,
     title: "Community",
     features: [
-      { name: "Member directory", desc: "Searchable member directories with filters on any field, several layouts and a map view.", top: true },
+      { name: "Advanced member directory", desc: "Searchable directories with filters on any profile field, several layouts and a map view.", top: true },
       { name: "Public profiles", desc: "Profile pages with cover photo, custom tabs and privacy controls." },
       { name: "Private messaging", desc: "Members message each other, with blocking and email notifications." },
       { name: "Activity & notifications", desc: "An activity feed and an on-site notification bell for messages and membership events." },
@@ -122,7 +121,7 @@ const PRO_GROUPS = [
     icon: faChartLine,
     title: "Reports & tools",
     features: [
-      { name: "Revenue reports", desc: "MRR, churn, lifetime value, revenue by plan and gateway, and conversion rates, for any period.", top: true },
+      { name: "Revenue reports", desc: "Lifetime value, revenue by plan and gateway, cohorts and conversion rates, for any date range.", top: true },
       { name: "Import members", desc: "Import members from a CSV with their plans, dates and status, in the background.", top: true },
       { name: "Member journey", desc: "See which pages members visit and which page led them to join." },
       { name: "Text editor", desc: "Change any front-end text of MemberGlut from one screen." },

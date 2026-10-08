@@ -1,0 +1,17 @@
+# Files left out of the WordPress.org release zip (wp dist-archive / 10up deploy action).
+.git
+.github
+.gitignore
+.distignore
+node_modules
+assets/src
+plans
+Errors_from_team.txt
+free_features.html
+pro_features.html
+vite.config.js
+package.json
+package-lock.json
+composer.json
+composer.lock
+*.map

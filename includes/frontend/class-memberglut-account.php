@@ -49,6 +49,8 @@ class MemberGlut_Account {
 				'memberglut_expiry'   => array( __CLASS__, 'expiry_shortcode' ),
 				'memberglut_members'  => array( __CLASS__, 'members_shortcode' ),
 				'memberglut_count'    => array( __CLASS__, 'count_shortcode' ),
+				// 1.x alias.
+				'memberglut_member_info' => array( __CLASS__, 'member_info_shortcode' ),
 			)
 		);
 	}
@@ -877,6 +879,10 @@ class MemberGlut_Account {
 			case 'username':
 				$value = $user->user_login;
 				break;
+			case 'role':
+			case 'roles':
+				$value = implode( ', ', array_map( array( 'MemberGlut_Account', 'role_name' ), (array) $user->roles ) );
+				break;
 			case 'id':
 				$value = (string) $user->ID;
 				break;
@@ -891,6 +897,39 @@ class MemberGlut_Account {
 		}
 		$value = apply_filters( 'memberglut_member_field', (string) $value, $field, $user );
 		return esc_html( '' !== $value ? $value : $atts['default'] );
+	}
+
+	/**
+	 * Display name of a role.
+	 *
+	 * @param string $slug Role.
+	 * @return string
+	 */
+	public static function role_name( $slug ) {
+		$names = wp_roles()->get_names();
+		return isset( $names[ $slug ] ) ? translate_user_role( $names[ $slug ] ) : $slug;
+	}
+
+	/**
+	 * [memberglut_member_info show="role|name|email|all"] — 1.x shortcode, kept working.
+	 *
+	 * @param array $atts Attributes.
+	 * @return string
+	 */
+	public static function member_info_shortcode( $atts = array() ) {
+		$atts = shortcode_atts( array( 'show' => 'role' ), $atts, 'memberglut_member_info' );
+		if ( ! is_user_logged_in() ) {
+			return '<p>' . esc_html__( 'Please log in to view your member information.', 'memberglut' ) . '</p>';
+		}
+		$map = array( 'name' => 'display_name', 'email' => 'email', 'role' => 'role' );
+		if ( 'all' !== $atts['show'] ) {
+			return self::member_shortcode( array( 'field' => isset( $map[ $atts['show'] ] ) ? $map[ $atts['show'] ] : 'role' ) );
+		}
+		$html = '<div class="memberglut-member-info">';
+		foreach ( array( 'display_name' => __( 'Name:', 'memberglut' ), 'email' => __( 'Email:', 'memberglut' ), 'role' => __( 'Role:', 'memberglut' ), 'plans' => __( 'Plans:', 'memberglut' ) ) as $field => $label ) {
+			$html .= '<p><strong>' . esc_html( $label ) . '</strong> ' . self::member_shortcode( array( 'field' => $field ) ) . '</p>';
+		}
+		return $html . '</div>';
 	}
 
 	/**

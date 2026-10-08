@@ -7,13 +7,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08 10:52+0000\n"
+"POT-Creation-Date: 2026-10-08 10:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Domain: memberglut\n"
 
-#: assets/editor/memberglut-blocks.js:45 includes/class-memberglut-admin.php:126 includes/class-memberglut-admin.php:127 includes/class-memberglut-admin.php:258 includes/class-memberglut-admin.php:1876
+#: assets/editor/memberglut-blocks.js:45
 msgid "Settings"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Plans"
 msgstr ""
 
-#: assets/editor/memberglut-blocks.js:101 assets/src/pages/MemberDetail.jsx:203 assets/src/pages/RuleEditor.jsx:188 assets/src/pages/Tools.jsx:270 includes/admin/class-memberglut-post-access-admin.php:196 includes/class-memberglut-admin.php:1548
+#: assets/editor/memberglut-blocks.js:101 assets/src/pages/MemberDetail.jsx:203 assets/src/pages/RuleEditor.jsx:188 assets/src/pages/Tools.jsx:270 includes/admin/class-memberglut-post-access-admin.php:196 includes/frontend/class-memberglut-menu-visibility.php:174
 msgid "Roles"
 msgstr ""
 
@@ -236,11 +236,11 @@ msgstr ""
 msgid "Administrators always see blocks limited to plans or roles."
 msgstr ""
 
-#: assets/src/components/Header.jsx:18 assets/src/components/NavMenu.jsx:34 assets/src/pages/Dashboard.jsx:72 assets/src/pages/Settings.jsx:279 includes/class-memberglut-admin.php:86 includes/class-memberglut-admin.php:87
+#: assets/src/components/Header.jsx:18 assets/src/components/NavMenu.jsx:34 assets/src/pages/Dashboard.jsx:72 assets/src/pages/Settings.jsx:279 includes/class-memberglut-app.php:77 includes/frontend/class-memberglut-account.php:79
 msgid "Dashboard"
 msgstr ""
 
-#: assets/src/components/Header.jsx:19 assets/src/components/NavMenu.jsx:35 assets/src/pages/Dashboard.jsx:99 assets/src/pages/Members.jsx:249 assets/src/pages/Plans.jsx:103 includes/class-memberglut-admin.php:106
+#: assets/src/components/Header.jsx:19 assets/src/components/NavMenu.jsx:35 assets/src/pages/Dashboard.jsx:99 assets/src/pages/Members.jsx:249 assets/src/pages/Plans.jsx:103 includes/class-memberglut-app.php:78
 msgid "Members"
 msgstr ""
 
@@ -260,7 +260,7 @@ msgstr ""
 msgid "Back to WordPress Admin"
 msgstr ""
 
-#: assets/src/components/Header.jsx:43 includes/class-memberglut-admin.php:147 includes/class-memberglut-admin.php:148 includes/class-memberglut-admin.php:1880
+#: assets/src/components/Header.jsx:43
 msgid "Go Pro"
 msgstr ""
 
@@ -336,7 +336,7 @@ msgstr ""
 msgid "From the plan’s duration"
 msgstr ""
 
-#: assets/src/components/MemberModals.jsx:98 assets/src/pages/MemberDetail.jsx:47 assets/src/pages/Members.jsx:71 assets/src/pages/Members.jsx:215 includes/frontend/class-memberglut-account.php:867 includes/frontend/class-memberglut-account.php:903
+#: assets/src/components/MemberModals.jsx:98 assets/src/pages/MemberDetail.jsx:47 assets/src/pages/Members.jsx:71 assets/src/pages/Members.jsx:215 includes/frontend/class-memberglut-account.php:869 includes/frontend/class-memberglut-account.php:942
 msgid "Never"
 msgstr ""
 
@@ -365,7 +365,7 @@ msgid_plural "Applies to %d subscriptions."
 msgstr[0] ""
 msgstr[1] ""
 
-#: assets/src/components/NavMenu.jsx:36 assets/src/pages/Plans.jsx:111 includes/class-memberglut-admin.php:116 includes/class-memberglut-admin.php:117 includes/class-memberglut-admin.php:238 includes/class-memberglut-admin.php:255
+#: assets/src/components/NavMenu.jsx:36 assets/src/pages/Plans.jsx:111 includes/class-memberglut-app.php:79
 msgid "Membership Plans"
 msgstr ""
 
@@ -389,7 +389,7 @@ msgstr ""
 msgid "Data & Logs"
 msgstr ""
 
-#: assets/src/components/NavMenu.jsx:45 includes/class-memberglut-admin.php:1617 includes/class-memberglut-app.php:88
+#: assets/src/components/NavMenu.jsx:45 includes/class-memberglut-app.php:88
 msgid "Pro Features"
 msgstr ""
 
@@ -479,7 +479,7 @@ msgstr ""
 msgid "except %s"
 msgstr ""
 
-#: assets/src/pages/ContentRules.jsx:82 assets/src/pages/Coupons.jsx:91 assets/src/pages/Emails.jsx:136 assets/src/pages/Plans.jsx:69 includes/class-memberglut-admin.php:443 includes/class-memberglut-admin.php:631
+#: assets/src/pages/ContentRules.jsx:82 assets/src/pages/Coupons.jsx:91 assets/src/pages/Emails.jsx:136 assets/src/pages/Plans.jsx:69
 msgid "Edit"
 msgstr ""
 
@@ -495,7 +495,7 @@ msgstr ""
 msgid "The content becomes public again unless another rule protects it."
 msgstr ""
 
-#: assets/src/pages/ContentRules.jsx:87 assets/src/pages/Coupons.jsx:94 assets/src/pages/Plans.jsx:81 assets/src/pages/Settings.jsx:394 includes/class-memberglut-admin.php:446 includes/class-memberglut-admin.php:884
+#: assets/src/pages/ContentRules.jsx:87 assets/src/pages/Coupons.jsx:94 assets/src/pages/Plans.jsx:81 assets/src/pages/Settings.jsx:394
 msgid "Delete"
 msgstr ""
 
@@ -620,11 +620,11 @@ msgstr ""
 msgid "Scheduled"
 msgstr ""
 
-#: assets/src/pages/Coupons.jsx:14 assets/src/pages/Members.jsx:282 assets/src/services/format.js:37 includes/class-memberglut-admin.php:1122 includes/services/class-memberglut-lookups.php:255
+#: assets/src/pages/Coupons.jsx:14 assets/src/pages/Members.jsx:282 assets/src/services/format.js:37 includes/services/class-memberglut-lookups.php:255
 msgid "Expired"
 msgstr ""
 
-#: assets/src/pages/Coupons.jsx:14 assets/src/pages/PlanEditor.jsx:116 assets/src/pages/Plans.jsx:134 assets/src/pages/RuleEditor.jsx:157 includes/class-memberglut-admin.php:626
+#: assets/src/pages/Coupons.jsx:14 assets/src/pages/PlanEditor.jsx:116 assets/src/pages/Plans.jsx:134 assets/src/pages/RuleEditor.jsx:157
 msgid "Inactive"
 msgstr ""
 
@@ -637,7 +637,7 @@ msgstr ""
 msgid "New coupon"
 msgstr ""
 
-#: assets/src/pages/Coupons.jsx:25 includes/class-memberglut-admin.php:499 includes/class-memberglut-admin.php:1011 includes/class-memberglut-admin.php:1132 includes/frontend/class-memberglut-account.php:274
+#: assets/src/pages/Coupons.jsx:25 includes/frontend/class-memberglut-account.php:276
 msgid "Cancel"
 msgstr ""
 
@@ -1029,7 +1029,7 @@ msgstr ""
 msgid "Account fields, plan choice and payment. Plan signup links open this page."
 msgstr ""
 
-#: assets/src/pages/FormsPages.jsx:17 assets/src/pages/Settings.jsx:377 includes/class-memberglut-access-control.php:743 includes/class-memberglut-forms.php:146 includes/class-memberglut-forms.php:147 includes/class-memberglut.php:120
+#: assets/src/pages/FormsPages.jsx:17 assets/src/pages/Settings.jsx:377 includes/admin/class-memberglut-admin-notices.php:66 includes/rest/class-memberglut-rest-forms.php:25
 msgid "Login"
 msgstr ""
 
@@ -1444,7 +1444,7 @@ msgstr ""
 msgid "Change dates / status"
 msgstr ""
 
-#: assets/src/pages/MemberDetail.jsx:33 includes/class-memberglut-admin.php:1638
+#: assets/src/pages/MemberDetail.jsx:33
 msgid "Activate"
 msgstr ""
 
@@ -1624,7 +1624,7 @@ msgstr ""
 msgid "Reject"
 msgstr ""
 
-#: assets/src/pages/MemberDetail.jsx:173 assets/src/pages/Members.jsx:58 assets/src/pages/Members.jsx:175 assets/src/pages/Members.jsx:281 assets/src/pages/Payments.jsx:86 includes/class-memberglut-admin.php:590
+#: assets/src/pages/MemberDetail.jsx:173 assets/src/pages/Members.jsx:58 assets/src/pages/Members.jsx:175 assets/src/pages/Members.jsx:281 assets/src/pages/Payments.jsx:86 includes/frontend/class-memberglut-shortcodes.php:330
 msgid "Email"
 msgstr ""
 
@@ -1660,7 +1660,7 @@ msgstr ""
 msgid "No plan yet."
 msgstr ""
 
-#: assets/src/pages/MemberDetail.jsx:192 includes/frontend/class-memberglut-account.php:82
+#: assets/src/pages/MemberDetail.jsx:192 includes/frontend/class-memberglut-account.php:84
 msgid "Activity"
 msgstr ""
 
@@ -1668,7 +1668,7 @@ msgstr ""
 msgid "Logins"
 msgstr ""
 
-#: assets/src/pages/MemberDetail.jsx:200 includes/frontend/class-memberglut-account.php:78 templates/account/profile.php:18
+#: assets/src/pages/MemberDetail.jsx:200 includes/frontend/class-memberglut-account.php:80 templates/account/profile.php:18
 msgid "Profile"
 msgstr ""
 
@@ -1762,11 +1762,11 @@ msgstr ""
 msgid "New user"
 msgstr ""
 
-#: assets/src/pages/Members.jsx:56 includes/frontend/class-memberglut-account.php:364 includes/services/class-memberglut-mailer.php:199
+#: assets/src/pages/Members.jsx:56 includes/frontend/class-memberglut-account.php:366 includes/services/class-memberglut-mailer.php:199
 msgid "First name"
 msgstr ""
 
-#: assets/src/pages/Members.jsx:57 includes/frontend/class-memberglut-account.php:364 includes/services/class-memberglut-mailer.php:200
+#: assets/src/pages/Members.jsx:57 includes/frontend/class-memberglut-account.php:366 includes/services/class-memberglut-mailer.php:200
 msgid "Last name"
 msgstr ""
 
@@ -1774,7 +1774,7 @@ msgstr ""
 msgid "Enter a valid email."
 msgstr ""
 
-#: assets/src/pages/Members.jsx:59 includes/class-memberglut-forms.php:329 includes/frontend/class-memberglut-shortcodes.php:330 includes/services/class-memberglut-mailer.php:201
+#: assets/src/pages/Members.jsx:59 includes/frontend/class-memberglut-shortcodes.php:330 includes/services/class-memberglut-mailer.php:201
 msgid "Username"
 msgstr ""
 
@@ -1782,7 +1782,7 @@ msgstr ""
 msgid "Empty creates one from the email address."
 msgstr ""
 
-#: assets/src/pages/Members.jsx:62 includes/class-memberglut-admin.php:589 includes/class-memberglut-admin.php:1088
+#: assets/src/pages/Members.jsx:62
 msgid "User"
 msgstr ""
 
@@ -1869,7 +1869,7 @@ msgstr ""
 msgid "Membership removed"
 msgstr ""
 
-#: assets/src/pages/Members.jsx:183 assets/src/pages/Members.jsx:283 includes/frontend/class-memberglut-account.php:311
+#: assets/src/pages/Members.jsx:183 assets/src/pages/Members.jsx:283 includes/frontend/class-memberglut-account.php:313
 msgid "Remove"
 msgstr ""
 
@@ -1914,7 +1914,7 @@ msgstr ""
 msgid "%d on a free trial"
 msgstr ""
 
-#: assets/src/pages/Members.jsx:262 assets/src/services/format.js:34 assets/src/services/format.js:42 includes/class-memberglut-admin.php:1120 includes/services/class-memberglut-lookups.php:252
+#: assets/src/pages/Members.jsx:262 assets/src/services/format.js:34 assets/src/services/format.js:42 includes/services/class-memberglut-lookups.php:252
 msgid "Pending"
 msgstr ""
 
@@ -2177,7 +2177,7 @@ msgstr ""
 msgid "%s (not enabled)"
 msgstr ""
 
-#: assets/src/pages/PlanEditor.jsx:29 includes/services/class-memberglut-lookups.php:39 includes/services/class-memberglut-plans.php:456
+#: assets/src/pages/PlanEditor.jsx:29 includes/services/class-memberglut-lookups.php:39 includes/services/class-memberglut-plans.php:457
 msgid "Default registration form"
 msgstr ""
 
@@ -2254,7 +2254,7 @@ msgstr ""
 msgid "Used in signup links (?plan=gold) and shortcodes. Empty creates it from the name. Changing it breaks links you already shared."
 msgstr ""
 
-#: assets/src/pages/PlanEditor.jsx:114 includes/class-memberglut-admin.php:370 includes/class-memberglut-admin.php:479 includes/class-memberglut-admin.php:704 includes/class-memberglut-admin.php:914 includes/class-memberglut-admin.php:1413
+#: assets/src/pages/PlanEditor.jsx:114
 msgid "Description"
 msgstr ""
 
@@ -2302,7 +2302,7 @@ msgstr ""
 msgid "Plan type"
 msgstr ""
 
-#: assets/src/pages/PlanEditor.jsx:125 assets/src/services/format.js:52 assets/src/services/format.js:75 includes/class-memberglut-admin.php:848 includes/class-memberglut-admin.php:1541 includes/class-memberglut-admin.php:1603
+#: assets/src/pages/PlanEditor.jsx:125 assets/src/services/format.js:52 assets/src/services/format.js:75 includes/core/class-memberglut-install.php:660 includes/gateways/class-memberglut-gateway-free.php:28 includes/services/class-memberglut-mailer.php:261
 msgid "Free"
 msgstr ""
 
@@ -2330,7 +2330,7 @@ msgstr ""
 msgid "Recurring subscription"
 msgstr ""
 
-#: assets/src/pages/PlanEditor.jsx:130 assets/src/pages/Plans.jsx:100 includes/class-memberglut-admin.php:712 includes/class-memberglut-admin.php:922 templates/account/subscriptions.php:34
+#: assets/src/pages/PlanEditor.jsx:130 assets/src/pages/Plans.jsx:100 templates/account/subscriptions.php:34
 msgid "Price"
 msgstr ""
 
@@ -2447,7 +2447,7 @@ msgstr ""
 msgid "Everyone expires on the same day."
 msgstr ""
 
-#: assets/src/pages/PlanEditor.jsx:153 assets/src/services/format.js:67 includes/services/class-memberglut-plans.php:932
+#: assets/src/pages/PlanEditor.jsx:153 assets/src/services/format.js:67 includes/services/class-memberglut-plans.php:933
 msgid "Calendar year"
 msgstr ""
 
@@ -2643,7 +2643,7 @@ msgstr ""
 msgid "Buy button shortcode"
 msgstr ""
 
-#: assets/src/pages/PlanEditor.jsx:217 assets/src/pages/PlanEditor.jsx:217 includes/services/class-memberglut-plans.php:254
+#: assets/src/pages/PlanEditor.jsx:217 assets/src/pages/PlanEditor.jsx:217 includes/services/class-memberglut-plans.php:255
 msgid "Give the plan a name."
 msgstr ""
 
@@ -2776,7 +2776,7 @@ msgstr ""
 msgid "Ready for more?"
 msgstr ""
 
-#: assets/src/pages/ProFeatures.jsx:73 includes/class-memberglut-admin.php:272 includes/class-memberglut-admin.php:342 includes/class-memberglut-admin.php:580 includes/class-memberglut-admin.php:676 includes/class-memberglut-admin.php:1642
+#: assets/src/pages/ProFeatures.jsx:73
 msgid "Upgrade to Pro"
 msgstr ""
 
@@ -2791,7 +2791,7 @@ msgstr ""
 #. translators: %s: role name
 #. translators: %s: plan name
 #. translators: %s: rule
-#: assets/src/pages/Roles.jsx:38 includes/rest/class-memberglut-rest-roles.php:101 includes/services/class-memberglut-plans.php:588 includes/services/class-memberglut-rules.php:386
+#: assets/src/pages/Roles.jsx:38 includes/rest/class-memberglut-rest-roles.php:101 includes/services/class-memberglut-plans.php:589 includes/services/class-memberglut-rules.php:386
 #, php-format
 msgid "%s (copy)"
 msgstr ""
@@ -2961,7 +2961,7 @@ msgstr ""
 msgid "Create roles for your members and choose exactly what each role can do."
 msgstr ""
 
-#: assets/src/pages/Roles.jsx:303 includes/class-memberglut-admin.php:1414 includes/class-memberglut-admin.php:1456 includes/frontend/class-memberglut-blocks.php:66
+#: assets/src/pages/Roles.jsx:303 includes/frontend/class-memberglut-blocks.php:66
 msgid "Default"
 msgstr ""
 
@@ -3797,7 +3797,7 @@ msgstr ""
 msgid "Recent logins with device and IP."
 msgstr ""
 
-#: assets/src/pages/Settings.jsx:285 includes/frontend/class-memberglut-account.php:83 templates/account/delete.php:14
+#: assets/src/pages/Settings.jsx:285 includes/frontend/class-memberglut-account.php:85 templates/account/delete.php:14
 msgid "Delete account"
 msgstr ""
 
@@ -4193,7 +4193,7 @@ msgstr ""
 msgid "Protect these forms"
 msgstr ""
 
-#: assets/src/pages/Settings.jsx:377
+#: assets/src/pages/Settings.jsx:377 includes/admin/class-memberglut-admin-notices.php:66
 msgid "Registration"
 msgstr ""
 
@@ -4273,7 +4273,7 @@ msgstr ""
 msgid "Anonymize"
 msgstr ""
 
-#: assets/src/pages/Settings.jsx:398 includes/class-memberglut-admin.php:1559
+#: assets/src/pages/Settings.jsx:398
 msgid "Advanced"
 msgstr ""
 
@@ -4635,22 +4635,22 @@ msgid "Canceled"
 msgstr ""
 
 #. translators: %d: number
-#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:903
+#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:904
 msgid "day"
 msgstr ""
 
 #. translators: %d: number
-#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:905
+#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:906
 msgid "week"
 msgstr ""
 
 #. translators: %d: number
-#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:907
+#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:908
 msgid "month"
 msgstr ""
 
 #. translators: %d: number
-#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:909
+#: assets/src/services/format.js:58 includes/services/class-memberglut-plans.php:910
 msgid "year"
 msgstr ""
 
@@ -4666,7 +4666,7 @@ msgstr ""
 msgid "years"
 msgstr ""
 
-#: assets/src/services/format.js:65 includes/services/class-memberglut-plans.php:923
+#: assets/src/services/format.js:65 includes/services/class-memberglut-plans.php:924
 msgid "Until canceled"
 msgstr ""
 
@@ -4674,12 +4674,32 @@ msgstr ""
 msgid "Until "
 msgstr ""
 
-#: assets/src/services/format.js:69 includes/services/class-memberglut-plans.php:934
+#: assets/src/services/format.js:69 includes/services/class-memberglut-plans.php:935
 msgid "Lifetime"
 msgstr ""
 
 #: assets/src/services/format.js:77
 msgid "once"
+msgstr ""
+
+#: includes/admin/class-memberglut-admin-notices.php:66 includes/frontend/class-memberglut-blocks.php:61 includes/frontend/class-memberglut-shortcodes.php:326
+msgid "My account"
+msgstr ""
+
+#. translators: 1: page names, 2: link
+#: includes/admin/class-memberglut-admin-notices.php:77
+#, php-format
+msgid "MemberGlut needs a few pages to work: %1$s. <a href=\"%2$s\">Create them in one click</a>."
+msgstr ""
+
+#. translators: %s: link
+#: includes/admin/class-memberglut-admin-notices.php:90
+#, php-format
+msgid "MemberGlut 2.0 moved your plans, members and settings to the new system. Have a look at the new <a href=\"%s\">dashboard</a>."
+msgstr ""
+
+#: includes/admin/class-memberglut-admin-notices.php:121
+msgid "Dismiss"
 msgstr ""
 
 #: includes/admin/class-memberglut-post-access-admin.php:203 includes/admin/class-memberglut-post-access-admin.php:214 includes/admin/class-memberglut-post-access-admin.php:220
@@ -4732,1624 +4752,28 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: includes/class-memberglut-access-control.php:333 includes/class-memberglut-access-control.php:511 includes/class-memberglut-admin.php:222
-msgid "Restricted Content"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:437
-msgid "Members Only"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:710 includes/class-memberglut-access-control.php:792 includes/class-memberglut-access-control.php:1116 includes/class-memberglut-admin.php:1204 includes/class-memberglut.php:105 includes/class-memberglut.php:158
-msgid "This content is restricted to members only."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:721 includes/class-memberglut.php:116
-msgid "Content Restricted"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:726
-msgid "Required membership:"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:747 includes/class-memberglut-forms.php:300 includes/class-memberglut-forms.php:301 includes/class-memberglut.php:124 includes/rest/class-memberglut-rest-forms.php:24
-msgid "Register"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:752
-msgid "Go Home"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:759
-msgid "Upgrade Membership"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:779
-msgid "This content is restricted."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:789
-msgid "[Content restricted to members]"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:803 includes/class-memberglut-access-control.php:1026
-msgid "Invalid post ID."
-msgstr ""
-
-#. translators: %s: role slug
-#: includes/class-memberglut-access-control.php:811
-#, php-format
-msgid "Role \"%s\" does not exist."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1020 includes/class-memberglut-access-control.php:1055 includes/class-memberglut-capabilities.php:429 includes/class-memberglut-capabilities.php:457 includes/class-memberglut-capabilities.php:485 includes/class-memberglut-extensions.php:404
-msgid "Permission denied."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1044
-msgid "Content restriction updated successfully."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1069
-msgid "Free version is limited to 10 posts per bulk operation. Upgrade to Pro for unlimited bulk operations."
-msgstr ""
-
-#. translators: %1$d: number of successful updates, %2$d: number of errors
-#: includes/class-memberglut-access-control.php:1089
-#, php-format
-msgid "%1$d items updated successfully, %2$d errors."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1115
-msgid "Basic Restriction"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1121
-msgid "Premium Content"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1122
-msgid "This premium content is only available to premium members."
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1127
-msgid "Coming Soon"
-msgstr ""
-
-#: includes/class-memberglut-access-control.php:1128
-msgid "This content will be available soon to our members."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:74 includes/class-memberglut-admin.php:75 includes/class-memberglut-app.php:128 includes/class-memberglut-app.php:129 includes/frontend/class-memberglut-blocks.php:104 includes/services/class-memberglut-privacy.php:58
-msgid "MemberGlut"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:96 includes/class-memberglut-admin.php:97 includes/class-memberglut-admin.php:214 includes/class-memberglut-admin.php:326
-msgid "Member Roles"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:136 includes/class-memberglut-admin.php:137
-msgid "Extensions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:181
-msgid "Are you sure you want to delete this role?"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:182 includes/class-memberglut.php:408
-msgid "Loading..."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:183 includes/class-memberglut-forms.php:88 includes/class-memberglut.php:409
-msgid "An error occurred. Please try again."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:184
-msgid "Operation completed successfully."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:185 includes/class-memberglut-admin.php:425
-msgid "Show Capabilities"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:186
-msgid "Hide Capabilities"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:198
-msgid "MemberGlut Dashboard"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:206 includes/class-memberglut-admin.php:868
-msgid "Total Members"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:230
-msgid "Active Memberships"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:246
-msgid "Quick Actions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:249
-msgid "Manage Roles"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:252
-msgid "View Members"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:264
-msgid "Recent Activity"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:273
-msgid "Unlock powerful features with MemberGlut Pro:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:280
-msgid "Learn More"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:286
-msgid "System Info"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:289
-msgid "Plugin Version:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:293
-msgid "WordPress Version:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:297
-msgid "PHP Version:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:301
-msgid "Pro Status:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:302
-msgid "Not Active"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:331
-msgid "Create New Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:337
-msgid "Role limit reached!"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:338
-msgid "Free version is limited to 3 custom roles."
-msgstr ""
-
-#. translators: %d: number of custom roles used
-#: includes/class-memberglut-admin.php:340
-#, php-format
-msgid "Free version: %d of 3 custom roles used."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:343
-msgid "for unlimited roles."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:352 includes/class-memberglut-admin.php:471
-msgid "Role Name"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:356
-msgid "Display name for the role (e.g., \"Gold Member\")"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:361
-msgid "Role Slug"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:365
-msgid "Unique identifier (e.g., \"gold_member\"). Will be prefixed with \"memberglut_\""
-msgstr ""
-
-#: includes/class-memberglut-admin.php:377 includes/class-memberglut-admin.php:486
-msgid "Capabilities"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:393 includes/class-memberglut-admin.php:805
-msgid "Limit Reached"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:393
-msgid "Create Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:401
-msgid "Existing Roles"
-msgstr ""
-
-#. translators: %d: number of capabilities
-#: includes/class-memberglut-admin.php:421
-#, php-format
-msgid "%d Capabilities"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:436
-msgid "No capabilities assigned"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:449
-msgid "WordPress Default Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:463
-msgid "Edit Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:496
-msgid "Update Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:527
-msgid "Assign Member Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:532
-msgid "Select User"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:536
-msgid "Choose a user..."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:550 includes/class-memberglut-admin.php:591 includes/class-memberglut-roles.php:469
-msgid "Member Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:554
-msgid "Choose a role..."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:560
-msgid "Remove MemberGlut Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:567
-msgid "Assign Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:575
-msgid "Current Members"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:579
-msgid "Free version shows up to 50 members."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:581
-msgid "for unlimited member management."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:592
-msgid "Member Since"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:594
-msgid "Actions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:601
-msgid "No members found."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:665
-msgid "Create New Plan"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:671
-msgid "Plan limit reached!"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:672
-msgid "Free version is limited to 3 custom plans."
-msgstr ""
-
-#. translators: %d: number of custom plans used
-#: includes/class-memberglut-admin.php:674
-#, php-format
-msgid "Free version: %d of 3 custom plans used."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:677
-msgid "for unlimited plans."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:686 includes/class-memberglut-admin.php:906
-msgid "Plan Name"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:690
-msgid "Display name for the plan (e.g., \"Gold Plan\")"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:695
-msgid "Plan Slug"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:699
-msgid "Unique identifier (e.g., \"gold_plan\"). Leave blank to auto-generate."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:716
-msgid "Enter 0 for free plans."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:721 includes/class-memberglut-admin.php:930
-msgid "Billing Cycle"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:725 includes/class-memberglut-admin.php:934
-msgid "Lifetime (One-time)"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:726 includes/class-memberglut-admin.php:935
-msgid "Daily"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:727 includes/class-memberglut-admin.php:936
-msgid "Weekly"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:728 includes/class-memberglut-admin.php:937
-msgid "Monthly"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:729 includes/class-memberglut-admin.php:938
-msgid "Quarterly"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:730 includes/class-memberglut-admin.php:939
-msgid "Yearly"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:736 includes/class-memberglut-admin.php:945 includes/class-memberglut-admin.php:1106
-msgid "Duration (days)"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:740
-msgid "Number of days the plan is valid. Enter 0 for lifetime plans."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:745 includes/class-memberglut-admin.php:953
-msgid "Trial Days"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:749
-msgid "Number of free trial days. Enter 0 for no trial."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:754 includes/class-memberglut-admin.php:961
-msgid "Plan Color"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:758
-msgid "Color for plan badges and cards."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:763 includes/class-memberglut-admin.php:969
-msgid "Plan Icon"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:767 includes/class-memberglut-admin.php:973 includes/services/class-memberglut-roles-service.php:162
-msgid "Users"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:768 includes/class-memberglut-admin.php:974 includes/class-memberglut-admin.php:1047
-msgid "Star"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:769 includes/class-memberglut-admin.php:975 includes/class-memberglut-admin.php:1048
-msgid "Awards"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:770 includes/class-memberglut-admin.php:976
-msgid "Heart"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:771 includes/class-memberglut-admin.php:977
-msgid "Tickets"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:772 includes/class-memberglut-admin.php:978
-msgid "Shopping Cart"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:773 includes/class-memberglut-admin.php:979
-msgid "Tag"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:774 includes/class-memberglut-admin.php:980
-msgid "Money"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:775 includes/class-memberglut-admin.php:981
-msgid "Smiley"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:776 includes/class-memberglut-admin.php:982
-msgid "Thumbs Up"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:782 includes/class-memberglut-admin.php:988
-msgid "Display Order"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:786
-msgid "Lower numbers appear first."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:798
-msgid "Uncheck to hide this plan from new members."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:805
-msgid "Create Plan"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:813
-msgid "Existing Plans"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:843
-msgid "one-time"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:881
-msgid "Features"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:898 includes/class-memberglut-app.php:91
+#: includes/class-memberglut-app.php:91
 msgid "Edit Plan"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1008
-msgid "Update Plan"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1022
-msgid "Manage Plan Features"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1030
-msgid "Add New Feature"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1034
-msgid "Feature Name"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1042
-msgid "Icon"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1046
-msgid "Checkmark"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1049
-msgid "Unlock"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1050
-msgid "Download"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1052
-msgid "Groups"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1053
-msgid "Support"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1054
-msgid "Consulting"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1055
-msgid "Events"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1062
-msgid "Add Feature"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1069
-msgid "Existing Features"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1080
-msgid "Assign Plan to User"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1092
-msgid "Select a user..."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1110
-msgid "Override default duration. 0 = use plan default."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1121
-msgid "Cancelled"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1129
-msgid "Assign Plan"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1148
-msgid "Settings saved successfully!"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1152
-msgid "MemberGlut Settings"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1162
-msgid "General Settings"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1166
-msgid "Default Member Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1170
-msgid "Subscriber (No Membership)"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1183
-msgid "Role assigned to new users upon registration."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1188 includes/class-memberglut-extensions.php:73
-msgid "Content Restriction"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1194
-msgid "Enable content restriction features"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1196
-msgid "Allow restricting content based on member roles."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1201
-msgid "Default Restriction Message"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1205
-msgid "Message shown when content is restricted."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1212
-msgid "Custom Login & Registration"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1215
-msgid "View Shortcode Documentation"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1221
-msgid "Override WordPress Login"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1227
-msgid "Replace WordPress default login system with custom forms"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1229
-msgid "Redirects wp-login.php to your custom login page and customizes all login URLs."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1234
-msgid "Whole Site Login Control"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1240
-msgid "Restrict entire site to logged-in users only"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1242
-msgid "Redirects all non-logged-in visitors to the login page. Admin pages and login/register forms are excluded."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1247
-msgid "Allowed Public Pages"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1250
-msgid "/login\\n/register\\n/privacy-policy"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1251
-msgid "Enter URLs (one per line) that should remain accessible to non-logged-in users. Relative paths like \"/contact\" or full URLs."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1256
-msgid "Custom Login Page URL"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1262
-msgid "Relative URL path for your custom login page (e.g., /login). Make sure to add the [memberglut_login_form] shortcode to this page."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1267
-msgid "Custom Registration Page URL"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1273
-msgid "Relative URL path for your custom registration page (e.g., /register). Make sure to add the [memberglut_register_form] shortcode to this page."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1278
-msgid "Custom Lost Password Page URL"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1284
-msgid "Relative URL path for your custom lost password page (e.g., /lost-password)."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1289
-msgid "Hide Admin Bar"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1295
-msgid "Hide admin bar for non-admin users"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1297
-msgid "Only users with \"manage_options\" capability will see the admin bar."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1302
-msgid "Auto-login After Registration"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1308
-msgid "Automatically log in users after successful registration"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1310
-msgid "Users will be logged in immediately after registering without needing to verify email."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1317
-msgid "Redirect Settings"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1321
-msgid "Login Redirect URL"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1326
-msgid "Redirect users here after login (leave blank for default)."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1331
-msgid "Logout Redirect URL"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1336
-msgid "Redirect users here after logout (leave blank for default)."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1343
-msgid "Advanced Settings"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1347
-msgid "Remove Data on Uninstall"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1353
-msgid "Remove all plugin data when uninstalling"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1355
-msgid "Warning: This will permanently delete all roles, memberships, and settings."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1370
-msgid "Login & Register Shortcode Documentation"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1375
-msgid "Login Form"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1376
-msgid "Register Form"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1377
-msgid "Examples"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1381
-msgid "Login Form Shortcode"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1382
-msgid "Use the <code>[memberglut_login_form]</code> shortcode to display a login form anywhere on your site."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1384
-msgid "Complete Shortcode with All Parameters:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1408
-msgid "Parameter Reference:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1412 includes/class-memberglut-admin.php:1454
-msgid "Parameter"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1418
-msgid "Where to redirect after login"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1418 includes/class-memberglut-admin.php:1460
-msgid "Current page"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1419
-msgid "Show registration link"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1420
-msgid "Show lost password link"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1421
-msgid "Show remember me checkbox"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1422
-msgid "Show form title"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1423 includes/class-memberglut-admin.php:1462
-msgid "Form title text"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1424
-msgid "Form design"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1425
-msgid "Maximum form width"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1425
-msgid "Auto"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1426
-msgid "Enable AJAX submission"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1432
-msgid "Register Form Shortcode"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1433
-msgid "Use the <code>[memberglut_register_form]</code> shortcode to display a registration form."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1435
-msgid "Basic Usage:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1440
-msgid "With Parameters:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1450
-msgid "Available Parameters:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1460
-msgid "Where to redirect after registration"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1461
-msgid "Show login link"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1463
-msgid "Submit button text"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1464
-msgid "Role assigned to new users"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1470
-msgid "Common Usage Examples"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1472
-msgid "1. Simple Login Form"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1477
-msgid "2. Compact Professional Style"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1482
-msgid "3. Minimal Modern Style"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1487
-msgid "4. Custom Redirect After Login"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1492
-msgid "5. Hide Registration Link"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1497
-msgid "6. Custom Text Labels"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1507
-msgid "7. Registration Form with Custom Role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1528
-msgid "MemberGlut Pro Features"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1532
-msgid "Unlock the Full Power of MemberGlut"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1533
-msgid "Upgrade to MemberGlut Pro and get access to powerful membership management features."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1540
-msgid "Feature"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1542 includes/class-memberglut-admin.php:1632
-msgid "Pro"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1547
-msgid "Custom Member Roles"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1549 includes/class-memberglut-admin.php:1554
-msgid "Unlimited"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1552
-msgid "Member Management"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1557
-msgid "Content Restrictions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1573
-msgid "Ready to Upgrade?"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1574
-msgid "Get MemberGlut Pro today and take your membership site to the next level!"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1576
-msgid "Upgrade to Pro Now"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1594
-msgid "MemberGlut Extensions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1599
-msgid "Active Features"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1622
-msgid "Unlock Premium Features!"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1623
-msgid "Upgrade to MemberGlut Pro to access these powerful features."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1624
-msgid "Upgrade Now"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1654
-msgid "Why Upgrade to Pro?"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1658
-msgid "Unlimited Members"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1659
-msgid "Manage unlimited members with advanced bulk operations and import/export tools."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1663
-msgid "Advanced Restrictions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1664
-msgid "Time-based restrictions, IP-based access, and content dripping features."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1668
-msgid "Email Automation"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1669
-msgid "Automated welcome emails, expiration notices, and membership reminders."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1673
-msgid "Analytics & Reports"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1674
-msgid "Detailed insights into member activity, content access patterns, and more."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1680
-msgid "Upgrade to MemberGlut Pro"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1699
-msgid "MemberGlut Access Control"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1721
-msgid "Restrict this content to:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1725
-msgid "Public (No Restrictions)"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1739
-msgid "No member roles created yet."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1742
-msgid "Custom Restriction Message:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1743
-msgid "Leave blank to use default message"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1896
-msgid "Welcome to MemberGlut!"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1897
-msgid "Thank you for installing MemberGlut. Get started by"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1898
-msgid "creating your first member role"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1911
-msgid "MemberGlut Notice:"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1912
-msgid "Whole site login control has been temporarily disabled due to potential redirect loops. This will automatically reset in 5 minutes, or you can "
-msgstr ""
-
-#: includes/class-memberglut-admin.php:1913
-msgid "check your login page settings"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2008
-msgid "No recent activity."
-msgstr ""
-
-#. translators: %s: role name
-#: includes/class-memberglut-admin.php:2020
-#, php-format
-msgid "assigned to %s role"
-msgstr ""
-
-#. translators: %s: time difference
-#: includes/class-memberglut-admin.php:2022
-#, php-format
-msgid "%s ago"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2055 includes/class-memberglut-admin.php:2110 includes/class-memberglut-admin.php:2159 includes/class-memberglut-admin.php:2185 includes/class-memberglut-admin.php:2226 includes/class-memberglut-admin.php:2253
-msgid "Security check failed"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2060 includes/class-memberglut-admin.php:2115 includes/class-memberglut-admin.php:2164 includes/class-memberglut-admin.php:2190 includes/class-memberglut-admin.php:2231 includes/class-memberglut-admin.php:2258
-msgid "Insufficient permissions"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2066
-msgid "Role slug is required"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2099
-msgid "Role not found"
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2124
-msgid "Plan limit reached. Upgrade to Pro for unlimited plans."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2148
-msgid "Failed to create plan."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2174 includes/rest/class-memberglut-rest-plans.php:62 includes/services/class-memberglut-plans.php:469 includes/services/class-memberglut-plans.php:543 includes/services/class-memberglut-plans.php:583 includes/services/class-memberglut-plans.php:625
-msgid "Plan not found."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2215
-msgid "Failed to update plan."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2242
-msgid "Failed to delete plan."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2277
-msgid "Failed to add feature."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2326
-msgid "Failed to delete feature."
-msgstr ""
-
-#: includes/class-memberglut-admin.php:2357
-msgid "Failed to assign plan."
 msgstr ""
 
 #: includes/class-memberglut-app.php:92
 msgid "Edit Rule"
 msgstr ""
 
+#: includes/class-memberglut-app.php:128 includes/class-memberglut-app.php:129 includes/frontend/class-memberglut-blocks.php:104 includes/services/class-memberglut-privacy.php:58
+msgid "MemberGlut"
+msgstr ""
+
 #: includes/class-memberglut-app.php:140
 msgid "⭐ Pro Features"
 msgstr ""
 
-#: includes/class-memberglut-app.php:300
+#: includes/class-memberglut-app.php:301
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
-#: includes/class-memberglut-app.php:305
+#: includes/class-memberglut-app.php:306
 msgid "The admin screens are not built yet. Run \"npm install\" and \"npm run build\" in the plugin folder."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:71 includes/class-memberglut-db.php:240 includes/class-memberglut-roles.php:330
-msgid "Basic Content Access"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:72 includes/class-memberglut-db.php:245 includes/class-memberglut-roles.php:331
-msgid "Premium Content Access"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:73 includes/class-memberglut-db.php:250 includes/class-memberglut-roles.php:332
-msgid "VIP Content Access"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:76
-msgid "View Restricted Posts"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:77
-msgid "View Restricted Pages"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:78
-msgid "Download Protected Files"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:81
-msgid "Post Comments on Restricted Content"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:82
-msgid "Access Member Forums"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:83
-msgid "Send Private Messages"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:86
-msgid "View Member Prices"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:87
-msgid "Access Member Discounts"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:88
-msgid "Early Access to Products"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:121 includes/class-memberglut-roles.php:320
-msgid "Read"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:122 includes/class-memberglut-roles.php:321
-msgid "Edit Posts"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:123 includes/class-memberglut-roles.php:322
-msgid "Publish Posts"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:124 includes/class-memberglut-roles.php:323
-msgid "Edit Pages"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:125 includes/class-memberglut-roles.php:324
-msgid "Publish Pages"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:126 includes/class-memberglut-roles.php:325
-msgid "Upload Files"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:127 includes/class-memberglut-roles.php:326
-msgid "Edit Comments"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:128 includes/class-memberglut-roles.php:327
-msgid "Moderate Comments"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:129
-msgid "Edit Others Posts"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:130
-msgid "Edit Others Pages"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:158 includes/class-memberglut-capabilities.php:193 includes/class-memberglut-roles.php:161 includes/class-memberglut-roles.php:270 includes/rest/class-memberglut-rest-roles.php:98 includes/services/class-memberglut-roles-service.php:266
-msgid "Role not found."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:164
-msgid "Invalid capability."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:257
-msgid "Free version is limited to 10 custom capabilities. Upgrade to Pro for unlimited capabilities."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:265
-msgid "Capability key must contain only lowercase letters and underscores."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:275
-msgid "Capability already exists."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:299
-msgid "Cannot remove default WordPress capabilities."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:305
-msgid "Capability not found."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:330
-msgid "Content Access"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:341
-msgid "Community Features"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:349
-msgid "E-commerce"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:357
-msgid "WordPress Default"
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:433 includes/class-memberglut-capabilities.php:461 includes/class-memberglut-capabilities.php:489
-msgid "Missing required parameters."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:446
-msgid "Capability added successfully."
-msgstr ""
-
-#: includes/class-memberglut-capabilities.php:474
-msgid "Capability removed successfully."
-msgstr ""
-
-#: includes/class-memberglut-db.php:184
-msgid "Free Plan"
-msgstr ""
-
-#: includes/class-memberglut-db.php:186
-msgid "Basic access for free members"
-msgstr ""
-
-#: includes/class-memberglut-db.php:195
-msgid "Basic Plan"
-msgstr ""
-
-#: includes/class-memberglut-db.php:197
-msgid "Perfect for getting started"
-msgstr ""
-
-#: includes/class-memberglut-db.php:207
-msgid "Pro Plan"
-msgstr ""
-
-#: includes/class-memberglut-db.php:209
-msgid "For serious members"
-msgstr ""
-
-#: includes/class-memberglut-db.php:219
-msgid "Premium Plan"
-msgstr ""
-
-#: includes/class-memberglut-db.php:221
-msgid "Ultimate access with all features"
-msgstr ""
-
-#: includes/class-memberglut-db.php:241
-msgid "Community Forum Access"
-msgstr ""
-
-#: includes/class-memberglut-db.php:244
-msgid "All Free Features"
-msgstr ""
-
-#: includes/class-memberglut-db.php:246
-msgid "Email Support"
-msgstr ""
-
-#: includes/class-memberglut-db.php:249
-msgid "All Basic Features"
-msgstr ""
-
-#: includes/class-memberglut-db.php:251
-msgid "Priority Support"
-msgstr ""
-
-#: includes/class-memberglut-db.php:252
-msgid "Downloads Access"
-msgstr ""
-
-#: includes/class-memberglut-db.php:255
-msgid "All Pro Features"
-msgstr ""
-
-#: includes/class-memberglut-db.php:256
-msgid "1-on-1 Coaching"
-msgstr ""
-
-#: includes/class-memberglut-db.php:257
-msgid "Exclusive Events"
-msgstr ""
-
-#: includes/class-memberglut-db.php:258
-msgid "Unlimited Downloads"
-msgstr ""
-
-#: includes/class-memberglut-db.php:259
-msgid "API Access"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:64
-msgid "Basic Member Roles"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:65
-msgid "Create up to 3 custom member roles"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:74
-msgid "Restrict posts and pages to specific member roles"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:83
-msgid "Unlimited Custom Roles"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:84
-msgid "Create unlimited custom member roles with advanced permissions"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:92
-msgid "Advanced Content Restrictions"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:93
-msgid "Time-based restrictions, IP restrictions, and more"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:101
-msgid "Membership Expiration"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:102
-msgid "Set expiration dates for memberships with automatic renewals"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:109
-msgid "Email Notifications"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:110
-msgid "Automated emails for registration, expiration, and upgrades"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:117
-msgid "Import/Export Members"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:118
-msgid "Bulk import/export member data via CSV"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:125
-msgid "Advanced Analytics"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:126
-msgid "Detailed reports on member activity and content access"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:133
-msgid "Payment Gateway Integration"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:134
-msgid "Accept payments via Stripe, PayPal, and more"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:141
-msgid "Member Dashboard"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:142
-msgid "Frontend dashboard for members to manage their accounts"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:149
-msgid "Custom Registration Forms"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:150
-msgid "Create custom registration forms with additional fields"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:157
-msgid "Bulk Member Management"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:158
-msgid "Bulk operations for managing large numbers of members"
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:227
-msgid "Feature not found."
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:234
-msgid "This feature requires MemberGlut Pro."
-msgstr ""
-
-#. translators: %s: required feature name
-#: includes/class-memberglut-extensions.php:243
-#, php-format
-msgid "This feature requires %s to be active."
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:280
-msgid "Feature is not active."
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:428
-msgid "Feature ID is required."
-msgstr ""
-
-#: includes/class-memberglut-extensions.php:439
-msgid "Feature activated successfully."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:85 includes/class-memberglut-forms.php:576
-msgid "Login successful! Redirecting..."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:86
-msgid "Registration successful! Please check your email."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:87
-msgid "Processing..."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:148 includes/class-memberglut.php:306 includes/functions.php:263
-msgid "Username or Email"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:149 includes/class-memberglut-forms.php:339 includes/class-memberglut.php:307 includes/frontend/class-memberglut-account.php:79 includes/functions.php:264 templates/forms/login.php:37
-msgid "Password"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:150 includes/class-memberglut.php:308 includes/functions.php:265
-msgid "Remember Me"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:151
-msgid "Don't have an account? Register"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:152
-msgid "Lost Password?"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:312 includes/class-memberglut-forms.php:490 includes/class-memberglut-forms.php:714
-msgid "User registration is currently not allowed."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:344
-msgid "First Name"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:349
-msgid "Last Name"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:376
-msgid "Already have an account? Login"
-msgstr ""
-
-#. translators: %s: user display name
-#: includes/class-memberglut-forms.php:398
-#, php-format
-msgid "Welcome back, %s!"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:400 includes/functions.php:535
-msgid "Logout"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:436 includes/class-memberglut-forms.php:486 includes/class-memberglut-forms.php:675
-msgid "Security check failed."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:448
-msgid "Please enter both username and password."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:571
-msgid "Registration successful! Welcome!"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:702
-msgid "Login successful!"
-msgstr ""
-
-#: includes/class-memberglut-forms.php:727
-msgid "Please fill in all required fields."
-msgstr ""
-
-#: includes/class-memberglut-forms.php:773
-msgid "Registration successful!"
-msgstr ""
-
-#: includes/class-memberglut-roles.php:103
-msgid "Role slug and name are required."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:108
-msgid "A role with this slug already exists."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:151
-msgid "Failed to create role."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:221
-msgid "Cannot delete protected WordPress roles."
-msgstr ""
-
-#. translators: %d: number of users
-#: includes/class-memberglut-roles.php:234
-#, php-format
-msgid "Cannot delete role. %d users are currently assigned to this role."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:264 includes/rest/class-memberglut-rest-members.php:209 includes/services/class-memberglut-approval.php:135 includes/services/class-memberglut-approval.php:169 includes/services/class-memberglut-members.php:187 includes/services/class-memberglut-subscription-service.php:201
-msgid "User not found."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:364
-msgid "Free version is limited to 3 custom roles. Upgrade to Pro for unlimited roles."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:375
-msgid "Role created successfully."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:404
-msgid "Role updated successfully."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:427
-msgid "Role deleted successfully."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:451
-msgid "Role assigned successfully."
-msgstr ""
-
-#: includes/class-memberglut-roles.php:466
-msgid "MemberGlut Membership"
-msgstr ""
-
-#: includes/class-memberglut-roles.php:472
-msgid "No MemberGlut Role"
-msgstr ""
-
-#: includes/class-memberglut-roles.php:480
-msgid "Assign a MemberGlut role to this user."
-msgstr ""
-
-#: includes/class-memberglut.php:300 includes/functions.php:257
-msgid "You are already logged in."
-msgstr ""
-
-#: includes/class-memberglut.php:309 includes/functions.php:266
-msgid "Log In"
-msgstr ""
-
-#: includes/class-memberglut.php:330
-msgid "Please log in to view your member information."
-msgstr ""
-
-#: includes/class-memberglut.php:360
-msgid "Name:"
-msgstr ""
-
-#: includes/class-memberglut.php:361 includes/functions.php:516
-msgid "Email:"
-msgstr ""
-
-#: includes/class-memberglut.php:362
-msgid "Role:"
-msgstr ""
-
-#: includes/class-memberglut.php:379
-msgid "Content ID is required."
 msgstr ""
 
 #: includes/core/class-memberglut-install.php:143
@@ -6478,7 +4902,7 @@ msgstr ""
 msgid "Enter a valid URL."
 msgstr ""
 
-#: includes/core/class-memberglut-settings.php:486 includes/frontend/class-memberglut-account.php:614 includes/frontend/class-memberglut-fields.php:178 includes/rest/class-memberglut-rest-emails.php:105
+#: includes/core/class-memberglut-settings.php:486 includes/frontend/class-memberglut-account.php:616 includes/frontend/class-memberglut-fields.php:178 includes/rest/class-memberglut-rest-emails.php:105
 msgid "Enter a valid email address."
 msgstr ""
 
@@ -6504,189 +4928,213 @@ msgstr ""
 msgid "The field key “%s” is reserved by WordPress or MemberGlut."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:80 includes/services/class-memberglut-privacy.php:95 templates/account/subscriptions.php:16
+#: includes/frontend/class-memberglut-account.php:81 templates/forms/login.php:37
+msgid "Password"
+msgstr ""
+
+#: includes/frontend/class-memberglut-account.php:82 includes/services/class-memberglut-privacy.php:95 templates/account/subscriptions.php:16
 msgid "Memberships"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:277
+#: includes/frontend/class-memberglut-account.php:279
 msgid "Cancel this membership? Your access ends now."
 msgstr ""
 
 #. translators: %s: date
-#: includes/frontend/class-memberglut-account.php:279
+#: includes/frontend/class-memberglut-account.php:281
 #, php-format
 msgid "Cancel this membership? You keep access until %s."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:283
+#: includes/frontend/class-memberglut-account.php:285
 msgid "Renew"
 msgstr ""
 
 #. translators: %s: plan name
-#: includes/frontend/class-memberglut-account.php:299
+#: includes/frontend/class-memberglut-account.php:301
 #, php-format
 msgid "Upgrade to %s"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:299
+#: includes/frontend/class-memberglut-account.php:301
 #, php-format
 msgid "Switch to %s"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:307
+#: includes/frontend/class-memberglut-account.php:309
 msgid "Update payment method"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:311
+#: includes/frontend/class-memberglut-account.php:313
 msgid "Remove this membership from your account? This cannot be undone."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:364
+#: includes/frontend/class-memberglut-account.php:366
 msgid "Display name"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:364
+#: includes/frontend/class-memberglut-account.php:366
 msgid "Website"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:364
+#: includes/frontend/class-memberglut-account.php:366
 msgid "Biographical info"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:412 includes/frontend/class-memberglut-shortcodes.php:377
+#: includes/frontend/class-memberglut-account.php:414 includes/frontend/class-memberglut-shortcodes.php:377
 msgid "New password"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:413
+#: includes/frontend/class-memberglut-account.php:415
 msgid "Repeat the new password"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:447 templates/account/subscriptions.php:97
+#: includes/frontend/class-memberglut-account.php:449 templates/account/subscriptions.php:97
 msgid "Save card"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:447
+#: includes/frontend/class-memberglut-account.php:449
 msgid "Saving…"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:447
+#: includes/frontend/class-memberglut-account.php:449
 msgid "The card could not be saved. Please try again."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:550
+#: includes/frontend/class-memberglut-account.php:552
 msgid "Please log in again."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:558
+#: includes/frontend/class-memberglut-account.php:560
 msgid "The email change was canceled."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:568
+#: includes/frontend/class-memberglut-account.php:570
 msgid "Logged out of other devices"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:569
+#: includes/frontend/class-memberglut-account.php:571
 msgid "You were logged out of your other devices."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:594
+#: includes/frontend/class-memberglut-account.php:596
 msgid "This option is not available."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:616 includes/frontend/class-memberglut-account.php:778
+#: includes/frontend/class-memberglut-account.php:618 includes/frontend/class-memberglut-account.php:780
 msgid "Another account already uses this email address."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:618
+#: includes/frontend/class-memberglut-account.php:620
 msgid "This email address is not allowed."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:623 includes/frontend/class-memberglut-account.php:669 includes/frontend/class-memberglut-account.php:745 includes/frontend/class-memberglut-auth.php:223
+#: includes/frontend/class-memberglut-account.php:625 includes/frontend/class-memberglut-account.php:671 includes/frontend/class-memberglut-account.php:747 includes/frontend/class-memberglut-auth.php:223
 msgid "Please check the highlighted fields."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:627
+#: includes/frontend/class-memberglut-account.php:629
 msgid "Your profile was saved."
 msgstr ""
 
 #. translators: %s: new email
-#: includes/frontend/class-memberglut-account.php:634
+#: includes/frontend/class-memberglut-account.php:636
 #, php-format
 msgid "Your profile was saved. We sent a confirmation link to %s — your email changes once you click it."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:660
+#: includes/frontend/class-memberglut-account.php:662
 msgid "Your current password is not correct."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:666 includes/frontend/class-memberglut-assets.php:49 includes/frontend/class-memberglut-auth.php:211 includes/frontend/class-memberglut-auth.php:454 includes/frontend/class-memberglut-auth.php:454
+#: includes/frontend/class-memberglut-account.php:668 includes/frontend/class-memberglut-assets.php:49 includes/frontend/class-memberglut-auth.php:211 includes/frontend/class-memberglut-auth.php:454 includes/frontend/class-memberglut-auth.php:454
 msgid "The passwords do not match."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:676
+#: includes/frontend/class-memberglut-account.php:678
 msgid "Password changed by the member"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:677
+#: includes/frontend/class-memberglut-account.php:679
 msgid "Your password was changed. Other devices were logged out."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:691
+#: includes/frontend/class-memberglut-account.php:693
 msgid "Membership not found."
 msgstr ""
 
 #. translators: %s: date
-#: includes/frontend/class-memberglut-account.php:708
+#: includes/frontend/class-memberglut-account.php:710
 #, php-format
 msgid "Your membership was canceled. You keep access until %s."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:709
+#: includes/frontend/class-memberglut-account.php:711
 msgid "Your membership was canceled."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:713
+#: includes/frontend/class-memberglut-account.php:715
 msgid "The membership was removed from your account."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:716
+#: includes/frontend/class-memberglut-account.php:718
 msgid "Card payments are not available."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:739
+#: includes/frontend/class-memberglut-account.php:741
 msgid "Your password is not correct."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:742
+#: includes/frontend/class-memberglut-account.php:744
 msgid "Please confirm that you want to delete your account."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:759
+#: includes/frontend/class-memberglut-account.php:761
 msgid "Your account was deleted."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:775
+#: includes/frontend/class-memberglut-account.php:777
 msgid "This confirmation link is not valid or has expired."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:782
+#: includes/frontend/class-memberglut-account.php:784
 msgid "Email address changed by the member"
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:783
+#: includes/frontend/class-memberglut-account.php:785
 msgid "Your new email address is confirmed."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:794
+#: includes/frontend/class-memberglut-account.php:796
 msgid "Your payment method was updated."
 msgstr ""
 
-#: includes/frontend/class-memberglut-account.php:933
+#: includes/frontend/class-memberglut-account.php:922
+msgid "Please log in to view your member information."
+msgstr ""
+
+#: includes/frontend/class-memberglut-account.php:929
+msgid "Name:"
+msgstr ""
+
+#: includes/frontend/class-memberglut-account.php:929
+msgid "Email:"
+msgstr ""
+
+#: includes/frontend/class-memberglut-account.php:929
+msgid "Role:"
+msgstr ""
+
+#: includes/frontend/class-memberglut-account.php:929
+msgid "Plans:"
+msgstr ""
+
+#: includes/frontend/class-memberglut-account.php:972
 msgid "No members to show yet."
 msgstr ""
 
 #. translators: %s: date
-#: includes/frontend/class-memberglut-account.php:954
+#: includes/frontend/class-memberglut-account.php:993
 #, php-format
 msgid "Member since %s"
 msgstr ""
@@ -6883,10 +5331,6 @@ msgstr ""
 
 #: includes/frontend/class-memberglut-blocks.php:60
 msgid "Request and set a new password."
-msgstr ""
-
-#: includes/frontend/class-memberglut-blocks.php:61 includes/frontend/class-memberglut-shortcodes.php:326
-msgid "My account"
 msgstr ""
 
 #: includes/frontend/class-memberglut-blocks.php:61
@@ -7135,18 +5579,6 @@ msgstr ""
 msgid "Join %1$s — %2$s"
 msgstr ""
 
-#: includes/functions.php:512
-msgid "Welcome,"
-msgstr ""
-
-#: includes/functions.php:522
-msgid "Member Type:"
-msgstr ""
-
-#: includes/functions.php:529
-msgid "Member Since:"
-msgstr ""
-
 #: includes/gateways/class-memberglut-gateway-paypal.php:99
 msgid "Could not connect to PayPal. Check the client ID and secret."
 msgstr ""
@@ -7289,6 +5721,10 @@ msgstr ""
 msgid "wp_mail returned false. Check your mail settings or an SMTP plugin."
 msgstr ""
 
+#: includes/rest/class-memberglut-rest-forms.php:24
+msgid "Register"
+msgstr ""
+
 #: includes/rest/class-memberglut-rest-forms.php:27
 msgid "Lost Password"
 msgstr ""
@@ -7299,6 +5735,10 @@ msgstr ""
 
 #: includes/rest/class-memberglut-rest-members.php:118
 msgid "Unknown bulk action."
+msgstr ""
+
+#: includes/rest/class-memberglut-rest-members.php:209 includes/services/class-memberglut-approval.php:135 includes/services/class-memberglut-approval.php:169 includes/services/class-memberglut-members.php:187 includes/services/class-memberglut-subscription-service.php:201
+msgid "User not found."
 msgstr ""
 
 #: includes/rest/class-memberglut-rest-members.php:220
@@ -7337,12 +5777,20 @@ msgstr ""
 msgid "Receipt sent again"
 msgstr ""
 
+#: includes/rest/class-memberglut-rest-plans.php:62 includes/services/class-memberglut-plans.php:470 includes/services/class-memberglut-plans.php:544 includes/services/class-memberglut-plans.php:584 includes/services/class-memberglut-plans.php:626 includes/services/class-memberglut-subscription-service.php:204
+msgid "Plan not found."
+msgstr ""
+
 #: includes/rest/class-memberglut-rest-public.php:52
 msgid "Your session expired. Reload the page and try again."
 msgstr ""
 
 #: includes/rest/class-memberglut-rest-public.php:85
 msgid "Unknown form."
+msgstr ""
+
+#: includes/rest/class-memberglut-rest-roles.php:98 includes/services/class-memberglut-roles-service.php:266 includes/services/class-memberglut-roles-service.php:392 includes/services/class-memberglut-roles-service.php:412
+msgid "Role not found."
 msgstr ""
 
 #: includes/rest/class-memberglut-rest-rules.php:65 includes/services/class-memberglut-rules.php:284 includes/services/class-memberglut-rules.php:363 includes/services/class-memberglut-rules.php:382 includes/services/class-memberglut-rules.php:400
@@ -8066,71 +6514,71 @@ msgstr ""
 msgid "(refunded)"
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:271
+#: includes/services/class-memberglut-plans.php:272
 msgid "A paid plan needs a price above zero. Choose “Free” for a free plan."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:288
+#: includes/services/class-memberglut-plans.php:289
 msgid "Enter between 2 and 120 payments."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:300
+#: includes/services/class-memberglut-plans.php:301
 msgid "Choose the date access ends."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:302
+#: includes/services/class-memberglut-plans.php:303
 msgid "The end date is in the past."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:307
+#: includes/services/class-memberglut-plans.php:308
 msgid "Use the format MM-DD, e.g. 01-01 or 07-01."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:312
+#: includes/services/class-memberglut-plans.php:313
 msgid "This role does not exist."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:315
+#: includes/services/class-memberglut-plans.php:316
 msgid "Plans cannot give the Administrator role."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:319
+#: includes/services/class-memberglut-plans.php:320
 msgid "Choose an existing role."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:325
+#: includes/services/class-memberglut-plans.php:326
 msgid "Choose at least one payment method."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:331
+#: includes/services/class-memberglut-plans.php:332
 msgid "Choose the plans whose members can join."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:344
+#: includes/services/class-memberglut-plans.php:345
 msgid "Choose the page members go to after joining."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:351 includes/services/class-memberglut-rules.php:324
+#: includes/services/class-memberglut-plans.php:352 includes/services/class-memberglut-rules.php:324
 msgid "Please fix the highlighted fields."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:483
+#: includes/services/class-memberglut-plans.php:484
 msgid "The plan could not be saved."
 msgstr ""
 
 #. translators: %s: plan name
-#: includes/services/class-memberglut-plans.php:488
+#: includes/services/class-memberglut-plans.php:489
 #, php-format
 msgid "Plan “%s” updated"
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:488
+#: includes/services/class-memberglut-plans.php:489
 #, php-format
 msgid "Plan “%s” created"
 msgstr ""
 
 #. translators: %d: number of subscriptions
-#: includes/services/class-memberglut-plans.php:630
+#: includes/services/class-memberglut-plans.php:631
 #, php-format
 msgid "%d member has this plan. Make it inactive instead to keep them."
 msgid_plural "%d members have this plan. Make it inactive instead to keep them."
@@ -8138,45 +6586,45 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: plan name
-#: includes/services/class-memberglut-plans.php:635
+#: includes/services/class-memberglut-plans.php:636
 #, php-format
 msgid "Plan “%s” deleted"
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:852
+#: includes/services/class-memberglut-plans.php:853
 msgid "This plan is not available."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:855
+#: includes/services/class-memberglut-plans.php:856
 msgid "This plan is sold out."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:858
+#: includes/services/class-memberglut-plans.php:859
 msgid "This plan is only for new members."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:866
+#: includes/services/class-memberglut-plans.php:867
 msgid "This plan is only for members of certain plans."
 msgstr ""
 
-#: includes/services/class-memberglut-plans.php:870
+#: includes/services/class-memberglut-plans.php:871
 msgid "No payment method is available for this plan yet."
 msgstr ""
 
 #. translators: 1: price, 2: period such as "month" or "3 months"
-#: includes/services/class-memberglut-plans.php:887
+#: includes/services/class-memberglut-plans.php:888
 #, php-format
 msgid "%1$s / %2$s"
 msgstr ""
 
 #. translators: %s: price
-#: includes/services/class-memberglut-plans.php:890
+#: includes/services/class-memberglut-plans.php:891
 #, php-format
 msgid "%s once"
 msgstr ""
 
 #. translators: %s: date
-#: includes/services/class-memberglut-plans.php:930
+#: includes/services/class-memberglut-plans.php:931
 #, php-format
 msgid "Until %s"
 msgstr ""
@@ -8289,6 +6737,10 @@ msgstr ""
 
 #: includes/services/class-memberglut-roles-service.php:161
 msgid "Pages"
+msgstr ""
+
+#: includes/services/class-memberglut-roles-service.php:162
+msgid "Users"
 msgstr ""
 
 #: includes/services/class-memberglut-roles-service.php:163

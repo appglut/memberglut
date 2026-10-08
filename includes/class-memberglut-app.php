@@ -11,17 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Whether the React admin screens replace the classic admin screens.
- *
- * Return false from the `memberglut_use_react_admin` filter to get the classic screens back.
- *
- * @return bool
- */
-function memberglut_use_react_admin() {
-	return (bool) apply_filters( 'memberglut_use_react_admin', true );
-}
-
-/**
  * MemberGlut_App class.
  */
 class MemberGlut_App {
@@ -111,7 +100,7 @@ class MemberGlut_App {
 	 * @return bool
 	 */
 	public function is_app_page() {
-		return memberglut_use_react_admin() && '' !== $this->current_page();
+		return '' !== $this->current_page();
 	}
 
 	/**
@@ -120,10 +109,6 @@ class MemberGlut_App {
 	 * @return void
 	 */
 	public function register_menus() {
-		if ( ! memberglut_use_react_admin() ) {
-			return;
-		}
-
 		add_menu_page(
 			__( 'MemberGlut', 'memberglut' ),
 			__( 'MemberGlut', 'memberglut' ),

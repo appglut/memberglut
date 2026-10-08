@@ -30,7 +30,7 @@ Audit date: 2026-10-08 · plugin 1.1.5 · the React admin is design-only today (
 | # | File | Builds | Depends on | Status |
 |---|---|---|---|---|
 | 0 | [phase-00-foundations.md](phase-00-foundations.md) | schema, settings store, REST base, lookups, scheduler, logger, events, caps | — |✅ |
-| 1 | [phase-15-legacy-migration.md](phase-15-legacy-migration.md) *(migration step only)* | 1.1.5 → new schema/options | P0 |◐ migrations done, cleanup pending |
+| 1 | [phase-15-legacy-migration.md](phase-15-legacy-migration.md) *(migration step only)* | 1.1.5 → new schema/options | P0 |✅ |
 | 2 | [phase-01-global-settings.md](phase-01-global-settings.md) | persistence + validation for ~120 settings | P0 |✅ |
 | 3 | [phase-03-roles-capabilities.md](phase-03-roles-capabilities.md) | role editor, deny caps, multi-role, rescue | P0 |✅ |
 | 4 | [phase-02-plans.md](phase-02-plans.md) | plans list + 40-field editor | P0, P1, P3 |✅ |
