@@ -31787,7 +31787,7 @@ const THEME = {
   }
 };
 function Page({ active, wide = false, children }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(ConfigProvider, { theme: THEME, children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: wide ? "mg-fs-page" : "mg-list-page", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(ConfigProvider, { theme: THEME, direction: typeof memberglut_admin !== "undefined" && memberglut_admin.rtl ? "rtl" : "ltr", children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: wide ? "mg-fs-page" : "mg-list-page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(Header, { active }),
     wide ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-body", children }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-content", children })
   ] }) }) });

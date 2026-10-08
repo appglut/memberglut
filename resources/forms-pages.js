@@ -1,21 +1,21 @@
-import { a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, bh as faFileLines, c2 as faUserPlus, bJ as faRightToBracket, bp as faIdCard, bS as faTableColumns, b4 as faCode, c as Button, q as FontAwesomeIcon, c9 as faWandMagicSparkles, aZ as faCheck, bX as faTriangleExclamation, aL as faArrowUpRightFromSquare, aK as faArrowUp, aH as faArrowDown, bu as faLock, bB as faPen, bW as faTrashCan, bF as faPlus, aD as createRoot } from "./chunks/Page-IjLhTpkA.js";
+import { a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, bh as faFileLines, c2 as faUserPlus, bJ as faRightToBracket, bp as faIdCard, bS as faTableColumns, b4 as faCode, c as Button, q as FontAwesomeIcon, c9 as faWandMagicSparkles, aZ as faCheck, bX as faTriangleExclamation, aL as faArrowUpRightFromSquare, aK as faArrowUp, aH as faArrowDown, bu as faLock, bB as faPen, bW as faTrashCan, bF as faPlus, aD as createRoot } from "./chunks/Page-hmVJ7ZEb.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel, C as CopyCode } from "./chunks/SettingsPanel-BUenzITG.js";
-import { a2 as getFormsConfig, aH as saveFormsConfig, S as Select, T as Tooltip, t as createPages } from "./chunks/api-bTN0wgJl.js";
-import { L, b as planOptions } from "./chunks/lookups-BorBkD6H.js";
-import { b as planPrice } from "./chunks/format-DqybqfzJ.js";
-import { S as Spin } from "./chunks/index-Cx3mrKAm.js";
-import { T as Tag } from "./chunks/index-BGwJdhy2.js";
-import { A as Alert } from "./chunks/index-B58vIpI9.js";
-import { F as Form } from "./chunks/index-DOKJBfv7.js";
-import { I as Input } from "./chunks/index-D_WImSsm.js";
-import { S as Switch } from "./chunks/index-1uPwKzTk.js";
-import { M as Modal } from "./chunks/index-CP2VMNWD.js";
-import "./chunks/index-CIFeBIlA.js";
-import "./chunks/index-BCqSRH-G.js";
-import "./chunks/index-DkFErzSq.js";
-import "./chunks/index-JzziSPeX.js";
-import "./chunks/useBreakpoint-Cs-_AIQv.js";
+import { S as SettingsPanel, C as CopyCode } from "./chunks/SettingsPanel-CQqU9qOj.js";
+import { a2 as getFormsConfig, aH as saveFormsConfig, S as Select, T as Tooltip, t as createPages } from "./chunks/api-VgcaUgLl.js";
+import { L, b as planOptions } from "./chunks/lookups-PfwO7D-y.js";
+import { b as planPrice } from "./chunks/format-CBnx-JJy.js";
+import { S as Spin } from "./chunks/index-meZbse2h.js";
+import { T as Tag } from "./chunks/index-nAZOmPrG.js";
+import { A as Alert } from "./chunks/index-BwEO_KtO.js";
+import { F as Form } from "./chunks/index-6b3MThe_.js";
+import { I as Input } from "./chunks/index-CH-t94NL.js";
+import { S as Switch } from "./chunks/index-BCEmSWRh.js";
+import { M as Modal } from "./chunks/index-BgWjIT_i.js";
+import "./chunks/index-DyME-zn4.js";
+import "./chunks/index-GRmK3Eb7.js";
+import "./chunks/index-C0PWwl2H.js";
+import "./chunks/index-Dq9_nZbq.js";
+import "./chunks/useBreakpoint-BJ5o-Qbk.js";
 const PAGE_SLOTS = [
   ["page_register", __("Registration & checkout", "memberglut"), "[memberglut_register]", __("Account fields, plan choice and payment. Plan signup links open this page.", "memberglut")],
   ["page_login", __("Login", "memberglut"), "[memberglut_login]", __("Replaces wp-login.php when “Use MemberGlut pages” is on.", "memberglut")],

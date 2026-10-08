@@ -1,16 +1,16 @@
-import { a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, cW as link, q as FontAwesomeIcon, bk as faGear, bi as faFloppyDisk, c4 as faUserShield, bY as faUser, bB as faPen, bd as faEye, bA as faPaperPlane, bL as faRotateLeft, aD as createRoot } from "./chunks/Page-IjLhTpkA.js";
+import { a8 as __, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, cW as link, q as FontAwesomeIcon, bk as faGear, bi as faFloppyDisk, c4 as faUserShield, bY as faUser, bB as faPen, bd as faEye, bA as faPaperPlane, bL as faRotateLeft, aD as createRoot } from "./chunks/Page-hmVJ7ZEb.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { a as SmartTags } from "./chunks/SettingsPanel-BUenzITG.js";
-import { $ as getEmails, aG as saveEmails, aD as resetEmail, aA as previewEmail, aY as testEmail } from "./chunks/api-bTN0wgJl.js";
-import "./chunks/lookups-BorBkD6H.js";
-import { S as Switch } from "./chunks/index-1uPwKzTk.js";
-import { T as Tag } from "./chunks/index-BGwJdhy2.js";
-import { S as Segmented } from "./chunks/index-DkFErzSq.js";
-import { T as TypedInputNumber } from "./chunks/index-JzziSPeX.js";
-import { I as Input } from "./chunks/index-D_WImSsm.js";
-import { M as Modal } from "./chunks/index-CP2VMNWD.js";
-import "./chunks/index-CIFeBIlA.js";
-import "./chunks/index-BCqSRH-G.js";
+import { a as SmartTags } from "./chunks/SettingsPanel-CQqU9qOj.js";
+import { $ as getEmails, aG as saveEmails, aD as resetEmail, aA as previewEmail, aY as testEmail } from "./chunks/api-VgcaUgLl.js";
+import "./chunks/lookups-PfwO7D-y.js";
+import { S as Switch } from "./chunks/index-BCEmSWRh.js";
+import { T as Tag } from "./chunks/index-nAZOmPrG.js";
+import { S as Segmented } from "./chunks/index-C0PWwl2H.js";
+import { T as TypedInputNumber } from "./chunks/index-Dq9_nZbq.js";
+import { I as Input } from "./chunks/index-CH-t94NL.js";
+import { M as Modal } from "./chunks/index-BgWjIT_i.js";
+import "./chunks/index-DyME-zn4.js";
+import "./chunks/index-GRmK3Eb7.js";
 const GROUPS = [
   ["account", __("Account", "memberglut")],
   ["subscription", __("Subscription", "memberglut")],

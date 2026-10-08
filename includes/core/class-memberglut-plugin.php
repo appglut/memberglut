@@ -97,6 +97,7 @@ final class MemberGlut_Plugin {
 			'MemberGlut_Tools',
 			'MemberGlut_Site_Health',
 			'MemberGlut_Cache',
+			'MemberGlut_WPML',
 			'MemberGlut_Admin_Notices',
 		);
 	}

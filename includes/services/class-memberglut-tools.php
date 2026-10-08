@@ -689,6 +689,11 @@ class MemberGlut_Tools {
 		}
 		// Custom roles created with MemberGlut.
 		$created = (array) get_option( 'memberglut_created_roles', array() );
+		foreach ( array_keys( wp_roles()->roles ) as $slug ) {
+			if ( 0 === strpos( $slug, 'memberglut_' ) ) {
+				$created[ $slug ] = $slug; // Default member roles added on activation.
+			}
+		}
 		$default = get_option( 'default_role', 'subscriber' );
 		foreach ( $created as $slug ) {
 			if ( ! get_role( $slug ) || in_array( $slug, array( 'administrator', $default ), true ) ) {

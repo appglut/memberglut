@@ -243,6 +243,7 @@ class MemberGlut_App {
 			'dashboard_url' => admin_url( 'index.php' ),
 			'version'       => MEMBERGLUT_VERSION,
 			'lookups'       => MemberGlut_Lookups::all(),
+			'rtl'           => is_rtl(),
 			'user'          => array(
 				'id'   => get_current_user_id(),
 				'name'  => wp_get_current_user()->display_name,

@@ -141,7 +141,7 @@ class MemberGlut_Plans {
 	 */
 	public static function to_client( $row ) {
 		$s = array_merge( self::settings_defaults(), is_array( $row['settings'] ) ? $row['settings'] : array() );
-		return array(
+		$plan = array(
 			'id'              => (int) $row['id'],
 			'name'            => (string) $row['plan_name'],
 			'slug'            => (string) $row['plan_slug'],
@@ -192,6 +192,7 @@ class MemberGlut_Plans {
 			'created_at'      => memberglut_iso( $row['created_at'] ),
 			'updated_at'      => memberglut_iso( $row['updated_at'] ),
 		);
+		return apply_filters( 'memberglut_plan', $plan, $row );
 	}
 
 	/**

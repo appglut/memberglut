@@ -6,7 +6,9 @@
     "dev": "node node_modules/vite/bin/vite.js",
     "build": "node node_modules/vite/bin/vite.js build",
     "watch": "node node_modules/vite/bin/vite.js build --watch",
-    "preview": "node node_modules/vite/bin/vite.js preview"
+    "preview": "node node_modules/vite/bin/vite.js preview",
+    "make-pot": "wp i18n make-pot . languages/memberglut.pot --domain=memberglut --exclude=node_modules,vendor,resources,plans,examples,global-assets",
+    "make-json": "wp i18n make-json languages --no-purge"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",

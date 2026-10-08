@@ -38,6 +38,20 @@ class MemberGlut_Install {
 	public static function init() {
 		add_action( 'init', array( __CLASS__, 'maybe_upgrade' ), 0 );
 		add_action( 'wp_initialize_site', array( __CLASS__, 'on_new_site' ), 20 );
+		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'drop_tables' ) );
+	}
+
+	/**
+	 * A network site is deleted: drop its MemberGlut tables too.
+	 *
+	 * @param string[] $tables Tables WordPress drops.
+	 * @return string[]
+	 */
+	public static function drop_tables( $tables ) {
+		foreach ( self::tables() as $t ) {
+			$tables[] = self::table( $t );
+		}
+		return $tables;
 	}
 
 	/**

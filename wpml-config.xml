@@ -1,0 +1,34 @@
+<wpml-config>
+	<admin-texts>
+		<key name="memberglut_settings">
+			<key name="msg_logged_out" />
+			<key name="msg_logged_in" />
+			<key name="bank_title" />
+			<key name="bank_instructions" />
+			<key name="sender_name" />
+			<key name="email_footer" />
+			<key name="gdpr_consent_text" />
+		</key>
+		<key name="memberglut_forms">
+			<key name="reg_title" />
+			<key name="reg_button" />
+			<key name="login_title" />
+			<key name="login_button" />
+			<key name="pricing_button" />
+			<key name="reg_fields">
+				<key name="*">
+					<key name="label" />
+					<key name="placeholder" />
+					<key name="help" />
+				</key>
+			</key>
+		</key>
+		<key name="memberglut_emails">
+			<key name="*">
+				<key name="subject" />
+				<key name="heading" />
+				<key name="body" />
+			</key>
+		</key>
+	</admin-texts>
+</wpml-config>

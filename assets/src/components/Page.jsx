@@ -25,7 +25,7 @@ export const THEME = {
  */
 export default function Page({ active, wide = false, children }) {
   return (
-    <ConfigProvider theme={THEME}>
+    <ConfigProvider theme={THEME} direction={typeof memberglut_admin !== 'undefined' && memberglut_admin.rtl ? 'rtl' : 'ltr'}>
       <AntApp>
         <div className={wide ? 'mg-fs-page' : 'mg-list-page'}>
           <Header active={active} />
