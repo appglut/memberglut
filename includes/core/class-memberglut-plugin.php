@@ -93,6 +93,7 @@ final class MemberGlut_Plugin {
 			'MemberGlut_Privacy',
 			'MemberGlut_User_Profile',
 			'MemberGlut_Stats',
+			'MemberGlut_Dashboard',
 			'MemberGlut_Site_Health',
 			'MemberGlut_Cache',
 			'MemberGlut_Admin_Notices',

@@ -1,23 +1,21 @@
 import { cV as jsxRuntimeExports, P as Page, d8 as reactExports, E as PageHeader, c as Button, a8 as __, cW as link, q as FontAwesomeIcon, bO as faShieldHalved, bs as faLayerGroup, bF as faPlus, a0 as Skeleton, a1 as StatCard, c7 as faUsers, bM as faSackDollar, c2 as faUserPlus, bo as faHourglassHalf, aI as faArrowRight, b0 as faCircleCheck, a$ as faCircle, bJ as faRightToBracket, b_ as faUserClock, c6 as faUserXmark, b6 as faCreditCard, b3 as faClockRotateLeft, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode } from "./chunks/SettingsPanel-DTwtCdkX.js";
-import { ak as getStats, ac as getPlans, Q as getActivity, aj as getSetupChecklist, E as Empty, T as Tooltip } from "./chunks/api-B7vDfSa0.js";
+import { C as CopyCode } from "./chunks/SettingsPanel-Bw_1Au-Y.js";
+import { aj as getStats, ab as getPlans, Z as getEvents, ai as getSetupChecklist, E as Empty, T as Tooltip } from "./chunks/api-CeNclfze.js";
+import { d as dayjs } from "./chunks/lookups-Cfp9TqGS.js";
 import { m as money, f as fromNow } from "./chunks/format-DjWmiSLr.js";
 import { S as Segmented } from "./chunks/index-DgFmLSfn.js";
-import { P as Progress } from "./chunks/progress-CNNevOYe.js";
-import "./chunks/lookups-Cfp9TqGS.js";
-import "./chunks/index-WOnEJu5p.js";
-import "./chunks/index-DblzLh6y.js";
+import { P as Progress } from "./chunks/progress-CYMznVyQ.js";
+import "./chunks/index-CfFOi98G.js";
+import "./chunks/index-DXACN07P.js";
 import "./chunks/index-vq8i8Snb.js";
-import "./chunks/index-CRoY-Qmr.js";
-import "./chunks/index-_8mLokV3.js";
+import "./chunks/index-CJ3krbQI.js";
+import "./chunks/index-BAtZnDy4.js";
 import "./chunks/index-B-UY_eZJ.js";
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function BarChart({ data, field, format }) {
   const max = Math.max(...data.map((d) => d[field]), 1);
-  const now = (/* @__PURE__ */ new Date()).getMonth();
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-bars", children: data.map((d, i) => {
-    const label = MONTHS[(now - (data.length - 1 - i) + 12) % 12];
+    const label = dayjs(`${d.month}-01`).format("MMM");
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: `${label}: ${format(d[field])}`, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-bar", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-bar-fill", style: { height: `${d[field] / max * 100}%` } }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: label })
@@ -32,6 +30,28 @@ const ACTIVITY_ICON = {
   pending: faUserClock,
   login: faRightToBracket
 };
+const ACTIVITY_GROUP = {
+  grant: "grant",
+  activate: "grant",
+  approve: "grant",
+  registered: "grant",
+  plan_change: "grant",
+  payment_completed: "payment",
+  payment_created: "payment",
+  payment_receipt: "payment",
+  payment_failed: "cancel",
+  payment_refund: "cancel",
+  cancel: "cancel",
+  revoke: "cancel",
+  reject: "cancel",
+  expire: "expire",
+  hold: "expire",
+  pending: "pending",
+  login_locked: "login",
+  login_blocked: "login"
+};
+const ACTIVITY_TYPES = Object.keys(ACTIVITY_GROUP).join(",");
+const trendText = (v, tpl) => sprintf(tpl, v >= 0 ? "▲" : "▼", Math.abs(v));
 function Dashboard() {
   const [stats, setStats] = reactExports.useState(null);
   const [plans, setPlans] = reactExports.useState([]);
@@ -39,7 +59,7 @@ function Dashboard() {
   const [checklist, setChecklist] = reactExports.useState([]);
   const [metric, setMetric] = reactExports.useState("revenue");
   reactExports.useEffect(() => {
-    Promise.all([getStats(), getPlans(), getActivity(), getSetupChecklist()]).then(([s, p, a, c]) => {
+    Promise.all([getStats(), getPlans().catch(() => []), getEvents({ per_page: 7, type: ACTIVITY_TYPES }).then((r) => r.items).catch(() => []), getSetupChecklist().catch(() => [])]).then(([s, p, a, c]) => {
       setStats(s);
       setPlans(p);
       setActivity(a);
@@ -64,8 +84,8 @@ function Dashboard() {
     !stats ? /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { active: true, paragraph: { rows: 8 } }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-stats-row", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUsers }), label: __("Active members", "memberglut"), value: stats.active_members.toLocaleString(), hint: sprintf(__("%d waiting for approval", "memberglut"), stats.pending) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faSackDollar }), label: __("Revenue this month", "memberglut"), value: money(stats.revenue_month), hint: sprintf(__("▲ %s%% vs last month", "memberglut"), stats.revenue_change), trend: "up" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserPlus }), label: __("New members (30 days)", "memberglut"), value: stats.new_members_30d, hint: sprintf(__("▲ %s%% · %d canceled", "memberglut"), stats.new_members_change, stats.canceled_30d), trend: "up" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faSackDollar }), label: __("Revenue this month", "memberglut"), value: money(stats.revenue_month), hint: trendText(stats.revenue_change, __("%1$s %2$s%% vs last month", "memberglut")), trend: stats.revenue_change >= 0 ? "up" : "down" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserPlus }), label: __("New members (30 days)", "memberglut"), value: stats.new_members_30d, hint: `${trendText(stats.new_members_change, __("%1$s %2$s%%", "memberglut"))} · ${sprintf(__("%d canceled", "memberglut"), stats.canceled_30d)}`, trend: stats.new_members_change >= 0 ? "up" : "down" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(StatCard, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faHourglassHalf }), label: __("Expiring in 7 days", "memberglut"), value: stats.expiring_7d, hint: sprintf(__("Churn %s%% this month", "memberglut"), stats.churn), trend: "down" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-dash-grid", children: [
@@ -98,7 +118,7 @@ function Dashboard() {
           /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mg-checklist", children: checklist.map((c) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { className: c.done ? "done" : "", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: c.done ? faCircleCheck : faCircle }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: c.label }),
-            !c.done && /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: c.key === "gateway" ? link("settings", { tab: "payments" }) : link(c.key === "emails" ? "emails" : "forms"), children: __("Do it", "memberglut") })
+            !c.done && /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: link(c.target, c.args || {}), children: __("Do it", "memberglut") })
           ] }, c.key)) })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-card", children: [
@@ -127,7 +147,7 @@ function Dashboard() {
             /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: link("tools", { tab: "activity" }), children: __("Full log", "memberglut") })
           ] }),
           activity.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx("ul", { className: "mg-activity", children: activity.map((a) => /* @__PURE__ */ jsxRuntimeExports.jsxs("li", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `ic t-${a.type}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: ACTIVITY_ICON[a.type] || faClockRotateLeft }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `ic t-${ACTIVITY_GROUP[a.type] || "other"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: ACTIVITY_ICON[ACTIVITY_GROUP[a.type]] || faClockRotateLeft }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: a.text }),
               /* @__PURE__ */ jsxRuntimeExports.jsx("small", { children: fromNow(a.date) })

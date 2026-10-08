@@ -325,7 +325,8 @@ class MemberGlut_REST_Members extends MemberGlut_REST_Controller {
 			$where['object_id'] = absint( $request->get_param( 'object_id' ) );
 		}
 		if ( $request->get_param( 'type' ) ) {
-			$where['event'] = array_map( 'sanitize_key', (array) $request->get_param( 'type' ) );
+			$types         = $request->get_param( 'type' );
+			$where['event'] = array_map( 'sanitize_key', is_array( $types ) ? $types : explode( ',', (string) $types ) );
 		}
 		if ( $request->get_param( 'from' ) ) {
 			$where['created_at >='] = memberglut_parse_date( sanitize_text_field( $request->get_param( 'from' ) ) );

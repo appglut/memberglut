@@ -356,3 +356,4 @@
 .mg-fs-control .ant-input-affix-wrapper input.ant-input { height: auto; border: 0 !important; box-shadow: none !important; padding: 0 !important; }
 .mg-fs-control .ant-input-affix-wrapper { padding-top: 6px; padding-bottom: 6px; border-radius: 8px; }
 .mg-fs-control .ant-input-prefix { color: #94a3b8; }
+.mg-activity .ic.t-login { background: #f5f3ff; color: #7c3aed; }

@@ -1,16 +1,16 @@
 import { aJ as faArrowRightFromBracket, a8 as __, bJ as faRightToBracket, bw as faMessage, cV as jsxRuntimeExports, P as Page, b as App, d8 as reactExports, cW as link, q as FontAwesomeIcon, bt as faLink, bS as faTableColumns, c1 as faUserPen, aR as faBoxArchive, bj as faFolderTree, bh as faFileLines, bm as faGlobe, bC as faPenToSquare, b5 as faCopy, bW as faTrashCan, E as PageHeader, c as Button, bF as faPlus, a1 as StatCard, bO as faShieldHalved, c0 as faUserLock, bv as faMagnifyingGlass, b8 as faCubes, aP as faBars, b4 as faCode, bP as faSliders, aD as createRoot } from "./chunks/Page-C9tSda4_.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { ag as getRuleStats, a8 as getPerPostRules, ah as getRules, B as duplicateRule, y as deleteRule, aM as setRuleStatus } from "./chunks/api-B7vDfSa0.js";
+import { af as getRuleStats, a7 as getPerPostRules, ag as getRules, B as duplicateRule, y as deleteRule, aL as setRuleStatus } from "./chunks/api-CeNclfze.js";
 import { f as fromNow } from "./chunks/format-DjWmiSLr.js";
 import { L, r as roleName, a as planById } from "./chunks/lookups-Cfp9TqGS.js";
-import { P as Popconfirm } from "./chunks/index-CBMipQNv.js";
+import { P as Popconfirm } from "./chunks/index-cx92Nszp.js";
 import { S as Switch } from "./chunks/index-B-UY_eZJ.js";
-import { T as Tabs } from "./chunks/index-WOnEJu5p.js";
+import { T as Tabs } from "./chunks/index-CfFOi98G.js";
 import { I as Input } from "./chunks/index-vq8i8Snb.js";
-import { F as ForwardTable } from "./chunks/Table-B97Zri6O.js";
-import { T as Tag } from "./chunks/index-DblzLh6y.js";
-import "./chunks/index-CRoY-Qmr.js";
-import "./chunks/useBreakpoint-DJXkR6lG.js";
+import { F as ForwardTable } from "./chunks/Table-DI4ycSpx.js";
+import { T as Tag } from "./chunks/index-DXACN07P.js";
+import "./chunks/index-CJ3krbQI.js";
+import "./chunks/useBreakpoint-ChmeCqU6.js";
 import "./chunks/index-BDXpcJpj.js";
 const PROTECT_ICON = {
   site: faGlobe,

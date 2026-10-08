@@ -10,18 +10,16 @@ import Page, { PageHeader, StatCard } from '../components/Page';
 import { link } from '../components/adminData';
 import { CopyCode } from '../components/SettingsPanel';
 import * as api from '../services/api';
+import dayjs from 'dayjs';
 import { money, fromNow } from '../services/format';
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 /** Small dependency-free bar chart. */
 function BarChart({ data, field, format }) {
   const max = Math.max(...data.map((d) => d[field]), 1);
-  const now = new Date().getMonth();
   return (
     <div className="mg-bars">
       {data.map((d, i) => {
-        const label = MONTHS[(now - (data.length - 1 - i) + 12) % 12];
+        const label = dayjs(`${d.month}-01`).format('MMM');
         return (
           <Tooltip key={i} title={`${label}: ${format(d[field])}`}>
             <div className="mg-bar">
@@ -40,6 +38,18 @@ const ACTIVITY_ICON = {
   pending: faUserClock, login: faRightToBracket,
 };
 
+/** Event type → icon group. */
+const ACTIVITY_GROUP = {
+  grant: 'grant', activate: 'grant', approve: 'grant', registered: 'grant', plan_change: 'grant',
+  payment_completed: 'payment', payment_created: 'payment', payment_receipt: 'payment',
+  payment_failed: 'cancel', payment_refund: 'cancel', cancel: 'cancel', revoke: 'cancel', reject: 'cancel',
+  expire: 'expire', hold: 'expire', pending: 'pending', login_locked: 'login', login_blocked: 'login',
+};
+const ACTIVITY_TYPES = Object.keys(ACTIVITY_GROUP).join(',');
+
+/** “▲ 12% vs last month” / “▼ 4% …”. */
+const trendText = (v, tpl) => sprintf(tpl, v >= 0 ? '▲' : '▼', Math.abs(v));
+
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [plans, setPlans] = useState([]);
@@ -48,7 +58,7 @@ function Dashboard() {
   const [metric, setMetric] = useState('revenue');
 
   useEffect(() => {
-    Promise.all([api.getStats(), api.getPlans(), api.getActivity(), api.getSetupChecklist()]).then(([s, p, a, c]) => {
+    Promise.all([api.getStats(), api.getPlans().catch(() => []), api.getEvents({ per_page: 7, type: ACTIVITY_TYPES }).then((r) => r.items).catch(() => []), api.getSetupChecklist().catch(() => [])]).then(([s, p, a, c]) => {
       setStats(s); setPlans(p); setActivity(a); setChecklist(c);
     });
   }, []);
@@ -74,8 +84,8 @@ function Dashboard() {
         <>
           <div className="mg-stats-row">
             <StatCard icon={<FontAwesomeIcon icon={faUsers} />} label={__( 'Active members', 'memberglut' )} value={stats.active_members.toLocaleString()} hint={sprintf( __( '%d waiting for approval', 'memberglut' ), stats.pending )} />
-            <StatCard icon={<FontAwesomeIcon icon={faSackDollar} />} label={__( 'Revenue this month', 'memberglut' )} value={money(stats.revenue_month)} hint={sprintf( __( '▲ %s%% vs last month', 'memberglut' ), stats.revenue_change )} trend="up" />
-            <StatCard icon={<FontAwesomeIcon icon={faUserPlus} />} label={__( 'New members (30 days)', 'memberglut' )} value={stats.new_members_30d} hint={sprintf( __( '▲ %s%% · %d canceled', 'memberglut' ), stats.new_members_change, stats.canceled_30d )} trend="up" />
+            <StatCard icon={<FontAwesomeIcon icon={faSackDollar} />} label={__( 'Revenue this month', 'memberglut' )} value={money(stats.revenue_month)} hint={trendText(stats.revenue_change, __( '%1$s %2$s%% vs last month', 'memberglut' ))} trend={stats.revenue_change >= 0 ? 'up' : 'down'} />
+            <StatCard icon={<FontAwesomeIcon icon={faUserPlus} />} label={__( 'New members (30 days)', 'memberglut' )} value={stats.new_members_30d} hint={`${trendText(stats.new_members_change, __( '%1$s %2$s%%', 'memberglut' ))} · ${sprintf( __( '%d canceled', 'memberglut' ), stats.canceled_30d )}`} trend={stats.new_members_change >= 0 ? 'up' : 'down'} />
             <StatCard icon={<FontAwesomeIcon icon={faHourglassHalf} />} label={__( 'Expiring in 7 days', 'memberglut' )} value={stats.expiring_7d} hint={sprintf( __( 'Churn %s%% this month', 'memberglut' ), stats.churn )} trend="down" />
           </div>
 
@@ -104,7 +114,7 @@ function Dashboard() {
                   <li key={c.key} className={c.done ? 'done' : ''}>
                     <FontAwesomeIcon icon={c.done ? faCircleCheck : faCircle} />
                     <span>{c.label}</span>
-                    {!c.done && <a href={c.key === 'gateway' ? link('settings', { tab: 'payments' }) : link(c.key === 'emails' ? 'emails' : 'forms')}>{__( 'Do it', 'memberglut' )}</a>}
+                    {!c.done && <a href={link(c.target, c.args || {})}>{__( 'Do it', 'memberglut' )}</a>}
                   </li>
                 ))}
               </ul>
@@ -135,7 +145,7 @@ function Dashboard() {
                 <ul className="mg-activity">
                   {activity.map((a) => (
                     <li key={a.id}>
-                      <span className={`ic t-${a.type}`}><FontAwesomeIcon icon={ACTIVITY_ICON[a.type] || faClockRotateLeft} /></span>
+                      <span className={`ic t-${ACTIVITY_GROUP[a.type] || 'other'}`}><FontAwesomeIcon icon={ACTIVITY_ICON[ACTIVITY_GROUP[a.type]] || faClockRotateLeft} /></span>
                       <div><div>{a.text}</div><small>{fromNow(a.date)}</small></div>
                     </li>
                   ))}
