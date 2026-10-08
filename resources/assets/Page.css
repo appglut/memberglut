@@ -934,6 +934,10 @@ body {
 .mg-fs-nav-error { width: 8px; height: 8px; border-radius: 50%; background: #dc2626; margin-left: auto; flex: none; }
 .mg-fs-tab-error { color: #dc2626; }
 .mg-fs-tab-error::after { content: ' •'; }
+/* Roles: remove a custom capability */
+.mg-cap { position: relative; }
+.mg-cap-remove { border: 0; background: transparent; color: #94a3b8; cursor: pointer; padding: 2px 6px; margin-left: auto; }
+.mg-cap-remove:hover { color: #dc2626; }
 /* Three-bar menu button (left of every header) and its side menu */
 .mg-hamburger {
   display: inline-flex; flex-direction: column; justify-content: center; gap: 4px;

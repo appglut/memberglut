@@ -1,5 +1,5 @@
 import { d7 as reactExports, ao as _slicedToArray, av as canUseDom, ar as _typeof, ak as _objectSpread2, al as _objectWithoutProperties, af as _extends, aw as classNames, d4 as presetPrimaryColors, cr as genStyleHooks, cZ as merge, da as resetComponent, dk as unit, x as Keyframe, F as FastColor, j as ConfigContext, d0 as omit, T as RefIcon, W as RefIcon$1, V as RefIcon$2 } from "./Page-uv7jJYOd.js";
-import { T as Tooltip, R as RefIcon$3 } from "./api-BaJbRTwg.js";
+import { T as Tooltip, e as RefIcon$3 } from "./api-BU-mz-0j.js";
 var defaultProps = {
   percent: 0,
   prefixCls: "rc-progress",

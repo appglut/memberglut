@@ -44,12 +44,11 @@ export async function download(path, query, fallbackName = 'export.csv') {
     const data = await res.json().catch(() => ({}));
     throw new Error(data.message || `Download failed (${res.status})`);
   }
-  const type = res.headers.get('Content-Type') || '';
-  if (type.includes('application/json') && !path.includes('setup')) {
+  const cd = res.headers.get('Content-Disposition') || '';
+  if (!cd.includes('attachment')) {
     return res.json(); // Queued export: { queued: true, ... }
   }
   const blob = await res.blob();
-  const cd = res.headers.get('Content-Disposition') || '';
   const m = cd.match(/filename="?([^";]+)"?/);
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
