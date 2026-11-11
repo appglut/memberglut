@@ -30,7 +30,8 @@ class MemberGlut_Settings {
 	 * Schema of the global settings.
 	 *
 	 * Types: bool, int, float, enum, text, textarea, html, url, email, color, page, plan, roles, pages, tags, secret,
-	 * role_redirects, captcha_forms.
+	 * role_redirects, captcha_forms, custom (add-ons: [ 'sanitize' => callable( $raw, $key ) ] returns the clean value
+	 * or a WP_Error).
 	 *
 	 * @return array
 	 */
@@ -150,6 +151,22 @@ class MemberGlut_Settings {
 			'lockout_minutes'               => array( 'type' => 'int', 'default' => 15, 'min' => 1, 'max' => 1440 ),
 			'honeypot'                      => array( 'type' => 'bool', 'default' => true ),
 			'logout_on_close'               => array( 'type' => 'bool', 'default' => false ),
+			'new_device_alert'              => array( 'type' => 'bool', 'default' => false ),
+			'suspicious_alert'              => array( 'type' => 'bool', 'default' => true ),
+			// Login page design (wp-login.php).
+			'login_style'                   => array( 'type' => 'bool', 'default' => false ),
+			'login_logo'                    => array( 'type' => 'url', 'default' => '' ),
+			'login_logo_width'              => array( 'type' => 'int', 'default' => 84, 'min' => 40, 'max' => 320 ),
+			'login_hide_logo'               => array( 'type' => 'bool', 'default' => false ),
+			'login_bg_color'                => array( 'type' => 'color', 'default' => '' ),
+			'login_bg_image'                => array( 'type' => 'url', 'default' => '' ),
+			'login_form_bg'                 => array( 'type' => 'color', 'default' => '' ),
+			'login_form_transparent'        => array( 'type' => 'bool', 'default' => false ),
+			'login_text_color'              => array( 'type' => 'color', 'default' => '' ),
+			'login_button_color'            => array( 'type' => 'color', 'default' => '' ),
+			'login_radius'                  => array( 'type' => 'int', 'default' => 8, 'min' => 0, 'max' => 32 ),
+			'login_hide_back'               => array( 'type' => 'bool', 'default' => false ),
+			'login_custom_css'              => array( 'type' => 'textarea', 'default' => '' ),
 			// Captcha.
 			'captcha_provider'              => array( 'type' => 'enum', 'default' => 'none', 'options' => array( 'none', 'recaptcha', 'hcaptcha', 'turnstile' ) ),
 			'captcha_on'                    => array( 'type' => 'list', 'default' => array( 'register', 'login' ), 'options' => array( 'register', 'login', 'lost_password', 'checkout' ) ),
@@ -565,6 +582,9 @@ class MemberGlut_Settings {
 				return $out;
 			case 'reg_fields':
 				return self::sanitize_reg_fields( $raw );
+			case 'custom':
+				// Add-on settings with a structure of their own: the schema entry gives the sanitizer.
+				return isset( $def['sanitize'] ) && is_callable( $def['sanitize'] ) ? call_user_func( $def['sanitize'], $raw, $key ) : $def['default'];
 		}
 		return sanitize_text_field( (string) $raw );
 	}
@@ -616,7 +636,7 @@ class MemberGlut_Settings {
 			if ( is_array( $options ) ) {
 				$options = implode( "\n", $options );
 			}
-			$out[] = array(
+			$clean = array(
 				'key'      => $key,
 				'label'    => sanitize_text_field( isset( $f['label'] ) ? $f['label'] : $key ),
 				'type'     => $type,
@@ -626,6 +646,16 @@ class MemberGlut_Settings {
 				'custom'   => $custom,
 				'options'  => sanitize_textarea_field( (string) $options ),
 			);
+			/**
+			 * Extra field properties from add-ons (conditional logic, step, placeholder…), saved with the field.
+			 * Return [ prop => clean value ]; core properties cannot be replaced.
+			 *
+			 * @param array $extra Extra properties.
+			 * @param array $f     Raw field.
+			 * @param array $clean Clean core properties.
+			 */
+			$extra = (array) apply_filters( 'memberglut_sanitize_reg_field', array(), $f, $clean );
+			$out[] = $clean + $extra;
 		}
 		// Email and password can never be removed.
 		foreach ( array( 'email', 'password' ) as $must ) {

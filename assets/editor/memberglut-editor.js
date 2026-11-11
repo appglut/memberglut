@@ -186,7 +186,8 @@
 			var v = props.attributes.memberglutVisibility || {};
 			var set = function (patch) {
 				var next = Object.assign({ mode: 'show', who: '', plans: [], roles: [] }, v, patch);
-				props.setAttributes({ memberglutVisibility: next.who ? next : undefined });
+				// Add-ons keep their own conditions in memberglutVisibility.pro (e.g. a schedule) even for “Everyone”.
+				props.setAttributes({ memberglutVisibility: next.who || (next.pro && Object.keys(next.pro).length) ? next : undefined });
 			};
 			return el(Fragment, null,
 				el(BlockEdit, props),
@@ -228,7 +229,7 @@
 	var withBadge = wp.compose.createHigherOrderComponent(function (BlockListBlock) {
 		return function (props) {
 			var v = props.attributes && props.attributes.memberglutVisibility;
-			if (!v || !v.who) {
+			if (!v || (!v.who && !(v.pro && Object.keys(v.pro).length))) {
 				return el(BlockListBlock, props);
 			}
 			return el(BlockListBlock, Object.assign({}, props, { className: (props.className ? props.className + ' ' : '') + 'memberglut-has-visibility' }));

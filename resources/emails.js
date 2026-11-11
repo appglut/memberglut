@@ -1,16 +1,19 @@
-import { a8 as __, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, cX as link, q as FontAwesomeIcon, bk as faGear, bi as faFloppyDisk, c5 as faUserShield, bZ as faUser, bB as faPen, bd as faEye, bA as faPaperPlane, bM as faRotateLeft, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { ag as __, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, a6 as Skeleton, O as PageHeader, d as Button, dm as link, u as FontAwesomeIcon, bz as faGear, bx as faFloppyDisk, cl as faUserShield, cd as faUser, bR as faPen, bs as faEye, bQ as faPaperPlane, c0 as faRotateLeft } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { a as SmartTags } from "./chunks/SettingsPanel-CZprfnRR.js";
-import { $ as getEmails, aG as saveEmails, aD as resetEmail, aA as previewEmail, aY as testEmail } from "./chunks/api-C3opcxY4.js";
-import "./chunks/lookups-cQsk1BIx.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { S as Segmented } from "./chunks/index-B15yPtij.js";
-import { T as TypedInputNumber } from "./chunks/index-BQU-XdN2.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { M as Modal } from "./chunks/index-BtIaElEq.js";
-import "./chunks/index-DPM4vg2p.js";
-import "./chunks/index-Bdt2tpd-.js";
+import { d as SmartTags } from "./chunks/SettingsPanel-CL4JwW_5.js";
+import { a5 as getEmails, aO as saveEmails, aL as resetEmail, aI as previewEmail, b4 as testEmail } from "./chunks/api-BoF1RtIE.js";
+import "./chunks/lookups-2moJUDPH.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { S as Segmented } from "./chunks/index-BoUobS93.js";
+import { T as TypedInputNumber } from "./chunks/index-C6h9-TWP.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { M as Modal } from "./chunks/index-BYeBYKdc.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/registry-Cs5PTTmS.js";
+import "./chunks/index-BedyQTUQ.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-DLAXZnY0.js";
 const GROUPS = [
   ["account", __("Account", "memberglut")],
   ["subscription", __("Subscription", "memberglut")],
@@ -205,4 +208,4 @@ function Emails() {
 function EmailsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Emails, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(EmailsPage, {}));
+boot(EmailsPage);

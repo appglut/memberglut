@@ -18,12 +18,21 @@ class MemberGlut_Fields {
 	/**
 	 * Registration fields that are switched on, in order.
 	 *
+	 * @param array $context Where the form is used: plan (chosen plan or null), plans (plans offered), form (form key
+	 *                       from the shortcode / submission).
 	 * @return array[]
 	 */
-	public static function registration_fields() {
-		return array_values( array_filter( (array) memberglut_form_setting( 'reg_fields', array() ), static function ( $f ) {
+	public static function registration_fields( $context = array() ) {
+		$fields = array_values( array_filter( (array) memberglut_form_setting( 'reg_fields', array() ), static function ( $f ) {
 			return ! empty( $f['on'] ) || ! empty( $f['locked'] );
 		} ) );
+		/**
+		 * Fields of a registration form (add-ons offer several forms, e.g. one per plan or role).
+		 *
+		 * @param array[] $fields  Fields.
+		 * @param array   $context plan, plans, form.
+		 */
+		return (array) apply_filters( 'memberglut_registration_fields', $fields, wp_parse_args( $context, array( 'plan' => null, 'plans' => array(), 'form' => '' ) ) );
 	}
 
 	/**
@@ -155,6 +164,16 @@ class MemberGlut_Fields {
 		$errors = array();
 		foreach ( $fields as $f ) {
 			$key = $f['key'];
+			/**
+			 * Skip a field (not validated, not saved), e.g. one hidden by conditional logic or a layout-only field.
+			 *
+			 * @param bool  $skip  Skip.
+			 * @param array $f     Field.
+			 * @param array $input All submitted values.
+			 */
+			if ( apply_filters( 'memberglut_skip_field', false, $f, $input ) ) {
+				continue;
+			}
 			$raw = isset( $input[ $key ] ) ? $input[ $key ] : '';
 			if ( in_array( $f['type'], array( 'password' ), true ) ) {
 				$value = is_string( $raw ) ? $raw : '';
@@ -166,6 +185,9 @@ class MemberGlut_Fields {
 				$value = sanitize_email( is_string( $raw ) ? $raw : '' );
 			} elseif ( 'url' === $f['type'] ) {
 				$value = esc_url_raw( is_string( $raw ) ? trim( $raw ) : '' );
+			} elseif ( is_array( $raw ) ) {
+				// Add-on types with several values (multi-select…); the add-on cleans them in memberglut_sanitize_field.
+				$value = array_values( array_filter( array_map( 'sanitize_text_field', array_filter( $raw, 'is_scalar' ) ), 'strlen' ) );
 			} else {
 				$value = sanitize_text_field( is_string( $raw ) ? $raw : '' );
 			}
@@ -267,9 +289,28 @@ class MemberGlut_Fields {
 	 * Password policy (Login & registration › Passwords).
 	 *
 	 * @param string $password Password.
+	 * @param int    $user_id  User changing their password (0 = new account).
 	 * @return true|string Error message.
 	 */
-	public static function check_password( $password ) {
+	public static function check_password( $password, $user_id = 0 ) {
+		$result = self::password_rules( $password );
+		/**
+		 * Extra password rules (e.g. not one of the last passwords). Return an error message to reject it.
+		 *
+		 * @param true|string $result   Result so far.
+		 * @param string      $password Password.
+		 * @param int         $user_id  User (0 = new account).
+		 */
+		return apply_filters( 'memberglut_check_password', $result, $password, (int) $user_id );
+	}
+
+	/**
+	 * Length and strength rules of Global Settings.
+	 *
+	 * @param string $password Password.
+	 * @return true|string
+	 */
+	private static function password_rules( $password ) {
 		$min = (int) memberglut_setting( 'password_min', 8 );
 		if ( strlen( $password ) < $min ) {
 			/* translators: %d: number of characters */

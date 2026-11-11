@@ -1,17 +1,20 @@
-import { a8 as __, bQ as faSliders, bP as faShieldHalved, bs as faLayerGroup, c6 as faUserTag, bK as faRightToBracket, c4 as faUserSecret, b_ as faUserCheck, bw as faMessage, aJ as faArrowRightFromBracket, bW as faTags, be as faEyeSlash, c9 as faVial, cW as jsxRuntimeExports, c as Button, q as FontAwesomeIcon, cb as faXmark, bF as faPlus, d9 as reactExports, P as Page, b as App, d7 as queryArg, a_ as faChevronLeft, cX as link, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { ag as __, c4 as faSliders, c3 as faShieldHalved, bH as faLayerGroup, cm as faUserTag, b_ as faRightToBracket, ck as faUserSecret, ce as faUserCheck, bL as faMessage, aY as faArrowRightFromBracket, ca as faTags, bt as faEyeSlash, cp as faVial, dl as jsxRuntimeExports, d as Button, u as FontAwesomeIcon, cr as faXmark, bV as faPlus, dB as reactExports, P as Page, b as App, dz as queryArg, bd as faChevronLeft, dm as link } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { b as ruleTargets, r as ruleConditions, S as SettingsPanel } from "./chunks/SettingsPanel-CZprfnRR.js";
-import { S as Select, aQ as searchUsers, h as Space, aP as searchTerms, aO as searchPosts, aZ as testRule, ah as getRule, aM as saveRule } from "./chunks/api-C3opcxY4.js";
-import { b as planOptions, c as roleOptions, L, p as pageOptions } from "./chunks/lookups-cQsk1BIx.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { A as Alert } from "./chunks/index-dB_sQhvz.js";
-import { S as Spin } from "./chunks/index-D6ChUS7m.js";
-import "./chunks/index-DPM4vg2p.js";
-import "./chunks/index-8aTEZ5cr.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/index-B15yPtij.js";
-import "./chunks/index-BQU-XdN2.js";
-import "./chunks/index-DYGuXoRz.js";
+import { S as SettingsPanel } from "./chunks/SettingsPanel-CL4JwW_5.js";
+import { a as ruleTargets, r as ruleConditions } from "./chunks/registry-Cs5PTTmS.js";
+import { S as Select, aY as searchUsers, j as Space, aX as searchTerms, aW as searchPosts, b5 as testRule, an as getRule, aU as saveRule } from "./chunks/api-BoF1RtIE.js";
+import { b as planOptions, c as roleOptions, L, p as pageOptions } from "./chunks/lookups-2moJUDPH.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { A as Alert } from "./chunks/index-DBTNcr8l.js";
+import { S as Spin } from "./chunks/index-n8Z4Xk8Z.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/index-BedyQTUQ.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-BoUobS93.js";
+import "./chunks/index-C6h9-TWP.js";
+import "./chunks/index-DLAXZnY0.js";
+import "./chunks/index-DNVHX8xZ.js";
+import "./chunks/index-42CDOxMR.js";
 const TARGETS = [
   { value: "site", label: __("Whole site", "memberglut") },
   { value: "post_type", label: __("All of a post type", "memberglut") },
@@ -27,7 +30,7 @@ const TARGETS = [
   ...ruleTargets().map((t) => ({ value: t.value, label: t.label }))
 ];
 function ExtraTargetFields({ t, def, onChange }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Space, { wrap: true, children: (def.fields || []).map((f) => f.type === "select" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t[f.key], placeholder: f.label, options: f.options || [], onChange: (v) => onChange({ [f.key]: v }), style: { minWidth: 180 } }, f.key) : /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { type: f.type === "number" ? "number" : "text", value: t[f.key], placeholder: f.label, onChange: (e) => onChange({ [f.key]: e.target.value }), style: { width: 200 } }, f.key)) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Space, { wrap: true, children: (def.fields || []).map((f) => f.type === "select" ? /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value: t[f.key], placeholder: f.label, options: f.options || [], onChange: (v) => onChange({ [f.key]: v }), style: { minWidth: 180 } }, f.key) : /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { type: ["number", "date"].includes(f.type) ? f.type : "text", value: t[f.key], placeholder: f.label, title: f.label, onChange: (e) => onChange({ [f.key]: e.target.value }), style: { width: f.width || 200 } }, f.key)) });
 }
 const ARCHIVES = [
   { value: "front", label: __("Front page", "memberglut") },
@@ -338,4 +341,4 @@ function RuleEditor() {
 function RuleEditorPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "rules", wide: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(RuleEditor, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(RuleEditorPage, {}));
+boot(RuleEditorPage);

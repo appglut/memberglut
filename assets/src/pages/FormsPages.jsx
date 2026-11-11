@@ -11,6 +11,7 @@ import SettingsPanel, { CopyCode } from '../components/SettingsPanel';
 import * as api from '../services/api';
 import { L, planOptions } from '../services/lookups';
 import { planPrice } from '../services/format';
+import { fieldOptions } from '../services/registry';
 
 const PAGE_SLOTS = [
   ['page_register', __( 'Registration & checkout', 'memberglut' ), '[memberglut_register]', __( 'Account fields, plan choice and payment. Plan signup links open this page.', 'memberglut' )],
@@ -23,7 +24,21 @@ const PAGE_SLOTS = [
 
 const LOCKED_KEYS = ['email', 'password'];
 const NO_PROFILE = ['password', 'password_confirm', 'username', 'email'];
-const FIELD_TYPES = (L.field_types || ['text', 'textarea', 'email', 'url', 'tel', 'number', 'date', 'select', 'radio', 'checkbox', 'country', 'hidden']).filter((t) => t !== 'password').map((t) => ({ value: t, label: t }));
+const FIELD_TYPES = (L.field_types || ['text', 'textarea', 'email', 'url', 'tel', 'number', 'date', 'select', 'radio', 'checkbox', 'country', 'hidden']).filter((t) => t !== 'password').map((t) => ({ value: t, label: (L.field_type_labels && L.field_type_labels[t]) || t }));
+/** Field types with a list of choices (add-ons add more through the lookups: choice_types). */
+const CHOICE_TYPES = L.choice_types || ['select', 'radio', 'checkbox'];
+
+/** Control of an add-on field option inside the field modal (value / onChange come from Form.Item). */
+function OptionControl({ o, value, onChange, fields }) {
+  if (o.render) return o.render({ value, onChange, fields });
+  switch (o.type) {
+    case 'switch': return <Switch checked={!!value} onChange={onChange} />;
+    case 'select': return <Select value={value} onChange={onChange} options={o.options || []} allowClear placeholder={o.placeholder} />;
+    case 'number': return <Input type="number" value={value} onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))} placeholder={o.placeholder} style={{ width: 160 }} />;
+    case 'textarea': return <Input.TextArea rows={o.rows || 3} value={value} onChange={(e) => onChange(e.target.value)} placeholder={o.placeholder} />;
+    default: return <Input value={value} onChange={(e) => onChange(e.target.value)} placeholder={o.placeholder} />;
+  }
+}
 
 function FieldBuilder({ values, update }) {
   const [editing, setEditing] = useState(null); // index or 'new'
@@ -36,13 +51,20 @@ function FieldBuilder({ values, update }) {
     setEditing(i);
     form.setFieldsValue(i === 'new' ? { type: 'text', label: '', key: '', options: '', required: false } : list[i]);
   };
+  const current = editing !== null && editing !== 'new' ? list[editing] : null;
+  const isCore = !!current && !current.custom;
+  const extraOptions = fieldOptions().filter((o) => (!isCore || o.core) && (!o.types || o.types.includes(type)));
   const save = async () => {
     const v = await form.validateFields();
+    const extra = {};
+    fieldOptions().forEach((o) => { if (v[o.key] !== undefined) extra[o.key] = v[o.key]; });
     if (editing === 'new') {
       if (list.some((f) => f.key === v.key)) { form.setFields([{ name: 'key', errors: [__( 'This key is already used.', 'memberglut' )] }]); return; }
-      update('reg_fields', [...list, { ...v, on: true, required: !!v.required, custom: true }]);
+      update('reg_fields', [...list, { ...v, ...extra, on: true, required: !!v.required, custom: true }]);
+    } else if (isCore) {
+      set(editing, { label: v.label, required: LOCKED_KEYS.includes(current.key) ? true : !!v.required, ...extra });
     } else {
-      set(editing, { label: v.label, type: v.type, options: v.options || '', required: !!v.required });
+      set(editing, { label: v.label, type: v.type, options: v.options || '', required: !!v.required, ...extra });
     }
     setEditing(null);
   };
@@ -63,7 +85,7 @@ function FieldBuilder({ values, update }) {
               <Switch size="small" checked={locked || f.required} disabled={locked} onChange={(v) => set(i, { required: v })} />
               {locked ? <Tooltip title={__( 'Always shown', 'memberglut' )}><FontAwesomeIcon icon={faLock} className="mg-muted" /></Tooltip> : <Switch size="small" checked={f.on} onChange={(v) => set(i, { on: v })} />}
               <span>
-                {f.custom && <Button size="small" type="text" icon={<FontAwesomeIcon icon={faPen} />} onClick={() => open(i)} />}
+                {(f.custom || fieldOptions().some((o) => o.core)) && <Button size="small" type="text" icon={<FontAwesomeIcon icon={faPen} />} onClick={() => open(i)} />}
                 {f.custom && <Button size="small" type="text" danger icon={<FontAwesomeIcon icon={faTrashCan} />} onClick={() => update('reg_fields', list.filter((x, j) => j !== i))} />}
               </span>
             </div>
@@ -78,10 +100,15 @@ function FieldBuilder({ values, update }) {
           <Form.Item name="label" label={__( 'Label', 'memberglut' )} rules={[{ required: true, message: __( 'Enter a label.', 'memberglut' ) }]}><Input placeholder={__( 'Company', 'memberglut' )} onChange={(e) => { if (editing === 'new' && !form.isFieldTouched('key')) form.setFieldValue('key', e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '')); }} /></Form.Item>
           <div className="mg-form-grid">
             <Form.Item name="key" label={__( 'Meta key', 'memberglut' )} rules={[{ required: true, pattern: /^[a-z0-9_]+$/, message: __( 'Lowercase letters, numbers and _ only.', 'memberglut' ) }]}><Input placeholder="company" disabled={editing !== 'new'} /></Form.Item>
-            <Form.Item name="type" label={__( 'Type', 'memberglut' )}><Select options={FIELD_TYPES} /></Form.Item>
+            <Form.Item name="type" label={__( 'Type', 'memberglut' )}><Select options={isCore ? [{ value: type, label: type }] : FIELD_TYPES} disabled={isCore} showSearch optionFilterProp="label" /></Form.Item>
           </div>
-          {['select', 'radio', 'checkbox'].includes(type) && <Form.Item name="options" label={__( 'Choices', 'memberglut' )} extra={__( 'One per line. Use value|Label to store a different value.', 'memberglut' )}><Input.TextArea rows={4} /></Form.Item>}
-          <Form.Item name="required" valuePropName="checked" label={__( 'Required', 'memberglut' )}><Switch /></Form.Item>
+          {!isCore && CHOICE_TYPES.includes(type) && <Form.Item name="options" label={__( 'Choices', 'memberglut' )} extra={__( 'One per line. Use value|Label to store a different value.', 'memberglut' )}><Input.TextArea rows={4} /></Form.Item>}
+          <Form.Item name="required" valuePropName="checked" label={__( 'Required', 'memberglut' )}><Switch disabled={!!current && LOCKED_KEYS.includes(current.key)} /></Form.Item>
+          {extraOptions.map((o) => (
+            <Form.Item key={o.key} name={o.key} label={o.label} extra={o.tip}>
+              <OptionControl o={o} fields={list} />
+            </Form.Item>
+          ))}
         </Form>
       </Modal>
     </div>

@@ -181,7 +181,8 @@ class MemberGlut_Auth {
 
 		$clean = array();
 		if ( ! $user_id ) {
-			list( $clean, $field_errors ) = MemberGlut_Fields::validate( MemberGlut_Fields::registration_fields(), $input );
+			$form                         = isset( $data['mg_form'] ) ? sanitize_key( (string) $data['mg_form'] ) : '';
+			list( $clean, $field_errors ) = MemberGlut_Fields::validate( MemberGlut_Fields::registration_fields( array( 'plan' => $plan, 'form' => $form ) ), $input );
 			$errors                       = array_merge( $errors, $field_errors );
 			$email                        = isset( $clean['email'] ) ? $clean['email'] : '';
 			if ( $email && empty( $errors['email'] ) ) {
@@ -264,7 +265,7 @@ class MemberGlut_Auth {
 		}
 
 		if ( $new_user ) {
-			do_action( 'memberglut_user_registered', $user_id, array( 'plan' => $plan, 'source' => 'registration' ) );
+			do_action( 'memberglut_user_registered', $user_id, array( 'plan' => $plan, 'source' => 'registration', 'form' => isset( $data['mg_form'] ) ? sanitize_key( (string) $data['mg_form'] ) : '' ) );
 			if ( ! $approved ) {
 				MemberGlut_Approval::start( $user_id, $mode );
 			}
@@ -398,7 +399,9 @@ class MemberGlut_Auth {
 			if ( in_array( $code, array( 'invalid_username', 'invalid_email', 'incorrect_password' ), true ) ) {
 				return new WP_Error( 'memberglut_login_failed', __( 'The username / email or password is not correct.', 'memberglut' ), array( 'status' => 401 ) );
 			}
-			return new WP_Error( $code, $user->get_error_message(), array( 'status' => 401 ) );
+			// Keep the data of add-on errors (e.g. fields => [ code => message ] of a second factor).
+			$data = $user->get_error_data();
+			return new WP_Error( $code, $user->get_error_message(), array_merge( array( 'status' => 401 ), is_array( $data ) ? $data : array() ) );
 		}
 		wp_set_current_user( $user->ID );
 		return array( 'redirect' => MemberGlut_Redirects::after_login( $user->ID, isset( $data['redirect_to'] ) ? (string) $data['redirect_to'] : '' ) );
@@ -447,7 +450,7 @@ class MemberGlut_Auth {
 		}
 		$p1 = isset( $data['pass1'] ) ? (string) $data['pass1'] : '';
 		$p2 = isset( $data['pass2'] ) ? (string) $data['pass2'] : '';
-		$ok = MemberGlut_Fields::check_password( $p1 );
+		$ok = MemberGlut_Fields::check_password( $p1, $user->ID );
 		if ( true !== $ok ) {
 			return new WP_Error( 'memberglut_weak', $ok, array( 'status' => 400, 'fields' => array( 'pass1' => $ok ) ) );
 		}

@@ -235,7 +235,7 @@ class MemberGlut_Shortcodes {
 	 * @return string
 	 */
 	public static function register( $atts = array() ) {
-		$a = shortcode_atts( array( 'plan' => '', 'redirect' => '' ), $atts, 'memberglut_register' );
+		$a = shortcode_atts( array( 'plan' => '', 'redirect' => '', 'form' => '' ), $atts, 'memberglut_register' );
 		MemberGlut_Assets::need();
 		MemberGlut_Cache::no_cache();
 		$user_id = get_current_user_id();
@@ -275,8 +275,14 @@ class MemberGlut_Shortcodes {
 			'forms/register.php',
 			array(
 				'user_id'     => $user_id,
-				'fields'      => $user_id ? array() : MemberGlut_Fields::registration_fields(),
-				'values'      => $posted,
+				'fields'      => $user_id ? array() : MemberGlut_Fields::registration_fields( array( 'plan' => $plan, 'plans' => $plan ? array() : $plans, 'form' => sanitize_key( $a['form'] ) ) ),
+				/**
+				 * Values shown in the registration form (after a failed submission, or restored by an add-on).
+				 *
+				 * @param array $posted Values (field key => value).
+				 * @param array $a      Shortcode attributes.
+				 */
+				'values'      => (array) apply_filters( 'memberglut_register_form_values', $posted, $a ),
 				'errors'      => self::field_errors( $result ),
 				'notice'      => self::notice( $result ),
 				'plan'        => $plan,
@@ -289,7 +295,7 @@ class MemberGlut_Shortcodes {
 				'agreements'  => ( $user_id ? '' : MemberGlut_Agreements::render( 'register' ) ),
 				'checkout'    => $checkout,
 				'guard'       => MemberGlut_Form_Guard::render( 'register' ),
-				'hidden'      => self::form_hidden( 'register', self::requested_redirect( $a['redirect'] ) ),
+				'hidden'      => self::form_hidden( 'register', self::requested_redirect( $a['redirect'] ) ) . ( $a['form'] ? '<input type="hidden" name="mg_form" value="' . esc_attr( sanitize_key( $a['form'] ) ) . '">' : '' ),
 				'ajax'        => (bool) memberglut_form_setting( 'reg_ajax', true ),
 				'selected'    => is_wp_error( $result ) && isset( $_POST['plan'] ) ? sanitize_text_field( wp_unslash( $_POST['plan'] ) ) : ( $plan ? $plan['id'] : '' ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			)

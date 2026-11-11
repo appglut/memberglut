@@ -103,6 +103,7 @@ MemberGlut turns your WordPress site into a membership site in minutes.
 * Custom login URL and redirect away from wp-login.php
 * Redirects after login, logout and registration (also per role)
 * Pricing table with cards, comparison or list layout
+* Brand the WordPress login page (logo, colours, background)
 
 = 🛡️ Security =
 
@@ -113,6 +114,8 @@ MemberGlut turns your WordPress site into a membership site in minutes.
 * Hide the admin bar by role
 * Block wp-admin by role
 * Login history for every member
+* Email alerts for new-device logins and suspicious activity
+* Security badge shortcode
 
 = 🔐 Privacy & GDPR =
 
@@ -138,6 +141,9 @@ MemberGlut turns your WordPress site into a membership site in minutes.
 * Add and remove capabilities
 * Set the default role for new users
 * Import and export roles
+* Role hierarchy: users only manage users below their level
+* Per role: allow or block editing the profile and deleting the account
+* Restrict this page from the front-end toolbar
 
 = ✉️ Emails =
 
@@ -170,6 +176,10 @@ MemberGlut turns your WordPress site into a membership site in minutes.
 = ⚙️ For Developers =
 
 * REST API
+* WP-CLI commands (wp memberglut plans, members, grant, revoke, run)
+* WordPress Abilities API (AI / MCP): list plans and members, give and remove plans
+* Elementor widget and show/hide by plan for Elementor, Beaver Builder and Bricks elements
+* Easy Digital Downloads and GiveWP: give a plan on purchase or donation
 * Template overrides in your theme
 * 100+ actions and filters
 * Background jobs with Action Scheduler

@@ -2,7 +2,7 @@ import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faChevronLeft, faStar } from '@fortawesome/free-solid-svg-icons';
-import { _pg, _dashboard, _pluginUrl } from './adminData';
+import { _pg, _dashboard, _pluginUrl, _isPro } from './adminData';
 import NavMenu from './NavMenu';
 
 export { _pg };
@@ -39,8 +39,8 @@ export default function Header({ active }) {
         ))}
       </nav>
       <div className="mg-header-right">
-        <a href={_pg.pro_features} className="mg-header-pro">
-          <FontAwesomeIcon icon={faStar} /> {__( 'Go Pro', 'memberglut' )}
+        <a href={_pg.pro_features} className={`mg-header-pro ${_isPro ? 'is-active' : ''}`}>
+          <FontAwesomeIcon icon={faStar} /> {_isPro ? __( 'Pro', 'memberglut' ) : __( 'Go Pro', 'memberglut' )}
         </a>
       </div>
     </header>

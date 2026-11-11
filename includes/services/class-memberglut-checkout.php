@@ -148,7 +148,7 @@ class MemberGlut_Checkout {
 		}
 		$renew   = self::renewable_sub( $user_id, $plan );
 		$current = $user_id && ! $renew ? MemberGlut_Subscription_Service::in_group( $user_id, $plan['group'] ) : null;
-		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $current, 'renewal' => (bool) $renew ) );
+		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $current, 'renewal' => (bool) $renew, 'data' => $data ) );
 		if ( self::needs_gateway( $s ) && ! self::is_downgrade( $current, $plan ) ) {
 			$gateways = self::gateways_for( $plan );
 			$chosen   = isset( $data['gateway'] ) ? sanitize_key( $data['gateway'] ) : '';
@@ -227,7 +227,7 @@ class MemberGlut_Checkout {
 		if ( is_wp_error( $coupon ) ) {
 			return $coupon;
 		}
-		$s        = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $current ) );
+		$s        = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $current, 'data' => $data, 'current' => $current ) );
 		$gateway  = self::needs_gateway( $s ) ? MemberGlut_Gateways::get( isset( $data['gateway'] ) ? sanitize_key( $data['gateway'] ) : '' ) : MemberGlut_Gateways::get( 'free' );
 		if ( ! $gateway || ( 'free' !== $gateway->id && ! isset( self::gateways_for( $plan )[ $gateway->id ] ) ) ) {
 			return new WP_Error( 'memberglut_gateway', __( 'Choose a payment method.', 'memberglut' ), array( 'status' => 400, 'fields' => array( 'gateway' => __( 'Choose a payment method.', 'memberglut' ) ) ) );
@@ -255,6 +255,8 @@ class MemberGlut_Checkout {
 				'allow_duplicate' => false,
 				'meta'            => array(
 					'awaiting_payment' => true,
+					'currency'         => $s['currency'],
+					'renewal_tax'      => isset( $s['renewal_tax'] ) ? (float) $s['renewal_tax'] : 0.0,
 					'redirect_to'      => isset( $data['redirect_to'] ) ? esc_url_raw( (string) $data['redirect_to'] ) : '',
 					// 100 % off every payment: nothing will ever be billed, access lasts until canceled.
 					'free_forever'     => $s['recurring'] && ! $s['renewal'] && 'free' === $gateway->id,
@@ -312,7 +314,7 @@ class MemberGlut_Checkout {
 		if ( is_wp_error( $coupon ) ) {
 			return $coupon;
 		}
-		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user->ID, array( 'renewal' => true ) );
+		$s       = MemberGlut_Pricing::summary( $plan, $coupon, $user->ID, array( 'renewal' => true, 'data' => $data ) );
 		$gateway = self::needs_gateway( $s ) ? MemberGlut_Gateways::get( isset( $data['gateway'] ) ? sanitize_key( $data['gateway'] ) : '' ) : MemberGlut_Gateways::get( 'free' );
 		if ( ! $gateway || ( 'free' !== $gateway->id && ! isset( self::gateways_for( $plan )[ $gateway->id ] ) ) ) {
 			return new WP_Error( 'memberglut_gateway', __( 'Choose a payment method.', 'memberglut' ), array( 'status' => 400, 'fields' => array( 'gateway' => __( 'Choose a payment method.', 'memberglut' ) ) ) );
@@ -532,7 +534,9 @@ class MemberGlut_Checkout {
 	public static function summary_html( $s ) {
 		$html = '<table class="mg-summary-table"><tbody>';
 		foreach ( $s['lines'] as $line ) {
-			$html .= '<tr><th>' . esc_html( $line['label'] ) . '</th><td>' . esc_html( ( $line['amount'] < 0 ? '−' : '' ) . memberglut_format_price( abs( $line['amount'] ), $s['currency'] ) ) . '</td></tr>';
+			// Lines may carry a text instead of an amount (e.g. “incl. VAT 21%: €1.74”).
+			$value = isset( $line['info'] ) ? (string) $line['info'] : ( $line['amount'] < 0 ? '−' : '' ) . memberglut_format_price( abs( $line['amount'] ), $s['currency'] );
+			$html .= '<tr><th>' . esc_html( $line['label'] ) . '</th><td>' . esc_html( $value ) . '</td></tr>';
 		}
 		$html .= '<tr class="mg-total"><th>' . esc_html__( 'Due today', 'memberglut' ) . '</th><td>' . esc_html( memberglut_format_price( $s['total'], $s['currency'] ) ) . '</td></tr>';
 		$html .= '</tbody></table><p class="mg-summary-text">' . esc_html( $s['text'] ) . '</p>';

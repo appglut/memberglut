@@ -43,8 +43,12 @@ class MemberGlut_Pricing {
 	 * @param array      $plan    Plan.
 	 * @param array|null $coupon  Coupon row (already validated).
 	 * @param int        $user_id User.
-	 * @param array      $context change (bool): plan change of an existing member; renewal (bool): early renewal, no sign-up fee.
-	 * @return array
+	 * @param array      $context change (bool): plan change of an existing member; renewal (bool): early renewal, no sign-up fee;
+	 *                            data (array): submitted checkout form (extra checkout fields of add-ons);
+	 *                            current (array|null): subscription being changed.
+	 * @return array Summary. Add-ons may also set: period_price (amount of each period before coupons, used by
+	 *               gateways for recurring prices), first_credit (one-time credit on the first charge, e.g. proration),
+	 *               renewal_tax, and meta (array saved in the payment's meta).
 	 */
 	public static function summary( $plan, $coupon = null, $user_id = 0, $context = array() ) {
 		$currency  = memberglut_setting( 'currency', 'USD' );
@@ -92,6 +96,10 @@ class MemberGlut_Pricing {
 			'coupon_recurring' => $coupon ? (bool) $coupon['recurring'] : false,
 			'change'        => $change,
 			'lines'         => $lines,
+			'period_price'  => memberglut_round( $price, $currency ),
+			'first_credit'  => 0.0,
+			'renewal_tax'   => 0.0,
+			'meta'          => array(),
 		);
 		$s['text'] = self::describe( $s, $plan );
 		return apply_filters( 'memberglut_order_summary', $s, $plan, $coupon, $user_id, $context );

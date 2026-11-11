@@ -1,17 +1,20 @@
-import { a8 as __, bk as faGear, bP as faShieldHalved, bK as faRightToBracket, aN as faArrowsTurnRight, b2 as faCircleUser, b6 as faCreditCard, ba as faEnvelope, c1 as faUserLock, c5 as faUserShield, bO as faScaleBalanced, bQ as faSliders, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
-import { C as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CZprfnRR.js";
-import { S as Select, ak as getSettings, aN as saveSettings } from "./chunks/api-C3opcxY4.js";
-import { c as roleOptions$1, L, p as pageOptions$1 } from "./chunks/lookups-cQsk1BIx.js";
-import { F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { S as Spin } from "./chunks/index-D6ChUS7m.js";
-import "./chunks/index-DPM4vg2p.js";
-import "./chunks/index-8aTEZ5cr.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/index-B15yPtij.js";
-import "./chunks/index-BQU-XdN2.js";
-import "./chunks/index-DYGuXoRz.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
+import { ag as __, bz as faGear, c3 as faShieldHalved, b_ as faRightToBracket, b0 as faArrowsTurnRight, bh as faCircleUser, bl as faCreditCard, bp as faEnvelope, ch as faUserLock, bP as faPalette, cl as faUserShield, c2 as faScaleBalanced, c4 as faSliders, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports } from "./chunks/client-CTTyQOnd.js";
+import { a as CopyCode, S as SettingsPanel } from "./chunks/SettingsPanel-CL4JwW_5.js";
+import { S as Select, aq as getSettings, aV as saveSettings } from "./chunks/api-BoF1RtIE.js";
+import { c as roleOptions$1, L, p as pageOptions$1 } from "./chunks/lookups-2moJUDPH.js";
+import { F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { S as Spin } from "./chunks/index-n8Z4Xk8Z.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/registry-Cs5PTTmS.js";
+import "./chunks/index-BedyQTUQ.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-BoUobS93.js";
+import "./chunks/index-C6h9-TWP.js";
+import "./chunks/index-DLAXZnY0.js";
+import "./chunks/index-DNVHX8xZ.js";
+import "./chunks/index-42CDOxMR.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
 const roleOptions = roleOptions$1();
 const freePlanOptions = L.plans.filter((p) => p.type === "free" && p.status === "active").map((p) => ({ value: p.id, label: p.name }));
 const pageOptions = pageOptions$1();
@@ -126,6 +129,22 @@ const DEFAULTS = {
   lockout_minutes: 15,
   honeypot: true,
   logout_on_close: false,
+  new_device_alert: false,
+  suspicious_alert: true,
+  // Login page design
+  login_style: false,
+  login_logo: "",
+  login_logo_width: 84,
+  login_hide_logo: false,
+  login_bg_color: "",
+  login_bg_image: "",
+  login_form_bg: "",
+  login_form_transparent: false,
+  login_text_color: "",
+  login_button_color: "",
+  login_radius: 8,
+  login_hide_back: false,
+  login_custom_css: "",
   captcha_provider: "none",
   captcha_on: ["register", "login"],
   recaptcha_version: "v3",
@@ -433,7 +452,30 @@ const SECTIONS = [
       { key: "failed_attempts", type: "number", label: __("Allowed attempts", "memberglut"), min: 2, max: 20, show: (v) => v.limit_failed },
       { key: "lockout_minutes", type: "number", label: __("Lock for", "memberglut"), suffix: __("minutes", "memberglut"), min: 1, max: 1440, show: (v) => v.limit_failed },
       { key: "honeypot", type: "switch", label: __("Honeypot on forms", "memberglut"), tip: __("A hidden field that catches bots without bothering people.", "memberglut") },
-      { key: "logout_on_close", type: "switch", label: __("Log out when the browser closes", "memberglut"), tip: __("Ignores “Remember me”.", "memberglut") }
+      { key: "logout_on_close", type: "switch", label: __("Log out when the browser closes", "memberglut"), tip: __("Ignores “Remember me”.", "memberglut") },
+      { key: "new_device_alert", type: "switch", label: __("Email members about new-device logins", "memberglut"), tip: __("Sends the “New device login” email when an account logs in from a device or network it never used. Edit the text in Emails.", "memberglut") },
+      { key: "suspicious_alert", type: "switch", label: __("Email the admin about suspicious activity", "memberglut"), tip: __("When a login is locked after failed attempts, or one account logs in from many IP addresses within an hour. At most one email per account or IP per hour.", "memberglut") }
+    ]
+  },
+  {
+    key: "login_design",
+    title: __("Login page design", "memberglut"),
+    icon: faPalette,
+    desc: __("Brand the WordPress login screen (wp-login.php). Your MemberGlut front-end forms follow your theme instead.", "memberglut"),
+    fields: [
+      { key: "login_style", type: "switch", label: __("Customize the WordPress login page", "memberglut"), tip: __("The logo also links to your home page instead of wordpress.org.", "memberglut") },
+      { key: "login_logo", type: "url", label: __("Logo URL", "memberglut"), tip: __("Empty keeps the WordPress logo.", "memberglut"), placeholder: site + "/wp-content/uploads/logo.png", show: (v) => v.login_style },
+      { key: "login_logo_width", type: "number", label: __("Logo width", "memberglut"), suffix: "px", min: 40, max: 320, show: (v) => v.login_style && v.login_logo },
+      { key: "login_hide_logo", type: "switch", label: __("Hide the logo", "memberglut"), show: (v) => v.login_style && !v.login_logo },
+      { key: "login_bg_color", type: "color", label: __("Background colour", "memberglut"), show: (v) => v.login_style },
+      { key: "login_bg_image", type: "url", label: __("Background image URL", "memberglut"), show: (v) => v.login_style },
+      { key: "login_form_transparent", type: "switch", label: __("Transparent form", "memberglut"), show: (v) => v.login_style },
+      { key: "login_form_bg", type: "color", label: __("Form background", "memberglut"), show: (v) => v.login_style && !v.login_form_transparent },
+      { key: "login_text_color", type: "color", label: __("Text and link colour", "memberglut"), show: (v) => v.login_style },
+      { key: "login_button_color", type: "color", label: __("Button colour", "memberglut"), show: (v) => v.login_style },
+      { key: "login_radius", type: "number", label: __("Corner radius", "memberglut"), suffix: "px", min: 0, max: 32, show: (v) => v.login_style },
+      { key: "login_hide_back", type: "switch", label: __("Hide “Go to site” link", "memberglut"), show: (v) => v.login_style },
+      { key: "login_custom_css", type: "code", label: __("Extra CSS", "memberglut"), rows: 4, placeholder: ".login form { box-shadow: none; }", show: (v) => v.login_style }
     ]
   },
   {
@@ -532,4 +574,4 @@ function Settings() {
 function SettingsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "settings", wide: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(SettingsPage, {}));
+boot(SettingsPage);

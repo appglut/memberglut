@@ -1,17 +1,20 @@
-import { cW as jsxRuntimeExports, P as Page, d9 as reactExports, E as PageHeader, c as Button, a8 as __, cX as link, q as FontAwesomeIcon, bP as faShieldHalved, bs as faLayerGroup, bF as faPlus, a0 as Skeleton, a1 as StatCard, c8 as faUsers, bN as faSackDollar, c3 as faUserPlus, bo as faHourglassHalf, aI as faArrowRight, b0 as faCircleCheck, a$ as faCircle, bK as faRightToBracket, b$ as faUserClock, c7 as faUserXmark, b6 as faCreditCard, b3 as faClockRotateLeft, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { dl as jsxRuntimeExports, P as Page, dB as reactExports, O as PageHeader, d as Button, ag as __, dm as link, u as FontAwesomeIcon, c3 as faShieldHalved, bH as faLayerGroup, bV as faPlus, a6 as Skeleton, a7 as StatCard, co as faUsers, c1 as faSackDollar, cj as faUserPlus, bD as faHourglassHalf, aX as faArrowRight, bf as faCircleCheck, be as faCircle, b_ as faRightToBracket, cf as faUserClock, cn as faUserXmark, bl as faCreditCard, bi as faClockRotateLeft } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { C as CopyCode } from "./chunks/SettingsPanel-CZprfnRR.js";
-import { am as getStats, ae as getPlans, a0 as getEvents, al as getSetupChecklist, E as Empty, T as Tooltip } from "./chunks/api-C3opcxY4.js";
-import { d as dayjs } from "./chunks/lookups-cQsk1BIx.js";
-import { m as money, f as fromNow } from "./chunks/format-DZEqfpos.js";
-import { S as Segmented } from "./chunks/index-B15yPtij.js";
-import { P as Progress } from "./chunks/progress-C7I7l5SB.js";
-import "./chunks/index-DPM4vg2p.js";
-import "./chunks/index-8aTEZ5cr.js";
-import "./chunks/index-D-BW9vN4.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/index-BQU-XdN2.js";
-import "./chunks/index-DYGuXoRz.js";
+import { a as CopyCode } from "./chunks/SettingsPanel-CL4JwW_5.js";
+import { as as getStats, ak as getPlans, a6 as getEvents, ar as getSetupChecklist, E as Empty, T as Tooltip } from "./chunks/api-BoF1RtIE.js";
+import { d as dayjs } from "./chunks/lookups-2moJUDPH.js";
+import { m as money, b as fromNow } from "./chunks/format-CXuEAMXg.js";
+import { S as Segmented } from "./chunks/index-BoUobS93.js";
+import { P as Progress } from "./chunks/progress-Dds9qb8O.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/registry-Cs5PTTmS.js";
+import "./chunks/index-BedyQTUQ.js";
+import "./chunks/index-D-VkJOw2.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-C6h9-TWP.js";
+import "./chunks/index-DLAXZnY0.js";
+import "./chunks/index-DNVHX8xZ.js";
+import "./chunks/index-42CDOxMR.js";
 function BarChart({ data, field, format }) {
   const max = Math.max(...data.map((d) => d[field]), 1);
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-bars", children: data.map((d, i) => {
@@ -176,4 +179,4 @@ function Dashboard() {
 function DashboardPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "dashboard", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Dashboard, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(DashboardPage, {}));
+boot(DashboardPage);

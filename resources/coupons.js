@@ -1,20 +1,29 @@
-import { a8 as __, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, q as FontAwesomeIcon, b5 as faCopy, bC as faPenToSquare, bX as faTrashCan, a2 as StatusBadge, E as PageHeader, c as Button, bg as faFileImport, bF as faPlus, p as Drawer, ca as faWandMagicSparkles, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { ag as __, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, u as FontAwesomeIcon, bk as faCopy, bS as faPenToSquare, cb as faTrashCan, a8 as StatusBadge, O as PageHeader, V as React, d as Button, bv as faFileImport, bV as faPlus, t as Drawer, cq as faWandMagicSparkles } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { a as planById, d as dayjs, L, b as planOptions } from "./chunks/lookups-cQsk1BIx.js";
-import { _ as getCoupons, w as deleteCoupon, ap as importCoupons, R as Radio, S as Select, aF as saveCoupon } from "./chunks/api-C3opcxY4.js";
-import { m as money, d as date } from "./chunks/format-DZEqfpos.js";
-import { P as Popconfirm } from "./chunks/index-BgJjhEIZ.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { P as Progress } from "./chunks/progress-C7I7l5SB.js";
-import { U as Upload } from "./chunks/index-BDu_JW7A.js";
-import { F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import { F as Form } from "./chunks/index--FwfDeQZ.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { T as TypedInputNumber, D as DatePicker } from "./chunks/index-BQU-XdN2.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
-import "./chunks/index-D6ChUS7m.js";
+import { a as planById, d as dayjs, L, b as planOptions } from "./chunks/lookups-2moJUDPH.js";
+import { a4 as getCoupons, z as deleteCoupon, av as importCoupons, R as Radio, S as Select, aN as saveCoupon } from "./chunks/api-BoF1RtIE.js";
+import { m as money, d as date } from "./chunks/format-CXuEAMXg.js";
+import { t as toolbarFor, s as sectionsFor } from "./chunks/registry-Cs5PTTmS.js";
+import { F as FieldControl } from "./chunks/SettingsPanel-CL4JwW_5.js";
+import { P as Popconfirm } from "./chunks/index-CmZYsh7n.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { P as Progress } from "./chunks/progress-Dds9qb8O.js";
+import { U as Upload } from "./chunks/index-B04HEf0N.js";
+import { F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { F as Form } from "./chunks/index-Cb3PZqfZ.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { T as TypedInputNumber } from "./chunks/index-C6h9-TWP.js";
+import { D as DatePicker } from "./chunks/index-DLAXZnY0.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/index-BedyQTUQ.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-BoUobS93.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
+import "./chunks/index-n8Z4Xk8Z.js";
+function ExtraField({ f, value, onChange }) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(FieldControl, { f, value, onChange, values: {} });
+}
 const STATUS = { active: __("Active", "memberglut"), scheduled: __("Scheduled", "memberglut"), expired: __("Expired", "memberglut"), inactive: __("Inactive", "memberglut") };
 function CouponDrawer({ coupon, onClose, onSave }) {
   const [form] = Form.useForm();
@@ -53,7 +62,11 @@ function CouponDrawer({ coupon, onClose, onSave }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "per_user", label: __("Uses per member", "memberglut"), extra: __("0 = unlimited", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { min: 0, style: { width: "100%" } }) })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "new_users_only", valuePropName: "checked", label: __("New customers only", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, {}) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "enabled", valuePropName: "checked", label: __("Enabled", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, {}) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "enabled", valuePropName: "checked", label: __("Enabled", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, {}) }),
+        sectionsFor("coupon").map((sec) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-drawer-section", children: [
+          sec.title && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-fs-subhead", children: sec.title }),
+          (sec.fields || []).map((f) => /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: f.key, label: f.label, extra: f.tip, children: /* @__PURE__ */ jsxRuntimeExports.jsx(ExtraField, { f }) }, f.key))
+        ] }, sec.key))
       ] })
     }
   );
@@ -63,8 +76,9 @@ function Coupons() {
   const [rows, setRows] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
   const [editing, setEditing] = reactExports.useState(null);
+  const load = () => getCoupons().then(setRows).catch((e) => message.error(e.message)).finally(() => setLoading(false));
   reactExports.useEffect(() => {
-    getCoupons().then(setRows).catch((e) => message.error(e.message)).finally(() => setLoading(false));
+    load();
   }, []);
   const save = async (v, form) => {
     try {
@@ -149,6 +163,7 @@ function Coupons() {
         title: __("Coupons", "memberglut"),
         subtitle: __("Discount codes for checkout: percent or fixed, per plan, with dates and usage limits.", "memberglut"),
         actions: /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          toolbarFor("coupons").map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: t.render({ reload: load, rows }) }, t.key)),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Upload, { accept: ".csv", showUploadList: false, beforeUpload: importCsv, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faFileImport }), children: __("Import CSV", "memberglut") }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "large", type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPlus }), onClick: () => setEditing({}), children: __("New coupon", "memberglut") })
         ] })
@@ -161,4 +176,4 @@ function Coupons() {
 function CouponsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "payments", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Coupons, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(CouponsPage, {}));
+boot(CouponsPage);

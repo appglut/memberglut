@@ -1,17 +1,18 @@
-import { aJ as faArrowRightFromBracket, a8 as __, bK as faRightToBracket, bw as faMessage, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, cX as link, q as FontAwesomeIcon, bt as faLink, bT as faTableColumns, c2 as faUserPen, aR as faBoxArchive, bj as faFolderTree, bh as faFileLines, bm as faGlobe, bC as faPenToSquare, b5 as faCopy, bX as faTrashCan, E as PageHeader, c as Button, bF as faPlus, a1 as StatCard, bP as faShieldHalved, c1 as faUserLock, bv as faMagnifyingGlass, b8 as faCubes, aP as faBars, b4 as faCode, bQ as faSliders, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { aY as faArrowRightFromBracket, ag as __, b_ as faRightToBracket, bL as faMessage, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, dm as link, u as FontAwesomeIcon, bI as faLink, c7 as faTableColumns, ci as faUserPen, b4 as faBoxArchive, by as faFolderTree, bw as faFileLines, bB as faGlobe, bS as faPenToSquare, bk as faCopy, cb as faTrashCan, O as PageHeader, d as Button, bV as faPlus, a7 as StatCard, c3 as faShieldHalved, ch as faUserLock, bK as faMagnifyingGlass, bn as faCubes, b2 as faBars, bj as faCode, c4 as faSliders } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { ai as getRuleStats, aa as getPerPostRules, aj as getRules, H as duplicateRule, A as deleteRule, aS as setRuleStatus } from "./chunks/api-C3opcxY4.js";
-import { f as fromNow } from "./chunks/format-DZEqfpos.js";
-import { L, r as roleName, a as planById } from "./chunks/lookups-cQsk1BIx.js";
-import { P as Popconfirm } from "./chunks/index-BgJjhEIZ.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import { T as Tabs } from "./chunks/index-DPM4vg2p.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
-import "./chunks/index-D6ChUS7m.js";
+import { ao as getRuleStats, ag as getPerPostRules, ap as getRules, O as duplicateRule, J as deleteRule, a_ as setRuleStatus } from "./chunks/api-BoF1RtIE.js";
+import { b as fromNow } from "./chunks/format-CXuEAMXg.js";
+import { L, r as roleName, a as planById } from "./chunks/lookups-2moJUDPH.js";
+import { P as Popconfirm } from "./chunks/index-CmZYsh7n.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { T as Tabs } from "./chunks/index-BedyQTUQ.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
+import "./chunks/index-n8Z4Xk8Z.js";
 const PROTECT_ICON = {
   site: faGlobe,
   post_type: faFileLines,
@@ -210,4 +211,4 @@ function ContentRules() {
 function ContentRulesPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "rules", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ContentRules, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(ContentRulesPage, {}));
+boot(ContentRulesPage);

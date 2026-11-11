@@ -218,21 +218,37 @@ class MemberGlut_Account {
 	public static function render_tab( $tab, $user ) {
 		switch ( $tab ) {
 			case 'dashboard':
-				return self::tab_dashboard( $user );
+				$html = self::tab_dashboard( $user );
+				break;
 			case 'profile':
-				return self::tab_profile( $user );
+				$html = self::tab_profile( $user );
+				break;
 			case 'password':
-				return self::tab_password( $user );
+				$html = self::tab_password( $user );
+				break;
 			case 'subscriptions':
-				return self::tab_subscriptions( $user );
+				$html = self::tab_subscriptions( $user );
+				break;
 			case 'payments':
-				return self::payments_table( $user->ID );
+				$html = self::payments_table( $user->ID );
+				break;
 			case 'activity':
-				return self::tab_activity( $user );
+				$html = self::tab_activity( $user );
+				break;
 			case 'delete':
-				return self::tab_delete( $user );
+				$html = self::tab_delete( $user );
+				break;
+			default:
+				$html = (string) apply_filters( 'memberglut_account_tab_content', '', $tab, $user );
 		}
-		return (string) apply_filters( 'memberglut_account_tab_content', '', $tab, $user );
+		/**
+		 * Final HTML of any My Account tab (add notices or blocks above / below the built-in tabs).
+		 *
+		 * @param string  $html HTML.
+		 * @param string  $tab  Tab.
+		 * @param WP_User $user Member.
+		 */
+		return (string) apply_filters( 'memberglut_account_tab_html', $html, $tab, $user );
 	}
 
 	/**
@@ -525,8 +541,15 @@ class MemberGlut_Account {
 			$plan   = $p['plan_id'] ? MemberGlut_Plans::get( $p['plan_id'] ) : null;
 			$rows[] = array(
 				'payment' => $p,
-				'plan'    => $plan ? $plan['name'] : '',
+				'plan'    => $plan ? $plan['name'] : ( isset( $p['meta']['label'] ) ? (string) $p['meta']['label'] : '' ),
 				'receipt' => ! empty( $p['meta']['key'] ) && memberglut_page_url( 'thanks' ) ? add_query_arg( array( 'mg_payment' => $p['id'], 'mg_key' => $p['meta']['key'] ), memberglut_page_url( 'thanks' ) ) : '',
+				/**
+				 * Extra links of a payment in My Account › Payments: [ [ label, url ] ] (e.g. an invoice).
+				 *
+				 * @param array $links   Links.
+				 * @param array $payment Payment.
+				 */
+				'links'   => (array) apply_filters( 'memberglut_account_payment_links', array(), $p ),
 			);
 		}
 		return memberglut_get_template( 'account/payments.php', array( 'rows' => $rows ) );
@@ -607,7 +630,10 @@ class MemberGlut_Account {
 		if ( ! memberglut_setting( 'tab_profile', true ) && ! has_shortcode( (string) get_post_field( 'post_content', get_queried_object_id() ), 'memberglut_profile' ) ) {
 			return self::disabled();
 		}
-		$input                    = isset( $data['mg'] ) && is_array( $data['mg'] ) ? $data['mg'] : array();
+		if ( ! MemberGlut_Roles_Service::user_may( $user->ID, 'edit_profile' ) ) {
+			return self::disabled();
+		}
+		$input                   = isset( $data['mg'] ) && is_array( $data['mg'] ) ? $data['mg'] : array();
 		list( $clean, $errors )   = MemberGlut_Fields::validate( self::profile_fields(), $input, $user->ID );
 		$email                    = isset( $input['email'] ) ? sanitize_email( (string) $input['email'] ) : $user->user_email;
 		$email_changed            = strtolower( $email ) !== strtolower( $user->user_email );
@@ -661,7 +687,7 @@ class MemberGlut_Account {
 		if ( ! wp_check_password( $current, $user->user_pass, $user->ID ) ) {
 			$errors['current_password'] = __( 'Your current password is not correct.', 'memberglut' );
 		}
-		$check = MemberGlut_Fields::check_password( $new );
+		$check = MemberGlut_Fields::check_password( $new, $user->ID );
 		if ( true !== $check ) {
 			$errors['password'] = $check;
 		} elseif ( $new !== $repeat ) {
@@ -721,6 +747,24 @@ class MemberGlut_Account {
 				}
 				set_transient( 'memberglut_card_' . $user->ID . '_' . $sub['id'], $r['secret'], HOUR_IN_SECONDS );
 				return array( 'redirect' => self::url( 'subscriptions', array( 'mg_card' => $sub['id'] ) ) . '#mg-card' );
+		}
+		/**
+		 * Run an add-on subscription action (one added with memberglut_account_subscription_actions, keyed by its op).
+		 * Return [ redirect ] / [ message ] or a WP_Error; null when the op is not yours.
+		 *
+		 * @param mixed   $result Result.
+		 * @param string  $op     Op.
+		 * @param array   $sub    Subscription.
+		 * @param array   $plan   Plan.
+		 * @param WP_User $user   Member.
+		 * @param array   $data   Submitted data.
+		 */
+		$res = apply_filters( 'memberglut_account_subscription_op', null, $op, $sub, $plan, $user, $data );
+		if ( null !== $res ) {
+			if ( is_array( $res ) && isset( $res['message'] ) && ! isset( $res['redirect'] ) ) {
+				return self::done( 'subscriptions', $res['message'] );
+			}
+			return $res;
 		}
 		return self::disabled();
 	}
@@ -813,6 +857,9 @@ class MemberGlut_Account {
 	public static function profile_shortcode() {
 		if ( ! is_user_logged_in() ) {
 			return MemberGlut_Shortcodes::login( array( 'redirect' => self::current_url() ) );
+		}
+		if ( ! MemberGlut_Roles_Service::user_may( get_current_user_id(), 'edit_profile' ) ) {
+			return '';
 		}
 		MemberGlut_Assets::need();
 		MemberGlut_Cache::no_cache();

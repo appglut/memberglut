@@ -10,6 +10,13 @@ import Page, { PageHeader, StatusBadge } from '../components/Page';
 import * as api from '../services/api';
 import { money, date } from '../services/format';
 import { L, planOptions, planById } from '../services/lookups';
+import { sectionsFor, toolbarFor } from '../services/registry';
+import { FieldControl } from '../components/SettingsPanel';
+
+/** Field of an add-on coupon section inside the drawer form (value / onChange come from Form.Item). */
+function ExtraField({ f, value, onChange }) {
+  return <FieldControl f={f} value={value} onChange={onChange} values={{}} />;
+}
 
 const STATUS = { active: __( 'Active', 'memberglut' ), scheduled: __( 'Scheduled', 'memberglut' ), expired: __( 'Expired', 'memberglut' ), inactive: __( 'Inactive', 'memberglut' ) };
 
@@ -44,6 +51,14 @@ function CouponDrawer({ coupon, onClose, onSave }) {
         </div>
         <Form.Item name="new_users_only" valuePropName="checked" label={__( 'New customers only', 'memberglut' )}><Switch /></Form.Item>
         <Form.Item name="enabled" valuePropName="checked" label={__( 'Enabled', 'memberglut' )}><Switch /></Form.Item>
+        {sectionsFor('coupon').map((sec) => (
+          <div key={sec.key} className="mg-drawer-section">
+            {sec.title && <div className="mg-fs-subhead">{sec.title}</div>}
+            {(sec.fields || []).map((f) => (
+              <Form.Item key={f.key} name={f.key} label={f.label} extra={f.tip}><ExtraField f={f} /></Form.Item>
+            ))}
+          </div>
+        ))}
       </Form>
     </Drawer>
   );
@@ -55,7 +70,8 @@ function Coupons() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(null);
 
-  useEffect(() => { api.getCoupons().then(setRows).catch((e) => message.error(e.message)).finally(() => setLoading(false)); }, []);
+  const load = () => api.getCoupons().then(setRows).catch((e) => message.error(e.message)).finally(() => setLoading(false));
+  useEffect(() => { load(); }, []);
 
   const save = async (v, form) => {
     try {
@@ -111,6 +127,7 @@ function Coupons() {
         subtitle={__( 'Discount codes for checkout: percent or fixed, per plan, with dates and usage limits.', 'memberglut' )}
         actions={(
           <>
+            {toolbarFor('coupons').map((t) => <React.Fragment key={t.key}>{t.render({ reload: load, rows })}</React.Fragment>)}
             <Upload accept=".csv" showUploadList={false} beforeUpload={importCsv}>
               <Button size="large" icon={<FontAwesomeIcon icon={faFileImport} />}>{__( 'Import CSV', 'memberglut' )}</Button>
             </Upload>

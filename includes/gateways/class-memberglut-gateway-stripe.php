@@ -181,16 +181,18 @@ class MemberGlut_Gateway_Stripe extends MemberGlut_Gateway {
 	/**
 	 * Recurring price of a plan for its current amount and interval (a new price when they change).
 	 *
-	 * @param array  $plan     Plan.
-	 * @param string $currency Currency.
+	 * @param array      $plan     Plan.
+	 * @param string     $currency Currency.
+	 * @param float|null $amount   Amount of each period (order summary period_price: tax, currency or member price
+	 *                             added by add-ons); null = plan price.
 	 * @return string|WP_Error
 	 */
-	public function price( $plan, $currency ) {
+	public function price( $plan, $currency, $amount = null ) {
 		$product = $this->product( $plan );
 		if ( is_wp_error( $product ) ) {
 			return $product;
 		}
-		$amount = memberglut_to_minor( $plan['price'], $currency );
+		$amount = memberglut_to_minor( null === $amount ? $plan['price'] : (float) $amount, $currency );
 		$sig    = md5( strtolower( $currency ) . '|' . $amount . '|' . $plan['duration']['unit'] . '|' . $plan['duration']['length'] );
 		$ids    = MemberGlut_Plans::gateway_ids( $plan['id'] );
 		$k      = 'stripe_' . $this->mode();
@@ -296,7 +298,7 @@ class MemberGlut_Gateway_Stripe extends MemberGlut_Gateway {
 			return array( 'client' => array( 'gateway' => 'stripe', 'type' => 'payment', 'secret' => $pi['client_secret'], 'return_url' => $this->return_url( $payment ), 'amount' => memberglut_to_minor( $s['total'], $currency ), 'currency' => $currency ) );
 		}
 
-		$price = $this->price( $plan, $s['currency'] );
+		$price = $this->price( $plan, $s['currency'], isset( $s['period_price'] ) ? $s['period_price'] : null );
 		if ( is_wp_error( $price ) ) {
 			return $price;
 		}
@@ -332,6 +334,34 @@ class MemberGlut_Gateway_Stripe extends MemberGlut_Gateway {
 				$params['discounts'] = array( array( 'coupon' => $coupon ) );
 			}
 		}
+		if ( ! empty( $s['first_credit'] ) && $s['first_credit'] > 0 ) {
+			// One-time credit on the first invoice (e.g. proration of the plan being replaced).
+			$credit = $this->api(
+				'POST',
+				'coupons',
+				array(
+					'duration'   => 'once',
+					'amount_off' => memberglut_to_minor( $s['first_credit'], $currency ),
+					'currency'   => $currency,
+					'name'       => __( 'Credit', 'memberglut' ),
+					'max_redemptions' => 1,
+					'metadata'   => array( 'memberglut_payment' => $payment['id'] ),
+				),
+				'mg-credit-' . $payment['id']
+			);
+			if ( is_wp_error( $credit ) ) {
+				return $credit;
+			}
+			$params['discounts']   = isset( $params['discounts'] ) ? $params['discounts'] : array();
+			$params['discounts'][] = array( 'coupon' => $credit['id'] );
+		}
+		/**
+		 * Stripe subscription parameters before the subscription is created (e.g. tax rates, cancel_at, metadata).
+		 *
+		 * @param array $params Params.
+		 * @param array $ctx    Checkout context: user, plan, summary, payment, subscription, data.
+		 */
+		$params = (array) apply_filters( 'memberglut_stripe_subscription_params', $params, $ctx );
 		$stripe_sub = $this->api( 'POST', 'subscriptions', $params, 'mg-sub-' . $payment['id'] );
 		if ( is_wp_error( $stripe_sub ) ) {
 			return $stripe_sub;
@@ -501,7 +531,7 @@ class MemberGlut_Gateway_Stripe extends MemberGlut_Gateway {
 		if ( is_wp_error( $s ) ) {
 			return $s;
 		}
-		$price = $this->price( $plan, isset( $s['currency'] ) ? $s['currency'] : memberglut_setting( 'currency', 'USD' ) );
+		$price = $this->price( $plan, isset( $s['currency'] ) ? $s['currency'] : memberglut_setting( 'currency', 'USD' ), apply_filters( 'memberglut_change_price_amount', null, $sub, $plan ) );
 		if ( is_wp_error( $price ) ) {
 			return $price;
 		}

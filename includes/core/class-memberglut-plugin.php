@@ -40,6 +40,7 @@ final class MemberGlut_Plugin {
 		MemberGlut_Install::init();
 		MemberGlut_Scheduler::init();
 		MemberGlut_REST::init();
+		MemberGlut_CLI::register();
 
 		/**
 		 * Components: each class has a static init() that adds its hooks.
@@ -80,6 +81,11 @@ final class MemberGlut_Plugin {
 			'MemberGlut_Block_Visibility',
 			'MemberGlut_Auth',
 			'MemberGlut_Login_Screen',
+			'MemberGlut_Login_Style',
+			'MemberGlut_Security_Alerts',
+			'MemberGlut_Admin_Bar',
+			'MemberGlut_Integrations',
+			'MemberGlut_Abilities',
 			'MemberGlut_Approval',
 			'MemberGlut_Security',
 			'MemberGlut_Captcha',

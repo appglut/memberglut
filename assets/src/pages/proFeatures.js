@@ -10,7 +10,7 @@ export const PRO_GROUPS = [
   {
     key: 'protection', icon: faShieldHalved, title: 'Advanced content protection', features: [
       { name: 'Content dripping', desc: 'Release posts, lessons or whole categories a set number of days after a member joins, or on a fixed date. Members see when each item unlocks and get an email when it does.', top: true },
-      { name: 'Protected file downloads', desc: 'Keep files in a private folder that cannot be opened by direct link. Members download through a secure link, with download limits, logs and Amazon S3 support.', top: true },
+      { name: 'Protected file downloads', desc: 'Keep files in a private folder that cannot be opened by direct link. Members download through a secure link, with download limits, logs and Amazon S3 or CloudFront support.', top: true },
       { name: 'Metered paywall', desc: 'Let visitors read a few locked articles each month before the paywall appears, with a “2 of 3 free articles left” banner.' },
       { name: 'AND / OR / NOT rules', desc: 'Build rules from several conditions at once: plan, role, registration date, profile fields, email domain and more.' },
       { name: 'Scheduled rules', desc: 'Turn a rule on or off between two dates, or show members only the posts published after they joined.' },
@@ -22,7 +22,7 @@ export const PRO_GROUPS = [
   },
   {
     key: 'billing', icon: faCreditCard, title: 'Advanced billing', features: [
-      { name: 'More payment gateways', desc: 'Authorize.Net, Mollie, Paystack, Razorpay and Paddle, alongside Stripe, PayPal and bank transfer.', top: true },
+      { name: 'More payment gateways', desc: 'Authorize.Net, Mollie, Paystack, Razorpay, Paddle, PayPal Payflow and ClickBank, alongside Stripe, PayPal and bank transfer.', top: true },
       { name: 'Pro-rated plan changes', desc: 'When a member upgrades or downgrades mid-cycle, the unused time of their current plan is credited against the new one.', top: true },
       { name: 'Team & group memberships', desc: 'Sell plans with seats. The buyer invites their team by link, email or CSV, and everyone gets the owner’s access.', top: true },
       { name: 'Tax & EU VAT', desc: 'Tax rates by country and state, VAT number validation, reverse charge for businesses, and tax on invoices.', top: true },
@@ -41,11 +41,14 @@ export const PRO_GROUPS = [
   },
   {
     key: 'forms', icon: faRectangleList, title: 'Advanced forms & profiles', features: [
-      { name: '60+ form fields', desc: 'File upload, address, date & time, map, signature, rating, repeater, calculations, hidden and more.', top: true },
+      { name: '30+ form fields', desc: 'File upload, date & time, location map, signature, rating, repeater, calculations, choice grid, QR code, embeds and more.', top: true },
       { name: 'Conditional logic', desc: 'Show or hide fields and form steps based on earlier answers.' },
       { name: 'Multi-step forms', desc: 'Split long forms into steps with a progress bar.' },
       { name: 'Several registration forms', desc: 'Different forms for different plans or roles, each with its own fields.' },
       { name: 'Save & continue', desc: 'Members save a half-finished form and come back to it from an emailed link.' },
+      { name: 'Conversational forms', desc: 'Ask one question at a time, with Enter to continue.' },
+      { name: 'Registration PDF', desc: 'The registration answers as a PDF, attached to emails and downloadable by admins.' },
+      { name: 'Member posting', desc: 'Members write posts from the front end within plan limits, with categories, expiry, featured posts, SEO fields and comment moderation.' },
       { name: 'Popup forms', desc: 'Open login and registration in a popup from any button or link.' },
       { name: 'Form style designer', desc: 'Change colours, fonts, spacing and buttons of every form without CSS.' },
       { name: 'Profile completeness', desc: 'A progress bar that asks members to finish their profile, with the option to require it.' },
@@ -53,7 +56,7 @@ export const PRO_GROUPS = [
   },
   {
     key: 'login', icon: faUserLock, title: 'Login & security', features: [
-      { name: 'Social login', desc: 'Sign up and log in with Google, Facebook, X, LinkedIn, Microsoft, GitHub and more.', top: true },
+      { name: 'Social login', desc: 'Sign up and log in with Google, Facebook, X, LinkedIn, Microsoft, GitHub, Amazon, Yahoo, VK and WordPress.com.', top: true },
       { name: 'Two-factor authentication', desc: 'Authenticator app or email codes, backup codes and a “remember this device” option. Require it for some roles.', top: true },
       { name: 'Passwordless login', desc: 'Members log in with a one-time link sent to their email.' },
       { name: 'Invite codes', desc: 'Only people with a valid code can register. Codes can have limits, dates and their own plan.' },
@@ -64,10 +67,14 @@ export const PRO_GROUPS = [
   },
   {
     key: 'community', icon: faPeopleGroup, title: 'Community', features: [
-      { name: 'Advanced member directory', desc: 'Searchable directories with filters on any profile field, several layouts and a map view.', top: true },
-      { name: 'Public profiles', desc: 'Profile pages with cover photo, custom tabs and privacy controls.' },
+      { name: 'Advanced member directory', desc: 'Searchable directories with filters on any profile field, tags and online status, several layouts and a map view.', top: true },
+      { name: 'Public profiles', desc: 'Profile pages with cover photo (upload or Unsplash), custom tabs, member tags and privacy controls.' },
+      { name: 'Followers & friends', desc: 'Members follow each other and send friend requests.' },
+      { name: 'Member reviews', desc: 'Members rate and review each other, with optional moderation.' },
+      { name: 'Photos, bookmarks & notes', desc: 'Photo albums on profiles, bookmarks of any content, and public or private notes.' },
+      { name: 'Online users', desc: 'See who is online now, with badges and a directory filter.' },
       { name: 'Private messaging', desc: 'Members message each other, with blocking and email notifications.' },
-      { name: 'Activity & notifications', desc: 'An activity feed and an on-site notification bell for messages and membership events.' },
+      { name: 'Activity & notifications', desc: 'An activity wall with replies and likes, and an on-site notification bell for messages and membership events.' },
       { name: 'Groups', desc: 'Members create and join groups with their own discussion.' },
       { name: 'Verified badges', desc: 'A verified badge, granted by request or automatically by plan.' },
       { name: 'Announcements', desc: 'Notices shown only to certain plans or roles.' },
@@ -76,17 +83,20 @@ export const PRO_GROUPS = [
   {
     key: 'marketing', icon: faEnvelopesBulk, title: 'Email marketing & automation', features: [
       { name: 'Mailchimp', desc: 'Add members to an audience, tag them by plan and move tags on upgrade, cancel or expiry.', top: true },
-      { name: 'Brevo, MailerLite, Kit & more', desc: 'The same list and tag sync for Brevo, MailerLite, Kit, ActiveCampaign, Klaviyo, AWeber, GetResponse and MailPoet.' },
+      { name: 'Brevo, MailerLite, Kit & more', desc: 'The same list and tag sync for Brevo, MailerLite, Kit, ActiveCampaign, Klaviyo, AWeber, GetResponse, Campaign Monitor and MailPoet.' },
       { name: 'Zapier & webhooks', desc: 'Send membership events to 5,000+ apps, or to your own URL with retries and signatures.' },
-      { name: 'Google Sheets', desc: 'Add every new member as a row in a spreadsheet.' },
+      { name: 'Google Sheets & Salesforce', desc: 'Add every new member as a row in a spreadsheet, or keep members as Salesforce leads or contacts.' },
     ],
   },
   {
     key: 'integrations', icon: faPlug, title: 'Integrations', features: [
-      { name: 'LMS plugins', desc: 'Sell LearnDash, LifterLMS, Sensei, MasterStudy and Tutor LMS courses with your plans, enroll on purchase and unenroll on expiry.', top: true },
+      { name: 'LMS plugins', desc: 'Sell LearnDash, LifterLMS, Sensei, MasterStudy, Tutor LMS and Academy LMS courses with your plans, enroll on purchase and unenroll on expiry.', top: true },
       { name: 'WooCommerce memberships', desc: 'Members-only products and prices, free shipping for members, and MemberGlut forms in WooCommerce checkout and My Account.' },
-      { name: 'Communities', desc: 'Give access to BuddyBoss groups, FluentCommunity spaces and bbPress forums by plan.' },
-      { name: 'Affiliates', desc: 'Pay affiliates for membership sales with AffiliateWP or SliceWP.' },
+      { name: 'Communities', desc: 'Give access to BuddyBoss groups, FluentCommunity spaces, SureDash portals and bbPress forums by plan.' },
+      { name: 'Affiliates', desc: 'Pay affiliates for membership sales with AffiliateWP, SliceWP, Affiliates Manager or iDevAffiliate.' },
+      { name: 'Points & wallets', desc: 'Award myCRED points for joining and renewing, and pay for plans with points or WooCommerce wallet credit.' },
+      { name: 'Paid Memberships Pro bridge', desc: 'Keep plans and PMPro levels in sync while you move, and import PMPro members.' },
+      { name: 'Cloud storage & translations', desc: 'Store member uploads on Google Drive or Dropbox, and translate forms with Polylang or WPML.' },
       { name: 'Multisite sign-up', desc: 'Create a new site in the network when someone joins a plan.' },
     ],
   },

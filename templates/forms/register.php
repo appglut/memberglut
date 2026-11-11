@@ -96,6 +96,15 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		<?php endif; ?>
 
+		<?php
+		/**
+		 * Extra registration inputs of add-ons (invite code, captcha question, phone check…).
+		 *
+		 * @param array[] $plans   Plans of the form (the preselected plan only, when there is one).
+		 * @param int     $user_id Logged-in user (0 = visitor).
+		 */
+		do_action( 'memberglut_register_form_after_fields', $plan ? array( $plan ) : $plans, $user_id );
+		?>
 		<?php echo $checkout; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in MemberGlut_Checkout::render_section(). ?>
 		<?php echo $agreements; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in MemberGlut_Agreements::render(). ?>
 		<?php echo $guard; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in MemberGlut_Form_Guard::render(). ?>

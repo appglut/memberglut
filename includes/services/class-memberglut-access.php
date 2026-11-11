@@ -104,7 +104,8 @@ class MemberGlut_Access {
 				// Access while retrying = Keep access: on-hold members keep their plans.
 				if ( 'active' === memberglut_setting( 'retry_status', 'on_hold' ) ) {
 					foreach ( MemberGlut_Subscription_Service::for_user( $user_id ) as $sub ) {
-						if ( 'on_hold' === $sub['status'] ) {
+						// Add-ons can put subscriptions on hold for other reasons (e.g. a paused membership).
+						if ( 'on_hold' === $sub['status'] && apply_filters( 'memberglut_on_hold_keeps_access', true, $sub ) ) {
 							$plans[] = (int) $sub['plan_id'];
 						}
 					}
@@ -403,6 +404,15 @@ class MemberGlut_Access {
 				'teaser'   => $teaser,
 				'message'  => self::message_html( $decision['message'], $decision, $post ),
 				'form'     => $form,
+				/**
+				 * HTML added under the paywall message by add-ons (e.g. a purchase form). Trusted markup: escape your
+				 * own output.
+				 *
+				 * @param string       $html     HTML.
+				 * @param array        $decision Decision.
+				 * @param WP_Post|null $post     Post.
+				 */
+				'extra'    => (string) apply_filters( 'memberglut_paywall_extra', '', $decision, $post ),
 				'decision' => $decision,
 				'post'     => $post,
 			)

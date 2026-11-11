@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import {
-  App, Button, Input, Tag, Segmented, Modal, Form, Select, Switch, Tooltip, Upload, Skeleton, Empty, Dropdown, Table, Alert,
+  App, Button, Input, InputNumber, Tag, Segmented, Modal, Form, Select, Switch, Tooltip, Upload, Skeleton, Empty, Dropdown, Table, Alert,
 } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -152,7 +152,8 @@ function Roles() {
   const [deleting, setDeleting] = useState(null);
   const [importData, setImportData] = useState(null);
   const [newCap, setNewCap] = useState('');
-  const [options, setOptions] = useState({ multi_roles: true, rescue: true });
+  const [options, setOptions] = useState({ multi_roles: true, rescue: true, hierarchy: false, levels: {}, behaviour: {} });
+  const defaultLevel = (slug) => ({ administrator: 100, editor: 70, author: 50, contributor: 30, subscriber: 10 }[slug] ?? 10);
 
   const applyCaps = (c) => { setGroups(c.groups); setCaps(c.roleCaps); setCustom(c.custom || []); };
 
@@ -315,6 +316,10 @@ function Roles() {
               <div><b>{__( 'Admin rescue link', 'memberglut' )}</b><span>{__( 'Locked out? wp-login.php?action=memberglut_rescue emails a 15-minute link that restores the Administrator role.', 'memberglut' )}</span></div>
               <Switch size="small" checked={options.rescue} onChange={(v) => saveOption('rescue', v)} />
             </div>
+            <div className="mg-role-opt">
+              <div><b>{__( 'Role hierarchy', 'memberglut' )}</b><span>{__( 'Users can only edit, delete or promote users whose role has a lower level than their own. Administrators are never limited.', 'memberglut' )}</span></div>
+              <Switch size="small" checked={!!options.hierarchy} onChange={(v) => saveOption('hierarchy', v)} />
+            </div>
           </div>
         </aside>
 
@@ -345,6 +350,23 @@ function Roles() {
           </div>
 
           {locked && <div className="mg-fs-note mg-note-warn"><FontAwesomeIcon icon={faCircleInfo} /> {__( 'The Administrator role is protected so you cannot lock yourself out. Its capabilities can be viewed but not changed.', 'memberglut' )}</div>}
+          {!locked && (
+            <div className="mg-role-behaviour" style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'center', margin: '0 0 16px' }}>
+              {options.hierarchy && (
+                <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <b>{__( 'Level', 'memberglut' )}</b>
+                  <InputNumber size="small" min={0} max={99} value={options.levels?.[current] ?? defaultLevel(current)} onChange={(v) => saveOption('levels', { ...(options.levels || {}), [current]: v ?? 0 })} />
+                  <Tooltip title={__( '0–99. Administrators are 100. Higher levels manage lower ones.', 'memberglut' )}><FontAwesomeIcon icon={faCircleInfo} className="mg-muted" /></Tooltip>
+                </label>
+              )}
+              {['edit_profile', 'delete_account'].map((flag) => (
+                <label key={flag} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <Switch size="small" checked={options.behaviour?.[current]?.[flag] ?? true} onChange={(v) => saveOption('behaviour', { ...(options.behaviour || {}), [current]: { ...(options.behaviour?.[current] || {}), [flag]: v } })} />
+                  {flag === 'edit_profile' ? __( 'Can edit own profile (My Account)', 'memberglut' ) : __( 'Can delete own account', 'memberglut' )}
+                </label>
+              ))}
+            </div>
+          )}
           {role.used_by_plans.length > 0 && <div className="mg-fs-note"><FontAwesomeIcon icon={faCircleInfo} /> {sprintf( __( 'Members get this role from the plans: %s.', 'memberglut' ), role.used_by_plans.map((p) => p.name).join(', ') )}</div>}
 
           <div className="mg-cap-toolbar">

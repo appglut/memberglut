@@ -151,6 +151,8 @@
 		notice(form, '', '');
 		busy(form, true);
 		var ctx = { form: form, extra: {}, abort: false };
+		// FormData leaves out the clicked button: forms with several actions read it (name="op" value="…").
+		if (e.submitter && e.submitter.name) { ctx.extra[e.submitter.name] = e.submitter.value; }
 		var chain = captchaToken(form);
 		hooks.beforeSubmit.forEach(function (fn) { chain = chain.then(function () { return fn(ctx); }); });
 		chain.then(function () {

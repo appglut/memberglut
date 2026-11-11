@@ -904,14 +904,21 @@ class MemberGlut_Plans {
 	 */
 	public static function price_label( $plan ) {
 		if ( 'free' === $plan['type'] || $plan['price'] <= 0 ) {
-			return __( 'Free', 'memberglut' );
-		}
-		if ( 'recurring' === $plan['billing'] ) {
+			$label = __( 'Free', 'memberglut' );
+		} elseif ( 'recurring' === $plan['billing'] ) {
 			/* translators: 1: price, 2: period such as "month" or "3 months" */
-			return sprintf( __( '%1$s / %2$s', 'memberglut' ), memberglut_format_price( $plan['price'] ), self::period_label( $plan['duration'] ) );
+			$label = sprintf( __( '%1$s / %2$s', 'memberglut' ), memberglut_format_price( $plan['price'] ), self::period_label( $plan['duration'] ) );
+		} else {
+			/* translators: %s: price */
+			$label = sprintf( __( '%s once', 'memberglut' ), memberglut_format_price( $plan['price'] ) );
 		}
-		/* translators: %s: price */
-		return sprintf( __( '%s once', 'memberglut' ), memberglut_format_price( $plan['price'] ) );
+		/**
+		 * Price label of a plan (“$9.00 / month”), e.g. “from $5” for pay-what-you-want plans.
+		 *
+		 * @param string $label Label.
+		 * @param array  $plan  Plan.
+		 */
+		return (string) apply_filters( 'memberglut_plan_price_label', $label, $plan );
 	}
 
 	/**

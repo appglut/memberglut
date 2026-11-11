@@ -303,13 +303,13 @@ const React$1 = /* @__PURE__ */ _mergeNamespaces({
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var f$3 = reactExports, k$3 = Symbol.for("react.element"), l$2 = Symbol.for("react.fragment"), m$4 = Object.prototype.hasOwnProperty, n$3 = f$3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, p$5 = { key: true, ref: true, __self: true, __source: true };
+var f$3 = reactExports, k$3 = Symbol.for("react.element"), l$2 = Symbol.for("react.fragment"), m$3 = Object.prototype.hasOwnProperty, n$3 = f$3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, p$5 = { key: true, ref: true, __self: true, __source: true };
 function q$2(c2, a2, g2) {
   var b2, d2 = {}, e2 = null, h2 = null;
   void 0 !== g2 && (e2 = "" + g2);
   void 0 !== a2.key && (e2 = "" + a2.key);
   void 0 !== a2.ref && (h2 = a2.ref);
-  for (b2 in a2) m$4.call(a2, b2) && !p$5.hasOwnProperty(b2) && (d2[b2] = a2[b2]);
+  for (b2 in a2) m$3.call(a2, b2) && !p$5.hasOwnProperty(b2) && (d2[b2] = a2[b2]);
   if (c2 && c2.defaultProps) for (b2 in a2 = c2.defaultProps, a2) void 0 === d2[b2] && (d2[b2] = a2[b2]);
   return { $$typeof: k$3, type: c2, key: e2, ref: h2, props: d2, _owner: n$3.current };
 }
@@ -320,6 +320,904 @@ reactJsxRuntime_production_min.jsxs = q$2;
   jsxRuntime.exports = reactJsxRuntime_production_min;
 }
 var jsxRuntimeExports = jsxRuntime.exports;
+var PRECEDENCE, OPENERS, TERMINATORS, PATTERN;
+PRECEDENCE = {
+  "(": 9,
+  "!": 8,
+  "*": 7,
+  "/": 7,
+  "%": 7,
+  "+": 6,
+  "-": 6,
+  "<": 5,
+  "<=": 5,
+  ">": 5,
+  ">=": 5,
+  "==": 4,
+  "!=": 4,
+  "&&": 3,
+  "||": 2,
+  "?": 1,
+  "?:": 1
+};
+OPENERS = ["(", "?"];
+TERMINATORS = {
+  ")": ["("],
+  ":": ["?", "?:"]
+};
+PATTERN = /<=|>=|==|!=|&&|\|\||\?:|\(|!|\*|\/|%|\+|-|<|>|\?|\)|:/;
+function postfix(expression) {
+  var terms = [], stack = [], match2, operator, term, element;
+  while (match2 = expression.match(PATTERN)) {
+    operator = match2[0];
+    term = expression.substr(0, match2.index).trim();
+    if (term) {
+      terms.push(term);
+    }
+    while (element = stack.pop()) {
+      if (TERMINATORS[operator]) {
+        if (TERMINATORS[operator][0] === element) {
+          operator = TERMINATORS[operator][1] || operator;
+          break;
+        }
+      } else if (OPENERS.indexOf(element) >= 0 || PRECEDENCE[element] < PRECEDENCE[operator]) {
+        stack.push(element);
+        break;
+      }
+      terms.push(element);
+    }
+    if (!TERMINATORS[operator]) {
+      stack.push(operator);
+    }
+    expression = expression.substr(match2.index + operator.length);
+  }
+  expression = expression.trim();
+  if (expression) {
+    terms.push(expression);
+  }
+  return terms.concat(stack.reverse());
+}
+var OPERATORS = {
+  "!": function(a2) {
+    return !a2;
+  },
+  "*": function(a2, b2) {
+    return a2 * b2;
+  },
+  "/": function(a2, b2) {
+    return a2 / b2;
+  },
+  "%": function(a2, b2) {
+    return a2 % b2;
+  },
+  "+": function(a2, b2) {
+    return a2 + b2;
+  },
+  "-": function(a2, b2) {
+    return a2 - b2;
+  },
+  "<": function(a2, b2) {
+    return a2 < b2;
+  },
+  "<=": function(a2, b2) {
+    return a2 <= b2;
+  },
+  ">": function(a2, b2) {
+    return a2 > b2;
+  },
+  ">=": function(a2, b2) {
+    return a2 >= b2;
+  },
+  "==": function(a2, b2) {
+    return a2 === b2;
+  },
+  "!=": function(a2, b2) {
+    return a2 !== b2;
+  },
+  "&&": function(a2, b2) {
+    return a2 && b2;
+  },
+  "||": function(a2, b2) {
+    return a2 || b2;
+  },
+  "?:": function(a2, b2, c2) {
+    if (a2) {
+      throw b2;
+    }
+    return c2;
+  }
+};
+function evaluate(postfix2, variables) {
+  var stack = [], i2, j2, args, getOperatorResult, term, value;
+  for (i2 = 0; i2 < postfix2.length; i2++) {
+    term = postfix2[i2];
+    getOperatorResult = OPERATORS[term];
+    if (getOperatorResult) {
+      j2 = getOperatorResult.length;
+      args = Array(j2);
+      while (j2--) {
+        args[j2] = stack.pop();
+      }
+      try {
+        value = getOperatorResult.apply(null, args);
+      } catch (earlyReturn) {
+        return earlyReturn;
+      }
+    } else if (variables.hasOwnProperty(term)) {
+      value = variables[term];
+    } else {
+      value = +term;
+    }
+    stack.push(value);
+  }
+  return stack[0];
+}
+function compile$1(expression) {
+  var terms = postfix(expression);
+  return function(variables) {
+    return evaluate(terms, variables);
+  };
+}
+function pluralForms(expression) {
+  var evaluate2 = compile$1(expression);
+  return function(n2) {
+    return +evaluate2({ n: n2 });
+  };
+}
+var DEFAULT_OPTIONS = {
+  contextDelimiter: "",
+  onMissingKey: null
+};
+function getPluralExpression(pf2) {
+  var parts, i2, part;
+  parts = pf2.split(";");
+  for (i2 = 0; i2 < parts.length; i2++) {
+    part = parts[i2].trim();
+    if (part.indexOf("plural=") === 0) {
+      return part.substr(7);
+    }
+  }
+}
+function Tannin(data, options) {
+  var key;
+  this.data = data;
+  this.pluralForms = {};
+  this.options = {};
+  for (key in DEFAULT_OPTIONS) {
+    this.options[key] = options !== void 0 && key in options ? options[key] : DEFAULT_OPTIONS[key];
+  }
+}
+Tannin.prototype.getPluralForm = function(domain, n2) {
+  var getPluralForm = this.pluralForms[domain], config2, plural, pf2;
+  if (!getPluralForm) {
+    config2 = this.data[domain][""];
+    pf2 = config2["Plural-Forms"] || config2["plural-forms"] || // Ignore reason: As known, there's no way to document the empty
+    // string property on a key to guarantee this as metadata.
+    // @ts-ignore
+    config2.plural_forms;
+    if (typeof pf2 !== "function") {
+      plural = getPluralExpression(
+        config2["Plural-Forms"] || config2["plural-forms"] || // Ignore reason: As known, there's no way to document the empty
+        // string property on a key to guarantee this as metadata.
+        // @ts-ignore
+        config2.plural_forms
+      );
+      pf2 = pluralForms(plural);
+    }
+    getPluralForm = this.pluralForms[domain] = pf2;
+  }
+  return getPluralForm(n2);
+};
+Tannin.prototype.dcnpgettext = function(domain, context, singular, plural, n2) {
+  var index2, key, entry;
+  if (n2 === void 0) {
+    index2 = 0;
+  } else {
+    index2 = this.getPluralForm(domain, n2);
+  }
+  key = singular;
+  if (context) {
+    key = context + this.options.contextDelimiter + singular;
+  }
+  entry = this.data[domain][key];
+  if (entry && entry[index2]) {
+    return entry[index2];
+  }
+  if (this.options.onMissingKey) {
+    this.options.onMissingKey(singular, domain);
+  }
+  return index2 === 0 ? singular : plural;
+};
+var DEFAULT_LOCALE_DATA = {
+  "": {
+    plural_forms(n2) {
+      return n2 === 1 ? 0 : 1;
+    }
+  }
+};
+var I18N_HOOK_REGEXP = /^i18n\.(n?gettext|has_translation)(_|$)/;
+var createI18n = (initialData, initialDomain, hooks8) => {
+  const tannin = new Tannin({});
+  const listeners = /* @__PURE__ */ new Set();
+  const notifyListeners = () => {
+    listeners.forEach((listener2) => listener2());
+  };
+  const subscribe = (callback) => {
+    listeners.add(callback);
+    return () => listeners.delete(callback);
+  };
+  const getLocaleData = (domain = "default") => tannin.data[domain];
+  const doSetLocaleData = (data, domain = "default") => {
+    var _a;
+    tannin.data[domain] = {
+      ...tannin.data[domain],
+      ...data
+    };
+    tannin.data[domain][""] = {
+      ...DEFAULT_LOCALE_DATA[""],
+      ...(_a = tannin.data[domain]) == null ? void 0 : _a[""]
+    };
+    delete tannin.pluralForms[domain];
+  };
+  const setLocaleData = (data, domain) => {
+    doSetLocaleData(data, domain);
+    notifyListeners();
+  };
+  const addLocaleData = (data, domain = "default") => {
+    var _a;
+    tannin.data[domain] = {
+      ...tannin.data[domain],
+      ...data,
+      // Populate default domain configuration (supported locale date which omits
+      // a plural forms expression).
+      "": {
+        ...DEFAULT_LOCALE_DATA[""],
+        ...(_a = tannin.data[domain]) == null ? void 0 : _a[""],
+        ...data == null ? void 0 : data[""]
+      }
+    };
+    delete tannin.pluralForms[domain];
+    notifyListeners();
+  };
+  const resetLocaleData = (data, domain) => {
+    tannin.data = {};
+    tannin.pluralForms = {};
+    setLocaleData(data, domain);
+  };
+  const dcnpgettext = (domain = "default", context, single, plural, number4) => {
+    if (!tannin.data[domain]) {
+      doSetLocaleData(void 0, domain);
+    }
+    return tannin.dcnpgettext(domain, context, single, plural, number4);
+  };
+  const getFilterDomain = (domain) => domain || "default";
+  const __2 = (text, domain) => {
+    let translation = dcnpgettext(domain, void 0, text);
+    if (!hooks8) {
+      return translation;
+    }
+    translation = hooks8.applyFilters(
+      "i18n.gettext",
+      translation,
+      text,
+      domain
+    );
+    return hooks8.applyFilters(
+      "i18n.gettext_" + getFilterDomain(domain),
+      translation,
+      text,
+      domain
+    );
+  };
+  const _x = (text, context, domain) => {
+    let translation = dcnpgettext(domain, context, text);
+    if (!hooks8) {
+      return translation;
+    }
+    translation = hooks8.applyFilters(
+      "i18n.gettext_with_context",
+      translation,
+      text,
+      context,
+      domain
+    );
+    return hooks8.applyFilters(
+      "i18n.gettext_with_context_" + getFilterDomain(domain),
+      translation,
+      text,
+      context,
+      domain
+    );
+  };
+  const _n2 = (single, plural, number4, domain) => {
+    let translation = dcnpgettext(
+      domain,
+      void 0,
+      single,
+      plural,
+      number4
+    );
+    if (!hooks8) {
+      return translation;
+    }
+    translation = hooks8.applyFilters(
+      "i18n.ngettext",
+      translation,
+      single,
+      plural,
+      number4,
+      domain
+    );
+    return hooks8.applyFilters(
+      "i18n.ngettext_" + getFilterDomain(domain),
+      translation,
+      single,
+      plural,
+      number4,
+      domain
+    );
+  };
+  const _nx = (single, plural, number4, context, domain) => {
+    let translation = dcnpgettext(
+      domain,
+      context,
+      single,
+      plural,
+      number4
+    );
+    if (!hooks8) {
+      return translation;
+    }
+    translation = hooks8.applyFilters(
+      "i18n.ngettext_with_context",
+      translation,
+      single,
+      plural,
+      number4,
+      context,
+      domain
+    );
+    return hooks8.applyFilters(
+      "i18n.ngettext_with_context_" + getFilterDomain(domain),
+      translation,
+      single,
+      plural,
+      number4,
+      context,
+      domain
+    );
+  };
+  const isRTL = () => {
+    return "rtl" === _x("ltr", "text direction");
+  };
+  const hasTranslation = (single, context, domain) => {
+    var _a, _b;
+    const key = context ? context + "" + single : single;
+    let result = !!((_b = (_a = tannin.data) == null ? void 0 : _a[domain ?? "default"]) == null ? void 0 : _b[key]);
+    if (hooks8) {
+      result = hooks8.applyFilters(
+        "i18n.has_translation",
+        result,
+        single,
+        context,
+        domain
+      );
+      result = hooks8.applyFilters(
+        "i18n.has_translation_" + getFilterDomain(domain),
+        result,
+        single,
+        context,
+        domain
+      );
+    }
+    return result;
+  };
+  if (hooks8) {
+    const onHookAddedOrRemoved = (hookName) => {
+      if (I18N_HOOK_REGEXP.test(hookName)) {
+        notifyListeners();
+      }
+    };
+    hooks8.addAction("hookAdded", "core/i18n", onHookAddedOrRemoved);
+    hooks8.addAction("hookRemoved", "core/i18n", onHookAddedOrRemoved);
+  }
+  return {
+    getLocaleData,
+    setLocaleData,
+    addLocaleData,
+    resetLocaleData,
+    subscribe,
+    __: __2,
+    _x,
+    _n: _n2,
+    _nx,
+    isRTL,
+    hasTranslation
+  };
+};
+function validateNamespace(namespace2) {
+  if ("string" !== typeof namespace2 || "" === namespace2) {
+    console.error("The namespace must be a non-empty string.");
+    return false;
+  }
+  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace2)) {
+    console.error(
+      "The namespace can only contain numbers, letters, dashes, periods, underscores and slashes."
+    );
+    return false;
+  }
+  return true;
+}
+var validateNamespace_default = validateNamespace;
+function validateHookName(hookName) {
+  if ("string" !== typeof hookName || "" === hookName) {
+    console.error("The hook name must be a non-empty string.");
+    return false;
+  }
+  if (/^__/.test(hookName)) {
+    console.error("The hook name cannot begin with `__`.");
+    return false;
+  }
+  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
+    console.error(
+      "The hook name can only contain numbers, letters, dashes, periods and underscores."
+    );
+    return false;
+  }
+  return true;
+}
+var validateHookName_default = validateHookName;
+function createAddHook(hooks8, storeKey) {
+  return function addHook(hookName, namespace2, callback, priority = 10) {
+    const hooksStore = hooks8[storeKey];
+    if (!validateHookName_default(hookName)) {
+      return;
+    }
+    if (!validateNamespace_default(namespace2)) {
+      return;
+    }
+    if ("function" !== typeof callback) {
+      console.error("The hook callback must be a function.");
+      return;
+    }
+    if ("number" !== typeof priority) {
+      console.error(
+        "If specified, the hook priority must be a number."
+      );
+      return;
+    }
+    const handler = { callback, priority, namespace: namespace2 };
+    if (hooksStore[hookName]) {
+      const handlers = hooksStore[hookName].handlers;
+      let i2;
+      for (i2 = handlers.length; i2 > 0; i2--) {
+        if (priority >= handlers[i2 - 1].priority) {
+          break;
+        }
+      }
+      if (i2 === handlers.length) {
+        handlers[i2] = handler;
+      } else {
+        handlers.splice(i2, 0, handler);
+      }
+      hooksStore.__current.forEach((hookInfo) => {
+        if (hookInfo.name === hookName && hookInfo.currentIndex >= i2) {
+          hookInfo.currentIndex++;
+        }
+      });
+    } else {
+      hooksStore[hookName] = {
+        handlers: [handler],
+        runs: 0
+      };
+    }
+    if (hookName !== "hookAdded") {
+      hooks8.doAction(
+        "hookAdded",
+        hookName,
+        namespace2,
+        callback,
+        priority
+      );
+    }
+  };
+}
+var createAddHook_default = createAddHook;
+function createRemoveHook(hooks8, storeKey, removeAll = false) {
+  return function removeHook(hookName, namespace2) {
+    const hooksStore = hooks8[storeKey];
+    if (!validateHookName_default(hookName)) {
+      return;
+    }
+    if (!removeAll && !validateNamespace_default(namespace2)) {
+      return;
+    }
+    if (!hooksStore[hookName]) {
+      return 0;
+    }
+    let handlersRemoved = 0;
+    if (removeAll) {
+      handlersRemoved = hooksStore[hookName].handlers.length;
+      hooksStore[hookName] = {
+        runs: hooksStore[hookName].runs,
+        handlers: []
+      };
+    } else {
+      const handlers = hooksStore[hookName].handlers;
+      for (let i2 = handlers.length - 1; i2 >= 0; i2--) {
+        if (handlers[i2].namespace === namespace2) {
+          handlers.splice(i2, 1);
+          handlersRemoved++;
+          hooksStore.__current.forEach((hookInfo) => {
+            if (hookInfo.name === hookName && hookInfo.currentIndex >= i2) {
+              hookInfo.currentIndex--;
+            }
+          });
+        }
+      }
+    }
+    if (hookName !== "hookRemoved") {
+      hooks8.doAction("hookRemoved", hookName, namespace2);
+    }
+    return handlersRemoved;
+  };
+}
+var createRemoveHook_default = createRemoveHook;
+function createHasHook(hooks8, storeKey) {
+  return function hasHook(hookName, namespace2) {
+    const hooksStore = hooks8[storeKey];
+    if ("undefined" !== typeof namespace2) {
+      return hookName in hooksStore && hooksStore[hookName].handlers.some(
+        (hook) => hook.namespace === namespace2
+      );
+    }
+    return hookName in hooksStore;
+  };
+}
+var createHasHook_default = createHasHook;
+function createRunHook(hooks8, storeKey, returnFirstArg, async) {
+  return function runHook(hookName, ...args) {
+    const hooksStore = hooks8[storeKey];
+    if (!hooksStore[hookName]) {
+      hooksStore[hookName] = {
+        handlers: [],
+        runs: 0
+      };
+    }
+    hooksStore[hookName].runs++;
+    const handlers = hooksStore[hookName].handlers;
+    if (!handlers || !handlers.length) {
+      return returnFirstArg ? args[0] : void 0;
+    }
+    const hookInfo = {
+      name: hookName,
+      currentIndex: 0
+    };
+    async function asyncRunner() {
+      try {
+        hooksStore.__current.add(hookInfo);
+        let result = returnFirstArg ? args[0] : void 0;
+        while (hookInfo.currentIndex < handlers.length) {
+          const handler = handlers[hookInfo.currentIndex];
+          result = await handler.callback.apply(null, args);
+          if (returnFirstArg) {
+            args[0] = result;
+          }
+          hookInfo.currentIndex++;
+        }
+        return returnFirstArg ? result : void 0;
+      } finally {
+        hooksStore.__current.delete(hookInfo);
+      }
+    }
+    function syncRunner() {
+      try {
+        hooksStore.__current.add(hookInfo);
+        let result = returnFirstArg ? args[0] : void 0;
+        while (hookInfo.currentIndex < handlers.length) {
+          const handler = handlers[hookInfo.currentIndex];
+          result = handler.callback.apply(null, args);
+          if (returnFirstArg) {
+            args[0] = result;
+          }
+          hookInfo.currentIndex++;
+        }
+        return returnFirstArg ? result : void 0;
+      } finally {
+        hooksStore.__current.delete(hookInfo);
+      }
+    }
+    return (async ? asyncRunner : syncRunner)();
+  };
+}
+var createRunHook_default = createRunHook;
+function createCurrentHook(hooks8, storeKey) {
+  return function currentHook() {
+    var _a;
+    const hooksStore = hooks8[storeKey];
+    const currentArray = Array.from(hooksStore.__current);
+    return ((_a = currentArray.at(-1)) == null ? void 0 : _a.name) ?? null;
+  };
+}
+var createCurrentHook_default = createCurrentHook;
+function createDoingHook(hooks8, storeKey) {
+  return function doingHook(hookName) {
+    const hooksStore = hooks8[storeKey];
+    if ("undefined" === typeof hookName) {
+      return hooksStore.__current.size > 0;
+    }
+    return Array.from(hooksStore.__current).some(
+      (hook) => hook.name === hookName
+    );
+  };
+}
+var createDoingHook_default = createDoingHook;
+function createDidHook(hooks8, storeKey) {
+  return function didHook(hookName) {
+    const hooksStore = hooks8[storeKey];
+    if (!validateHookName_default(hookName)) {
+      return;
+    }
+    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
+  };
+}
+var createDidHook_default = createDidHook;
+var _Hooks = class {
+  constructor() {
+    __publicField(this, "actions");
+    __publicField(this, "filters");
+    __publicField(this, "addAction");
+    __publicField(this, "addFilter");
+    __publicField(this, "removeAction");
+    __publicField(this, "removeFilter");
+    __publicField(this, "hasAction");
+    __publicField(this, "hasFilter");
+    __publicField(this, "removeAllActions");
+    __publicField(this, "removeAllFilters");
+    __publicField(this, "doAction");
+    __publicField(this, "doActionAsync");
+    __publicField(this, "applyFilters");
+    __publicField(this, "applyFiltersAsync");
+    __publicField(this, "currentAction");
+    __publicField(this, "currentFilter");
+    __publicField(this, "doingAction");
+    __publicField(this, "doingFilter");
+    __publicField(this, "didAction");
+    __publicField(this, "didFilter");
+    this.actions = /* @__PURE__ */ Object.create(null);
+    this.actions.__current = /* @__PURE__ */ new Set();
+    this.filters = /* @__PURE__ */ Object.create(null);
+    this.filters.__current = /* @__PURE__ */ new Set();
+    this.addAction = createAddHook_default(this, "actions");
+    this.addFilter = createAddHook_default(this, "filters");
+    this.removeAction = createRemoveHook_default(this, "actions");
+    this.removeFilter = createRemoveHook_default(this, "filters");
+    this.hasAction = createHasHook_default(this, "actions");
+    this.hasFilter = createHasHook_default(this, "filters");
+    this.removeAllActions = createRemoveHook_default(this, "actions", true);
+    this.removeAllFilters = createRemoveHook_default(this, "filters", true);
+    this.doAction = createRunHook_default(this, "actions", false, false);
+    this.doActionAsync = createRunHook_default(this, "actions", false, true);
+    this.applyFilters = createRunHook_default(this, "filters", true, false);
+    this.applyFiltersAsync = createRunHook_default(this, "filters", true, true);
+    this.currentAction = createCurrentHook_default(this, "actions");
+    this.currentFilter = createCurrentHook_default(this, "filters");
+    this.doingAction = createDoingHook_default(this, "actions");
+    this.doingFilter = createDoingHook_default(this, "filters");
+    this.didAction = createDidHook_default(this, "actions");
+    this.didFilter = createDidHook_default(this, "filters");
+  }
+};
+function createHooks() {
+  return new _Hooks();
+}
+var createHooks_default = createHooks;
+var defaultHooks = createHooks_default();
+var {
+  addAction,
+  addFilter,
+  removeAction,
+  removeFilter,
+  hasAction,
+  hasFilter,
+  removeAllActions,
+  removeAllFilters,
+  doAction,
+  doActionAsync,
+  applyFilters,
+  applyFiltersAsync,
+  currentAction,
+  currentFilter,
+  doingAction,
+  doingFilter,
+  didAction,
+  didFilter,
+  actions,
+  filters
+} = defaultHooks;
+var i18n = createI18n(void 0, void 0, defaultHooks);
+i18n.getLocaleData.bind(i18n);
+i18n.setLocaleData.bind(i18n);
+i18n.resetLocaleData.bind(i18n);
+i18n.subscribe.bind(i18n);
+var __ = i18n.__.bind(i18n);
+i18n._x.bind(i18n);
+var _n = i18n._n.bind(i18n);
+i18n._nx.bind(i18n);
+i18n.isRTL.bind(i18n);
+i18n.hasTranslation.bind(i18n);
+var classnames = { exports: {} };
+/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+(function(module) {
+  (function() {
+    var hasOwn = {}.hasOwnProperty;
+    function classNames2() {
+      var classes = "";
+      for (var i2 = 0; i2 < arguments.length; i2++) {
+        var arg = arguments[i2];
+        if (arg) {
+          classes = appendClass(classes, parseValue(arg));
+        }
+      }
+      return classes;
+    }
+    function parseValue(arg) {
+      if (typeof arg === "string" || typeof arg === "number") {
+        return arg;
+      }
+      if (typeof arg !== "object") {
+        return "";
+      }
+      if (Array.isArray(arg)) {
+        return classNames2.apply(null, arg);
+      }
+      if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
+        return arg.toString();
+      }
+      var classes = "";
+      for (var key in arg) {
+        if (hasOwn.call(arg, key) && arg[key]) {
+          classes = appendClass(classes, key);
+        }
+      }
+      return classes;
+    }
+    function appendClass(value, newClass) {
+      if (!newClass) {
+        return value;
+      }
+      if (value) {
+        return value + " " + newClass;
+      }
+      return value + newClass;
+    }
+    if (module.exports) {
+      classNames2.default = classNames2;
+      module.exports = classNames2;
+    } else {
+      window.classNames = classNames2;
+    }
+  })();
+})(classnames);
+var classnamesExports = classnames.exports;
+const classNames = /* @__PURE__ */ getDefaultExportFromCjs(classnamesExports);
+function _extends() {
+  return _extends = Object.assign ? Object.assign.bind() : function(n2) {
+    for (var e2 = 1; e2 < arguments.length; e2++) {
+      var t2 = arguments[e2];
+      for (var r2 in t2) ({}).hasOwnProperty.call(t2, r2) && (n2[r2] = t2[r2]);
+    }
+    return n2;
+  }, _extends.apply(null, arguments);
+}
+function _typeof$1(o2) {
+  "@babel/helpers - typeof";
+  return _typeof$1 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o3) {
+    return typeof o3;
+  } : function(o3) {
+    return o3 && "function" == typeof Symbol && o3.constructor === Symbol && o3 !== Symbol.prototype ? "symbol" : typeof o3;
+  }, _typeof$1(o2);
+}
+var REACT_ELEMENT_TYPE_18 = Symbol.for("react.element");
+var REACT_ELEMENT_TYPE_19 = Symbol.for("react.transitional.element");
+var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
+function isFragment$1(object4) {
+  return (
+    // Base object type
+    object4 && _typeof$1(object4) === "object" && // React Element type
+    (object4.$$typeof === REACT_ELEMENT_TYPE_18 || object4.$$typeof === REACT_ELEMENT_TYPE_19) && // React Fragment type
+    object4.type === REACT_FRAGMENT_TYPE
+  );
+}
+function toArray$2(children) {
+  var option = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
+  var ret = [];
+  React.Children.forEach(children, function(child) {
+    if ((child === void 0 || child === null) && !option.keepEmpty) {
+      return;
+    }
+    if (Array.isArray(child)) {
+      ret = ret.concat(toArray$2(child));
+    } else if (isFragment$1(child) && child.props) {
+      ret = ret.concat(toArray$2(child.props.children, option));
+    } else {
+      ret.push(child);
+    }
+  });
+  return ret;
+}
+var warned = {};
+var preMessage = function preMessage2(fn) {
+};
+function warning$2(valid, message) {
+}
+function note(valid, message) {
+}
+function resetWarned() {
+  warned = {};
+}
+function call(method4, valid, message) {
+  if (!valid && !warned[message]) {
+    method4(false, message);
+    warned[message] = true;
+  }
+}
+function warningOnce(valid, message) {
+  call(warning$2, valid, message);
+}
+function noteOnce(valid, message) {
+  call(note, valid, message);
+}
+warningOnce.preMessage = preMessage;
+warningOnce.resetWarned = resetWarned;
+warningOnce.noteOnce = noteOnce;
+function toPrimitive(t2, r2) {
+  if ("object" != _typeof$1(t2) || !t2) return t2;
+  var e2 = t2[Symbol.toPrimitive];
+  if (void 0 !== e2) {
+    var i2 = e2.call(t2, r2);
+    if ("object" != _typeof$1(i2)) return i2;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r2 ? String : Number)(t2);
+}
+function toPropertyKey(t2) {
+  var i2 = toPrimitive(t2, "string");
+  return "symbol" == _typeof$1(i2) ? i2 : i2 + "";
+}
+function _defineProperty$1(e2, r2, t2) {
+  return (r2 = toPropertyKey(r2)) in e2 ? Object.defineProperty(e2, r2, {
+    value: t2,
+    enumerable: true,
+    configurable: true,
+    writable: true
+  }) : e2[r2] = t2, e2;
+}
+function ownKeys$1(e2, r2) {
+  var t2 = Object.keys(e2);
+  if (Object.getOwnPropertySymbols) {
+    var o2 = Object.getOwnPropertySymbols(e2);
+    r2 && (o2 = o2.filter(function(r3) {
+      return Object.getOwnPropertyDescriptor(e2, r3).enumerable;
+    })), t2.push.apply(t2, o2);
+  }
+  return t2;
+}
+function _objectSpread2$1(e2) {
+  for (var r2 = 1; r2 < arguments.length; r2++) {
+    var t2 = null != arguments[r2] ? arguments[r2] : {};
+    r2 % 2 ? ownKeys$1(Object(t2), true).forEach(function(r3) {
+      _defineProperty$1(e2, r3, t2[r3]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e2, Object.getOwnPropertyDescriptors(t2)) : ownKeys$1(Object(t2)).forEach(function(r3) {
+      Object.defineProperty(e2, r3, Object.getOwnPropertyDescriptor(t2, r3));
+    });
+  }
+  return e2;
+}
 var reactDom = { exports: {} };
 var reactDom_production_min = {};
 var scheduler = { exports: {} };
@@ -6992,910 +7890,6 @@ const ReactDOM$1 = /* @__PURE__ */ _mergeNamespaces({
   __proto__: null,
   default: ReactDOM
 }, [reactDomExports]);
-var createRoot$1;
-var m$3 = reactDomExports;
-{
-  createRoot$1 = m$3.createRoot;
-  m$3.hydrateRoot;
-}
-var PRECEDENCE, OPENERS, TERMINATORS, PATTERN;
-PRECEDENCE = {
-  "(": 9,
-  "!": 8,
-  "*": 7,
-  "/": 7,
-  "%": 7,
-  "+": 6,
-  "-": 6,
-  "<": 5,
-  "<=": 5,
-  ">": 5,
-  ">=": 5,
-  "==": 4,
-  "!=": 4,
-  "&&": 3,
-  "||": 2,
-  "?": 1,
-  "?:": 1
-};
-OPENERS = ["(", "?"];
-TERMINATORS = {
-  ")": ["("],
-  ":": ["?", "?:"]
-};
-PATTERN = /<=|>=|==|!=|&&|\|\||\?:|\(|!|\*|\/|%|\+|-|<|>|\?|\)|:/;
-function postfix(expression) {
-  var terms = [], stack = [], match2, operator, term, element;
-  while (match2 = expression.match(PATTERN)) {
-    operator = match2[0];
-    term = expression.substr(0, match2.index).trim();
-    if (term) {
-      terms.push(term);
-    }
-    while (element = stack.pop()) {
-      if (TERMINATORS[operator]) {
-        if (TERMINATORS[operator][0] === element) {
-          operator = TERMINATORS[operator][1] || operator;
-          break;
-        }
-      } else if (OPENERS.indexOf(element) >= 0 || PRECEDENCE[element] < PRECEDENCE[operator]) {
-        stack.push(element);
-        break;
-      }
-      terms.push(element);
-    }
-    if (!TERMINATORS[operator]) {
-      stack.push(operator);
-    }
-    expression = expression.substr(match2.index + operator.length);
-  }
-  expression = expression.trim();
-  if (expression) {
-    terms.push(expression);
-  }
-  return terms.concat(stack.reverse());
-}
-var OPERATORS = {
-  "!": function(a2) {
-    return !a2;
-  },
-  "*": function(a2, b2) {
-    return a2 * b2;
-  },
-  "/": function(a2, b2) {
-    return a2 / b2;
-  },
-  "%": function(a2, b2) {
-    return a2 % b2;
-  },
-  "+": function(a2, b2) {
-    return a2 + b2;
-  },
-  "-": function(a2, b2) {
-    return a2 - b2;
-  },
-  "<": function(a2, b2) {
-    return a2 < b2;
-  },
-  "<=": function(a2, b2) {
-    return a2 <= b2;
-  },
-  ">": function(a2, b2) {
-    return a2 > b2;
-  },
-  ">=": function(a2, b2) {
-    return a2 >= b2;
-  },
-  "==": function(a2, b2) {
-    return a2 === b2;
-  },
-  "!=": function(a2, b2) {
-    return a2 !== b2;
-  },
-  "&&": function(a2, b2) {
-    return a2 && b2;
-  },
-  "||": function(a2, b2) {
-    return a2 || b2;
-  },
-  "?:": function(a2, b2, c2) {
-    if (a2) {
-      throw b2;
-    }
-    return c2;
-  }
-};
-function evaluate(postfix2, variables) {
-  var stack = [], i2, j2, args, getOperatorResult, term, value;
-  for (i2 = 0; i2 < postfix2.length; i2++) {
-    term = postfix2[i2];
-    getOperatorResult = OPERATORS[term];
-    if (getOperatorResult) {
-      j2 = getOperatorResult.length;
-      args = Array(j2);
-      while (j2--) {
-        args[j2] = stack.pop();
-      }
-      try {
-        value = getOperatorResult.apply(null, args);
-      } catch (earlyReturn) {
-        return earlyReturn;
-      }
-    } else if (variables.hasOwnProperty(term)) {
-      value = variables[term];
-    } else {
-      value = +term;
-    }
-    stack.push(value);
-  }
-  return stack[0];
-}
-function compile$1(expression) {
-  var terms = postfix(expression);
-  return function(variables) {
-    return evaluate(terms, variables);
-  };
-}
-function pluralForms(expression) {
-  var evaluate2 = compile$1(expression);
-  return function(n2) {
-    return +evaluate2({ n: n2 });
-  };
-}
-var DEFAULT_OPTIONS = {
-  contextDelimiter: "",
-  onMissingKey: null
-};
-function getPluralExpression(pf2) {
-  var parts, i2, part;
-  parts = pf2.split(";");
-  for (i2 = 0; i2 < parts.length; i2++) {
-    part = parts[i2].trim();
-    if (part.indexOf("plural=") === 0) {
-      return part.substr(7);
-    }
-  }
-}
-function Tannin(data, options) {
-  var key;
-  this.data = data;
-  this.pluralForms = {};
-  this.options = {};
-  for (key in DEFAULT_OPTIONS) {
-    this.options[key] = options !== void 0 && key in options ? options[key] : DEFAULT_OPTIONS[key];
-  }
-}
-Tannin.prototype.getPluralForm = function(domain, n2) {
-  var getPluralForm = this.pluralForms[domain], config2, plural, pf2;
-  if (!getPluralForm) {
-    config2 = this.data[domain][""];
-    pf2 = config2["Plural-Forms"] || config2["plural-forms"] || // Ignore reason: As known, there's no way to document the empty
-    // string property on a key to guarantee this as metadata.
-    // @ts-ignore
-    config2.plural_forms;
-    if (typeof pf2 !== "function") {
-      plural = getPluralExpression(
-        config2["Plural-Forms"] || config2["plural-forms"] || // Ignore reason: As known, there's no way to document the empty
-        // string property on a key to guarantee this as metadata.
-        // @ts-ignore
-        config2.plural_forms
-      );
-      pf2 = pluralForms(plural);
-    }
-    getPluralForm = this.pluralForms[domain] = pf2;
-  }
-  return getPluralForm(n2);
-};
-Tannin.prototype.dcnpgettext = function(domain, context, singular, plural, n2) {
-  var index2, key, entry;
-  if (n2 === void 0) {
-    index2 = 0;
-  } else {
-    index2 = this.getPluralForm(domain, n2);
-  }
-  key = singular;
-  if (context) {
-    key = context + this.options.contextDelimiter + singular;
-  }
-  entry = this.data[domain][key];
-  if (entry && entry[index2]) {
-    return entry[index2];
-  }
-  if (this.options.onMissingKey) {
-    this.options.onMissingKey(singular, domain);
-  }
-  return index2 === 0 ? singular : plural;
-};
-var DEFAULT_LOCALE_DATA = {
-  "": {
-    plural_forms(n2) {
-      return n2 === 1 ? 0 : 1;
-    }
-  }
-};
-var I18N_HOOK_REGEXP = /^i18n\.(n?gettext|has_translation)(_|$)/;
-var createI18n = (initialData, initialDomain, hooks8) => {
-  const tannin = new Tannin({});
-  const listeners = /* @__PURE__ */ new Set();
-  const notifyListeners = () => {
-    listeners.forEach((listener2) => listener2());
-  };
-  const subscribe = (callback) => {
-    listeners.add(callback);
-    return () => listeners.delete(callback);
-  };
-  const getLocaleData = (domain = "default") => tannin.data[domain];
-  const doSetLocaleData = (data, domain = "default") => {
-    var _a;
-    tannin.data[domain] = {
-      ...tannin.data[domain],
-      ...data
-    };
-    tannin.data[domain][""] = {
-      ...DEFAULT_LOCALE_DATA[""],
-      ...(_a = tannin.data[domain]) == null ? void 0 : _a[""]
-    };
-    delete tannin.pluralForms[domain];
-  };
-  const setLocaleData = (data, domain) => {
-    doSetLocaleData(data, domain);
-    notifyListeners();
-  };
-  const addLocaleData = (data, domain = "default") => {
-    var _a;
-    tannin.data[domain] = {
-      ...tannin.data[domain],
-      ...data,
-      // Populate default domain configuration (supported locale date which omits
-      // a plural forms expression).
-      "": {
-        ...DEFAULT_LOCALE_DATA[""],
-        ...(_a = tannin.data[domain]) == null ? void 0 : _a[""],
-        ...data == null ? void 0 : data[""]
-      }
-    };
-    delete tannin.pluralForms[domain];
-    notifyListeners();
-  };
-  const resetLocaleData = (data, domain) => {
-    tannin.data = {};
-    tannin.pluralForms = {};
-    setLocaleData(data, domain);
-  };
-  const dcnpgettext = (domain = "default", context, single, plural, number4) => {
-    if (!tannin.data[domain]) {
-      doSetLocaleData(void 0, domain);
-    }
-    return tannin.dcnpgettext(domain, context, single, plural, number4);
-  };
-  const getFilterDomain = (domain) => domain || "default";
-  const __2 = (text, domain) => {
-    let translation = dcnpgettext(domain, void 0, text);
-    if (!hooks8) {
-      return translation;
-    }
-    translation = hooks8.applyFilters(
-      "i18n.gettext",
-      translation,
-      text,
-      domain
-    );
-    return hooks8.applyFilters(
-      "i18n.gettext_" + getFilterDomain(domain),
-      translation,
-      text,
-      domain
-    );
-  };
-  const _x = (text, context, domain) => {
-    let translation = dcnpgettext(domain, context, text);
-    if (!hooks8) {
-      return translation;
-    }
-    translation = hooks8.applyFilters(
-      "i18n.gettext_with_context",
-      translation,
-      text,
-      context,
-      domain
-    );
-    return hooks8.applyFilters(
-      "i18n.gettext_with_context_" + getFilterDomain(domain),
-      translation,
-      text,
-      context,
-      domain
-    );
-  };
-  const _n2 = (single, plural, number4, domain) => {
-    let translation = dcnpgettext(
-      domain,
-      void 0,
-      single,
-      plural,
-      number4
-    );
-    if (!hooks8) {
-      return translation;
-    }
-    translation = hooks8.applyFilters(
-      "i18n.ngettext",
-      translation,
-      single,
-      plural,
-      number4,
-      domain
-    );
-    return hooks8.applyFilters(
-      "i18n.ngettext_" + getFilterDomain(domain),
-      translation,
-      single,
-      plural,
-      number4,
-      domain
-    );
-  };
-  const _nx = (single, plural, number4, context, domain) => {
-    let translation = dcnpgettext(
-      domain,
-      context,
-      single,
-      plural,
-      number4
-    );
-    if (!hooks8) {
-      return translation;
-    }
-    translation = hooks8.applyFilters(
-      "i18n.ngettext_with_context",
-      translation,
-      single,
-      plural,
-      number4,
-      context,
-      domain
-    );
-    return hooks8.applyFilters(
-      "i18n.ngettext_with_context_" + getFilterDomain(domain),
-      translation,
-      single,
-      plural,
-      number4,
-      context,
-      domain
-    );
-  };
-  const isRTL = () => {
-    return "rtl" === _x("ltr", "text direction");
-  };
-  const hasTranslation = (single, context, domain) => {
-    var _a, _b;
-    const key = context ? context + "" + single : single;
-    let result = !!((_b = (_a = tannin.data) == null ? void 0 : _a[domain ?? "default"]) == null ? void 0 : _b[key]);
-    if (hooks8) {
-      result = hooks8.applyFilters(
-        "i18n.has_translation",
-        result,
-        single,
-        context,
-        domain
-      );
-      result = hooks8.applyFilters(
-        "i18n.has_translation_" + getFilterDomain(domain),
-        result,
-        single,
-        context,
-        domain
-      );
-    }
-    return result;
-  };
-  if (hooks8) {
-    const onHookAddedOrRemoved = (hookName) => {
-      if (I18N_HOOK_REGEXP.test(hookName)) {
-        notifyListeners();
-      }
-    };
-    hooks8.addAction("hookAdded", "core/i18n", onHookAddedOrRemoved);
-    hooks8.addAction("hookRemoved", "core/i18n", onHookAddedOrRemoved);
-  }
-  return {
-    getLocaleData,
-    setLocaleData,
-    addLocaleData,
-    resetLocaleData,
-    subscribe,
-    __: __2,
-    _x,
-    _n: _n2,
-    _nx,
-    isRTL,
-    hasTranslation
-  };
-};
-function validateNamespace(namespace2) {
-  if ("string" !== typeof namespace2 || "" === namespace2) {
-    console.error("The namespace must be a non-empty string.");
-    return false;
-  }
-  if (!/^[a-zA-Z][a-zA-Z0-9_.\-\/]*$/.test(namespace2)) {
-    console.error(
-      "The namespace can only contain numbers, letters, dashes, periods, underscores and slashes."
-    );
-    return false;
-  }
-  return true;
-}
-var validateNamespace_default = validateNamespace;
-function validateHookName(hookName) {
-  if ("string" !== typeof hookName || "" === hookName) {
-    console.error("The hook name must be a non-empty string.");
-    return false;
-  }
-  if (/^__/.test(hookName)) {
-    console.error("The hook name cannot begin with `__`.");
-    return false;
-  }
-  if (!/^[a-zA-Z][a-zA-Z0-9_.-]*$/.test(hookName)) {
-    console.error(
-      "The hook name can only contain numbers, letters, dashes, periods and underscores."
-    );
-    return false;
-  }
-  return true;
-}
-var validateHookName_default = validateHookName;
-function createAddHook(hooks8, storeKey) {
-  return function addHook(hookName, namespace2, callback, priority = 10) {
-    const hooksStore = hooks8[storeKey];
-    if (!validateHookName_default(hookName)) {
-      return;
-    }
-    if (!validateNamespace_default(namespace2)) {
-      return;
-    }
-    if ("function" !== typeof callback) {
-      console.error("The hook callback must be a function.");
-      return;
-    }
-    if ("number" !== typeof priority) {
-      console.error(
-        "If specified, the hook priority must be a number."
-      );
-      return;
-    }
-    const handler = { callback, priority, namespace: namespace2 };
-    if (hooksStore[hookName]) {
-      const handlers = hooksStore[hookName].handlers;
-      let i2;
-      for (i2 = handlers.length; i2 > 0; i2--) {
-        if (priority >= handlers[i2 - 1].priority) {
-          break;
-        }
-      }
-      if (i2 === handlers.length) {
-        handlers[i2] = handler;
-      } else {
-        handlers.splice(i2, 0, handler);
-      }
-      hooksStore.__current.forEach((hookInfo) => {
-        if (hookInfo.name === hookName && hookInfo.currentIndex >= i2) {
-          hookInfo.currentIndex++;
-        }
-      });
-    } else {
-      hooksStore[hookName] = {
-        handlers: [handler],
-        runs: 0
-      };
-    }
-    if (hookName !== "hookAdded") {
-      hooks8.doAction(
-        "hookAdded",
-        hookName,
-        namespace2,
-        callback,
-        priority
-      );
-    }
-  };
-}
-var createAddHook_default = createAddHook;
-function createRemoveHook(hooks8, storeKey, removeAll = false) {
-  return function removeHook(hookName, namespace2) {
-    const hooksStore = hooks8[storeKey];
-    if (!validateHookName_default(hookName)) {
-      return;
-    }
-    if (!removeAll && !validateNamespace_default(namespace2)) {
-      return;
-    }
-    if (!hooksStore[hookName]) {
-      return 0;
-    }
-    let handlersRemoved = 0;
-    if (removeAll) {
-      handlersRemoved = hooksStore[hookName].handlers.length;
-      hooksStore[hookName] = {
-        runs: hooksStore[hookName].runs,
-        handlers: []
-      };
-    } else {
-      const handlers = hooksStore[hookName].handlers;
-      for (let i2 = handlers.length - 1; i2 >= 0; i2--) {
-        if (handlers[i2].namespace === namespace2) {
-          handlers.splice(i2, 1);
-          handlersRemoved++;
-          hooksStore.__current.forEach((hookInfo) => {
-            if (hookInfo.name === hookName && hookInfo.currentIndex >= i2) {
-              hookInfo.currentIndex--;
-            }
-          });
-        }
-      }
-    }
-    if (hookName !== "hookRemoved") {
-      hooks8.doAction("hookRemoved", hookName, namespace2);
-    }
-    return handlersRemoved;
-  };
-}
-var createRemoveHook_default = createRemoveHook;
-function createHasHook(hooks8, storeKey) {
-  return function hasHook(hookName, namespace2) {
-    const hooksStore = hooks8[storeKey];
-    if ("undefined" !== typeof namespace2) {
-      return hookName in hooksStore && hooksStore[hookName].handlers.some(
-        (hook) => hook.namespace === namespace2
-      );
-    }
-    return hookName in hooksStore;
-  };
-}
-var createHasHook_default = createHasHook;
-function createRunHook(hooks8, storeKey, returnFirstArg, async) {
-  return function runHook(hookName, ...args) {
-    const hooksStore = hooks8[storeKey];
-    if (!hooksStore[hookName]) {
-      hooksStore[hookName] = {
-        handlers: [],
-        runs: 0
-      };
-    }
-    hooksStore[hookName].runs++;
-    const handlers = hooksStore[hookName].handlers;
-    if (!handlers || !handlers.length) {
-      return returnFirstArg ? args[0] : void 0;
-    }
-    const hookInfo = {
-      name: hookName,
-      currentIndex: 0
-    };
-    async function asyncRunner() {
-      try {
-        hooksStore.__current.add(hookInfo);
-        let result = returnFirstArg ? args[0] : void 0;
-        while (hookInfo.currentIndex < handlers.length) {
-          const handler = handlers[hookInfo.currentIndex];
-          result = await handler.callback.apply(null, args);
-          if (returnFirstArg) {
-            args[0] = result;
-          }
-          hookInfo.currentIndex++;
-        }
-        return returnFirstArg ? result : void 0;
-      } finally {
-        hooksStore.__current.delete(hookInfo);
-      }
-    }
-    function syncRunner() {
-      try {
-        hooksStore.__current.add(hookInfo);
-        let result = returnFirstArg ? args[0] : void 0;
-        while (hookInfo.currentIndex < handlers.length) {
-          const handler = handlers[hookInfo.currentIndex];
-          result = handler.callback.apply(null, args);
-          if (returnFirstArg) {
-            args[0] = result;
-          }
-          hookInfo.currentIndex++;
-        }
-        return returnFirstArg ? result : void 0;
-      } finally {
-        hooksStore.__current.delete(hookInfo);
-      }
-    }
-    return (async ? asyncRunner : syncRunner)();
-  };
-}
-var createRunHook_default = createRunHook;
-function createCurrentHook(hooks8, storeKey) {
-  return function currentHook() {
-    var _a;
-    const hooksStore = hooks8[storeKey];
-    const currentArray = Array.from(hooksStore.__current);
-    return ((_a = currentArray.at(-1)) == null ? void 0 : _a.name) ?? null;
-  };
-}
-var createCurrentHook_default = createCurrentHook;
-function createDoingHook(hooks8, storeKey) {
-  return function doingHook(hookName) {
-    const hooksStore = hooks8[storeKey];
-    if ("undefined" === typeof hookName) {
-      return hooksStore.__current.size > 0;
-    }
-    return Array.from(hooksStore.__current).some(
-      (hook) => hook.name === hookName
-    );
-  };
-}
-var createDoingHook_default = createDoingHook;
-function createDidHook(hooks8, storeKey) {
-  return function didHook(hookName) {
-    const hooksStore = hooks8[storeKey];
-    if (!validateHookName_default(hookName)) {
-      return;
-    }
-    return hooksStore[hookName] && hooksStore[hookName].runs ? hooksStore[hookName].runs : 0;
-  };
-}
-var createDidHook_default = createDidHook;
-var _Hooks = class {
-  constructor() {
-    __publicField(this, "actions");
-    __publicField(this, "filters");
-    __publicField(this, "addAction");
-    __publicField(this, "addFilter");
-    __publicField(this, "removeAction");
-    __publicField(this, "removeFilter");
-    __publicField(this, "hasAction");
-    __publicField(this, "hasFilter");
-    __publicField(this, "removeAllActions");
-    __publicField(this, "removeAllFilters");
-    __publicField(this, "doAction");
-    __publicField(this, "doActionAsync");
-    __publicField(this, "applyFilters");
-    __publicField(this, "applyFiltersAsync");
-    __publicField(this, "currentAction");
-    __publicField(this, "currentFilter");
-    __publicField(this, "doingAction");
-    __publicField(this, "doingFilter");
-    __publicField(this, "didAction");
-    __publicField(this, "didFilter");
-    this.actions = /* @__PURE__ */ Object.create(null);
-    this.actions.__current = /* @__PURE__ */ new Set();
-    this.filters = /* @__PURE__ */ Object.create(null);
-    this.filters.__current = /* @__PURE__ */ new Set();
-    this.addAction = createAddHook_default(this, "actions");
-    this.addFilter = createAddHook_default(this, "filters");
-    this.removeAction = createRemoveHook_default(this, "actions");
-    this.removeFilter = createRemoveHook_default(this, "filters");
-    this.hasAction = createHasHook_default(this, "actions");
-    this.hasFilter = createHasHook_default(this, "filters");
-    this.removeAllActions = createRemoveHook_default(this, "actions", true);
-    this.removeAllFilters = createRemoveHook_default(this, "filters", true);
-    this.doAction = createRunHook_default(this, "actions", false, false);
-    this.doActionAsync = createRunHook_default(this, "actions", false, true);
-    this.applyFilters = createRunHook_default(this, "filters", true, false);
-    this.applyFiltersAsync = createRunHook_default(this, "filters", true, true);
-    this.currentAction = createCurrentHook_default(this, "actions");
-    this.currentFilter = createCurrentHook_default(this, "filters");
-    this.doingAction = createDoingHook_default(this, "actions");
-    this.doingFilter = createDoingHook_default(this, "filters");
-    this.didAction = createDidHook_default(this, "actions");
-    this.didFilter = createDidHook_default(this, "filters");
-  }
-};
-function createHooks() {
-  return new _Hooks();
-}
-var createHooks_default = createHooks;
-var defaultHooks = createHooks_default();
-var {
-  addAction,
-  addFilter,
-  removeAction,
-  removeFilter,
-  hasAction,
-  hasFilter,
-  removeAllActions,
-  removeAllFilters,
-  doAction,
-  doActionAsync,
-  applyFilters,
-  applyFiltersAsync,
-  currentAction,
-  currentFilter,
-  doingAction,
-  doingFilter,
-  didAction,
-  didFilter,
-  actions,
-  filters
-} = defaultHooks;
-var i18n = createI18n(void 0, void 0, defaultHooks);
-i18n.getLocaleData.bind(i18n);
-i18n.setLocaleData.bind(i18n);
-i18n.resetLocaleData.bind(i18n);
-i18n.subscribe.bind(i18n);
-var __ = i18n.__.bind(i18n);
-i18n._x.bind(i18n);
-var _n = i18n._n.bind(i18n);
-i18n._nx.bind(i18n);
-i18n.isRTL.bind(i18n);
-i18n.hasTranslation.bind(i18n);
-var classnames = { exports: {} };
-/*!
-	Copyright (c) 2018 Jed Watson.
-	Licensed under the MIT License (MIT), see
-	http://jedwatson.github.io/classnames
-*/
-(function(module) {
-  (function() {
-    var hasOwn = {}.hasOwnProperty;
-    function classNames2() {
-      var classes = "";
-      for (var i2 = 0; i2 < arguments.length; i2++) {
-        var arg = arguments[i2];
-        if (arg) {
-          classes = appendClass(classes, parseValue(arg));
-        }
-      }
-      return classes;
-    }
-    function parseValue(arg) {
-      if (typeof arg === "string" || typeof arg === "number") {
-        return arg;
-      }
-      if (typeof arg !== "object") {
-        return "";
-      }
-      if (Array.isArray(arg)) {
-        return classNames2.apply(null, arg);
-      }
-      if (arg.toString !== Object.prototype.toString && !arg.toString.toString().includes("[native code]")) {
-        return arg.toString();
-      }
-      var classes = "";
-      for (var key in arg) {
-        if (hasOwn.call(arg, key) && arg[key]) {
-          classes = appendClass(classes, key);
-        }
-      }
-      return classes;
-    }
-    function appendClass(value, newClass) {
-      if (!newClass) {
-        return value;
-      }
-      if (value) {
-        return value + " " + newClass;
-      }
-      return value + newClass;
-    }
-    if (module.exports) {
-      classNames2.default = classNames2;
-      module.exports = classNames2;
-    } else {
-      window.classNames = classNames2;
-    }
-  })();
-})(classnames);
-var classnamesExports = classnames.exports;
-const classNames = /* @__PURE__ */ getDefaultExportFromCjs(classnamesExports);
-function _extends() {
-  return _extends = Object.assign ? Object.assign.bind() : function(n2) {
-    for (var e2 = 1; e2 < arguments.length; e2++) {
-      var t2 = arguments[e2];
-      for (var r2 in t2) ({}).hasOwnProperty.call(t2, r2) && (n2[r2] = t2[r2]);
-    }
-    return n2;
-  }, _extends.apply(null, arguments);
-}
-function _typeof$1(o2) {
-  "@babel/helpers - typeof";
-  return _typeof$1 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o3) {
-    return typeof o3;
-  } : function(o3) {
-    return o3 && "function" == typeof Symbol && o3.constructor === Symbol && o3 !== Symbol.prototype ? "symbol" : typeof o3;
-  }, _typeof$1(o2);
-}
-var REACT_ELEMENT_TYPE_18 = Symbol.for("react.element");
-var REACT_ELEMENT_TYPE_19 = Symbol.for("react.transitional.element");
-var REACT_FRAGMENT_TYPE = Symbol.for("react.fragment");
-function isFragment$1(object4) {
-  return (
-    // Base object type
-    object4 && _typeof$1(object4) === "object" && // React Element type
-    (object4.$$typeof === REACT_ELEMENT_TYPE_18 || object4.$$typeof === REACT_ELEMENT_TYPE_19) && // React Fragment type
-    object4.type === REACT_FRAGMENT_TYPE
-  );
-}
-function toArray$2(children) {
-  var option = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-  var ret = [];
-  React.Children.forEach(children, function(child) {
-    if ((child === void 0 || child === null) && !option.keepEmpty) {
-      return;
-    }
-    if (Array.isArray(child)) {
-      ret = ret.concat(toArray$2(child));
-    } else if (isFragment$1(child) && child.props) {
-      ret = ret.concat(toArray$2(child.props.children, option));
-    } else {
-      ret.push(child);
-    }
-  });
-  return ret;
-}
-var warned = {};
-var preMessage = function preMessage2(fn) {
-};
-function warning$2(valid, message) {
-}
-function note(valid, message) {
-}
-function resetWarned() {
-  warned = {};
-}
-function call(method4, valid, message) {
-  if (!valid && !warned[message]) {
-    method4(false, message);
-    warned[message] = true;
-  }
-}
-function warningOnce(valid, message) {
-  call(warning$2, valid, message);
-}
-function noteOnce(valid, message) {
-  call(note, valid, message);
-}
-warningOnce.preMessage = preMessage;
-warningOnce.resetWarned = resetWarned;
-warningOnce.noteOnce = noteOnce;
-function toPrimitive(t2, r2) {
-  if ("object" != _typeof$1(t2) || !t2) return t2;
-  var e2 = t2[Symbol.toPrimitive];
-  if (void 0 !== e2) {
-    var i2 = e2.call(t2, r2);
-    if ("object" != _typeof$1(i2)) return i2;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return ("string" === r2 ? String : Number)(t2);
-}
-function toPropertyKey(t2) {
-  var i2 = toPrimitive(t2, "string");
-  return "symbol" == _typeof$1(i2) ? i2 : i2 + "";
-}
-function _defineProperty$1(e2, r2, t2) {
-  return (r2 = toPropertyKey(r2)) in e2 ? Object.defineProperty(e2, r2, {
-    value: t2,
-    enumerable: true,
-    configurable: true,
-    writable: true
-  }) : e2[r2] = t2, e2;
-}
-function ownKeys$1(e2, r2) {
-  var t2 = Object.keys(e2);
-  if (Object.getOwnPropertySymbols) {
-    var o2 = Object.getOwnPropertySymbols(e2);
-    r2 && (o2 = o2.filter(function(r3) {
-      return Object.getOwnPropertyDescriptor(e2, r3).enumerable;
-    })), t2.push.apply(t2, o2);
-  }
-  return t2;
-}
-function _objectSpread2$1(e2) {
-  for (var r2 = 1; r2 < arguments.length; r2++) {
-    var t2 = null != arguments[r2] ? arguments[r2] : {};
-    r2 % 2 ? ownKeys$1(Object(t2), true).forEach(function(r3) {
-      _defineProperty$1(e2, r3, t2[r3]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e2, Object.getOwnPropertyDescriptors(t2)) : ownKeys$1(Object(t2)).forEach(function(r3) {
-      Object.defineProperty(e2, r3, Object.getOwnPropertyDescriptor(t2, r3));
-    });
-  }
-  return e2;
-}
 function isDOM(node2) {
   return node2 instanceof HTMLElement || node2 instanceof SVGElement;
 }
@@ -12606,7 +12600,7 @@ function getAlphaColor(frontColor, backgroundColor) {
     a: 1
   }).toRgbString();
 }
-var __rest$c = function(s2, e2) {
+var __rest$e = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -12617,7 +12611,7 @@ var __rest$c = function(s2, e2) {
 function formatToken(derivativeToken) {
   const {
     override
-  } = derivativeToken, restToken = __rest$c(derivativeToken, ["override"]);
+  } = derivativeToken, restToken = __rest$e(derivativeToken, ["override"]);
   const overrideTokens = Object.assign({}, override);
   Object.keys(seedToken).forEach((token2) => {
     delete overrideTokens[token2];
@@ -12771,7 +12765,7 @@ function formatToken(derivativeToken) {
   }), overrideTokens);
   return aliasToken;
 }
-var __rest$b = function(s2, e2) {
+var __rest$d = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -12821,7 +12815,7 @@ const getComputedToken = (originToken, overrideToken, theme) => {
   const derivativeToken = theme.getDerivativeToken(originToken);
   const {
     override
-  } = overrideToken, components = __rest$b(overrideToken, ["override"]);
+  } = overrideToken, components = __rest$d(overrideToken, ["override"]);
   let mergedDerivativeToken = Object.assign(Object.assign({}, derivativeToken), {
     override
   });
@@ -12830,7 +12824,7 @@ const getComputedToken = (originToken, overrideToken, theme) => {
     Object.entries(components).forEach(([key, value]) => {
       const {
         theme: componentTheme
-      } = value, componentTokens = __rest$b(value, ["theme"]);
+      } = value, componentTokens = __rest$d(value, ["theme"]);
       let mergedComponentToken = componentTokens;
       if (componentTheme) {
         mergedComponentToken = getComputedToken(Object.assign(Object.assign({}, mergedDerivativeToken), componentTokens), {
@@ -13759,7 +13753,7 @@ function MotionWrapper(props) {
   return children;
 }
 const PropWarning = () => null;
-var __rest$a = function(s2, e2) {
+var __rest$c = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -14062,7 +14056,7 @@ const ProviderChildren = (props) => {
       token: token2,
       components,
       cssVar
-    } = _a, rest = __rest$a(_a, ["algorithm", "token", "components", "cssVar"]);
+    } = _a, rest = __rest$c(_a, ["algorithm", "token", "components", "cssVar"]);
     const themeObj = algorithm && (!Array.isArray(algorithm) || algorithm.length > 0) ? createTheme(algorithm) : defaultTheme;
     const parsedComponents = {};
     Object.entries(components || {}).forEach(([componentName, componentToken]) => {
@@ -15319,14 +15313,14 @@ const useStyle$a = genStyleHooks("Message", (token2) => {
   });
   return genMessageStyle(combinedToken);
 }, prepareComponentToken$7);
-(function(s2, e2) {
+var __rest$b = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
     if (e2.indexOf(p2[i2]) < 0 && Object.prototype.propertyIsEnumerable.call(s2, p2[i2])) t2[p2[i2]] = s2[p2[i2]];
   }
   return t2;
-});
+};
 const TypeIcon = {
   info: /* @__PURE__ */ reactExports.createElement(RefIcon$3, null),
   success: /* @__PURE__ */ reactExports.createElement(RefIcon$7, null),
@@ -15342,6 +15336,32 @@ const PureContent$1 = ({
 }) => /* @__PURE__ */ reactExports.createElement("div", {
   className: classNames(`${prefixCls}-custom-content`, `${prefixCls}-${type4}`)
 }, icon3 || TypeIcon[type4], /* @__PURE__ */ reactExports.createElement("span", null, children));
+const PurePanel$2 = (props) => {
+  const {
+    prefixCls: staticPrefixCls,
+    className,
+    type: type4,
+    icon: icon3,
+    content
+  } = props, restProps = __rest$b(props, ["prefixCls", "className", "type", "icon", "content"]);
+  const {
+    getPrefixCls
+  } = reactExports.useContext(ConfigContext);
+  const prefixCls = staticPrefixCls || getPrefixCls("message");
+  const rootCls = useCSSVarCls(prefixCls);
+  const [wrapCSSVar, hashId, cssVarCls] = useStyle$a(prefixCls, rootCls);
+  return wrapCSSVar(/* @__PURE__ */ reactExports.createElement(Notify, Object.assign({}, restProps, {
+    prefixCls,
+    className: classNames(className, hashId, `${prefixCls}-notice-pure-panel`, cssVarCls, rootCls),
+    eventKey: "pure",
+    duration: null,
+    content: /* @__PURE__ */ reactExports.createElement(PureContent$1, {
+      prefixCls,
+      type: type4,
+      icon: icon3
+    }, content)
+  })));
+};
 function getMotion$1(prefixCls, transitionName) {
   return {
     motionName: transitionName !== null && transitionName !== void 0 ? transitionName : `${prefixCls}-move-up`
@@ -15361,7 +15381,7 @@ function wrapPromiseFn(openFn) {
   result.promise = closePromise;
   return result;
 }
-var __rest$9 = function(s2, e2) {
+var __rest$a = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -15472,7 +15492,7 @@ function useInternalMessage(messageConfig) {
         className,
         style: style2,
         onClose
-      } = config2, restConfig = __rest$9(config2, ["content", "icon", "type", "key", "className", "style", "onClose"]);
+      } = config2, restConfig = __rest$a(config2, ["content", "icon", "type", "key", "className", "style", "onClose"]);
       let mergedKey = key;
       if (mergedKey === void 0 || mergedKey === null) {
         keyIndex += 1;
@@ -15802,11 +15822,11 @@ function _asyncToGenerator(n2) {
 }
 var fullClone = _objectSpread2$1({}, ReactDOM$1);
 var version = fullClone.version, reactRender = fullClone.render, unmountComponentAtNode = fullClone.unmountComponentAtNode;
-var createRoot;
+var createRoot$1;
 try {
   var mainVersion = Number((version || "").split(".")[0]);
   if (mainVersion >= 18) {
-    createRoot = fullClone.createRoot;
+    createRoot$1 = fullClone.createRoot;
   }
 } catch (e2) {
 }
@@ -15819,7 +15839,7 @@ function toggleWarning(skip) {
 var MARK = "__rc_react_root__";
 function modernRender(node2, container) {
   toggleWarning(true);
-  var root = container[MARK] || createRoot(container);
+  var root = container[MARK] || createRoot$1(container);
   toggleWarning(false);
   root.render(node2);
   container[MARK] = root;
@@ -15828,7 +15848,7 @@ function legacyRender(node2, container) {
   reactRender === null || reactRender === void 0 || reactRender(node2, container);
 }
 function render$1(node2, container) {
-  if (createRoot) {
+  if (createRoot$1) {
     modernRender(node2, container);
     return;
   }
@@ -15866,7 +15886,7 @@ function _unmount() {
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          if (!(createRoot !== void 0)) {
+          if (!(createRoot$1 !== void 0)) {
             _context2.next = 2;
             break;
           }
@@ -15889,6 +15909,9 @@ const defaultReactRender = (node2, container) => {
 };
 let unstableRender = defaultReactRender;
 function unstableSetRender(render22) {
+  if (render22) {
+    unstableRender = render22;
+  }
   return unstableRender;
 }
 const getCollapsedHeight = () => ({
@@ -16233,7 +16256,7 @@ const useStyle$8 = genStyleHooks(["Space", "Compact"], (token2) => [genSpaceComp
   // https://github.com/ant-design/ant-design/issues/40315
   resetStyle: false
 });
-var __rest$8 = function(s2, e2) {
+var __rest$9 = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -16277,7 +16300,7 @@ const NoCompactStyle = (props) => {
 const CompactItem = (props) => {
   const {
     children
-  } = props, others = __rest$8(props, ["children"]);
+  } = props, others = __rest$9(props, ["children"]);
   return /* @__PURE__ */ reactExports.createElement(SpaceCompactItemContext.Provider, {
     value: reactExports.useMemo(() => others, [others])
   }, children);
@@ -16295,7 +16318,7 @@ const Compact$1 = (props) => {
     className,
     rootClassName,
     children
-  } = props, restProps = __rest$8(props, ["size", "direction", "block", "prefixCls", "className", "rootClassName", "children"]);
+  } = props, restProps = __rest$9(props, ["size", "direction", "block", "prefixCls", "className", "rootClassName", "children"]);
   const mergedSize = useSize((ctx) => size !== null && size !== void 0 ? size : ctx);
   const prefixCls = getPrefixCls("space-compact", customizePrefixCls);
   const [wrapCSSVar, hashId] = useStyle$8(prefixCls);
@@ -16323,7 +16346,7 @@ const Compact$1 = (props) => {
     className: clx
   }, restProps), nodes));
 };
-var __rest$7 = function(s2, e2) {
+var __rest$8 = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -16341,7 +16364,7 @@ const ButtonGroup = (props) => {
     prefixCls: customizePrefixCls,
     size,
     className
-  } = props, others = __rest$7(props, ["prefixCls", "size", "className"]);
+  } = props, others = __rest$8(props, ["prefixCls", "size", "className"]);
   const prefixCls = getPrefixCls("btn-group", customizePrefixCls);
   const [, , hashId] = useToken();
   const sizeCls = reactExports.useMemo(() => {
@@ -18492,7 +18515,7 @@ const Compact = genSubStyleComponent(["Button", "compact"], (token2) => {
     genButtonCompactStyle(buttonToken)
   ];
 }, prepareComponentToken$5);
-var __rest$6 = function(s2, e2) {
+var __rest$7 = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -18548,7 +18571,7 @@ const InternalCompoundedButton = /* @__PURE__ */ React.forwardRef((props, ref) =
     style: customStyle = {},
     autoInsertSpace,
     autoFocus
-  } = props, rest = __rest$6(props, ["loading", "prefixCls", "color", "variant", "type", "danger", "shape", "size", "styles", "disabled", "className", "rootClassName", "children", "icon", "iconPosition", "ghost", "block", "htmlType", "classNames", "style", "autoInsertSpace", "autoFocus"]);
+  } = props, rest = __rest$7(props, ["loading", "prefixCls", "color", "variant", "type", "danger", "shape", "size", "styles", "disabled", "className", "rootClassName", "children", "icon", "iconPosition", "ghost", "block", "htmlType", "classNames", "style", "autoInsertSpace", "autoFocus"]);
   const mergedType = type4 || "default";
   const {
     button
@@ -23778,7 +23801,7 @@ const useStyle$4 = genStyleHooks("Modal", (token2) => {
     titleLineHeight: true
   }
 });
-var __rest$5 = function(s2, e2) {
+var __rest$6 = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -23827,7 +23850,7 @@ const Modal = (props) => {
     destroyOnClose,
     panelRef = null,
     modalRender
-  } = props, restProps = __rest$5(props, ["prefixCls", "className", "rootClassName", "open", "wrapClassName", "centered", "getContainer", "focusTriggerAfterClose", "style", "visible", "width", "footer", "classNames", "styles", "children", "loading", "confirmLoading", "zIndex", "mousePosition", "onOk", "onCancel", "destroyOnHidden", "destroyOnClose", "panelRef", "modalRender"]);
+  } = props, restProps = __rest$6(props, ["prefixCls", "className", "rootClassName", "open", "wrapClassName", "centered", "getContainer", "focusTriggerAfterClose", "style", "visible", "width", "footer", "classNames", "styles", "children", "loading", "confirmLoading", "zIndex", "mousePosition", "onOk", "onCancel", "destroyOnHidden", "destroyOnClose", "panelRef", "modalRender"]);
   const {
     getPopupContainer: getContextPopupContainer,
     getPrefixCls,
@@ -24025,7 +24048,7 @@ const Confirm = genSubStyleComponent(["Modal", "confirm"], (token2) => {
   // confirm is weak than modal since no conflict here
   order: -1e3
 });
-var __rest$4 = function(s2, e2) {
+var __rest$5 = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -24045,7 +24068,7 @@ const ConfirmContent = (props) => {
     footer,
     // Legacy for static function usage
     locale: staticLocale
-  } = props, resetProps = __rest$4(props, ["prefixCls", "icon", "okText", "cancelText", "confirmPrefixCls", "type", "okCancel", "footer", "locale"]);
+  } = props, resetProps = __rest$5(props, ["prefixCls", "icon", "okText", "cancelText", "confirmPrefixCls", "type", "okCancel", "footer", "locale"]);
   let mergedIcon = icon3;
   if (!icon3 && icon3 !== null) {
     switch (type4) {
@@ -24306,7 +24329,7 @@ function modalGlobalConfig({
 }) {
   defaultRootPrefixCls = rootPrefixCls;
 }
-var __rest$3 = function(s2, e2) {
+var __rest$4 = function(s2, e2) {
   var t2 = {};
   for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
   if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
@@ -24319,7 +24342,7 @@ const HookModal = (_a, ref) => {
   var {
     afterClose: hookAfterClose,
     config: config2
-  } = _a, restProps = __rest$3(_a, ["afterClose", "config"]);
+  } = _a, restProps = __rest$4(_a, ["afterClose", "config"]);
   const [open, setOpen] = reactExports.useState(true);
   const [innerConfig, setInnerConfig] = reactExports.useState(config2);
   const {
@@ -24910,6 +24933,25 @@ const useStyle$3 = genStyleHooks("Notification", (token2) => {
   const notificationToken = prepareNotificationToken(token2);
   return [genNotificationStyle(notificationToken), genNotificationPlacementStyle(notificationToken), genStackStyle(notificationToken)];
 }, prepareComponentToken$2);
+const PurePanelStyle = genSubStyleComponent(["Notification", "PurePanel"], (token2) => {
+  const noticeCls = `${token2.componentCls}-notice`;
+  const notificationToken = prepareNotificationToken(token2);
+  return {
+    [`${noticeCls}-pure-panel`]: Object.assign(Object.assign({}, genNoticeStyle(notificationToken)), {
+      width: notificationToken.width,
+      maxWidth: `calc(100vw - ${unit$1(token2.calc(notificationToken.notificationMarginEdge).mul(2).equal())})`,
+      margin: 0
+    })
+  };
+}, prepareComponentToken$2);
+var __rest$3 = function(s2, e2) {
+  var t2 = {};
+  for (var p2 in s2) if (Object.prototype.hasOwnProperty.call(s2, p2) && e2.indexOf(p2) < 0) t2[p2] = s2[p2];
+  if (s2 != null && typeof Object.getOwnPropertySymbols === "function") for (var i2 = 0, p2 = Object.getOwnPropertySymbols(s2); i2 < p2.length; i2++) {
+    if (e2.indexOf(p2[i2]) < 0 && Object.prototype.propertyIsEnumerable.call(s2, p2[i2])) t2[p2[i2]] = s2[p2[i2]];
+  }
+  return t2;
+};
 function getCloseIcon(prefixCls, closeIcon) {
   if (closeIcon === null || closeIcon === false) {
     return null;
@@ -24956,6 +24998,51 @@ const PureContent = (props) => {
   }, description), actions2 && /* @__PURE__ */ reactExports.createElement("div", {
     className: `${prefixCls}-actions`
   }, actions2));
+};
+const PurePanel$1 = (props) => {
+  const {
+    prefixCls: staticPrefixCls,
+    className,
+    icon: icon3,
+    type: type4,
+    message,
+    description,
+    btn,
+    actions: actions2,
+    closable = true,
+    closeIcon,
+    className: notificationClassName
+  } = props, restProps = __rest$3(props, ["prefixCls", "className", "icon", "type", "message", "description", "btn", "actions", "closable", "closeIcon", "className"]);
+  const {
+    getPrefixCls
+  } = reactExports.useContext(ConfigContext);
+  const mergedActions = actions2 !== null && actions2 !== void 0 ? actions2 : btn;
+  const prefixCls = staticPrefixCls || getPrefixCls("notification");
+  const noticePrefixCls = `${prefixCls}-notice`;
+  const rootCls = useCSSVarCls(prefixCls);
+  const [wrapCSSVar, hashId, cssVarCls] = useStyle$3(prefixCls, rootCls);
+  return wrapCSSVar(/* @__PURE__ */ reactExports.createElement("div", {
+    className: classNames(`${noticePrefixCls}-pure-panel`, hashId, className, cssVarCls, rootCls)
+  }, /* @__PURE__ */ reactExports.createElement(PurePanelStyle, {
+    prefixCls
+  }), /* @__PURE__ */ reactExports.createElement(Notify, Object.assign({}, restProps, {
+    prefixCls,
+    eventKey: "pure",
+    duration: null,
+    closable,
+    className: classNames({
+      notificationClassName
+    }),
+    closeIcon: getCloseIcon(prefixCls, closeIcon),
+    content: /* @__PURE__ */ reactExports.createElement(PureContent, {
+      prefixCls: noticePrefixCls,
+      icon: icon3,
+      type: type4,
+      message,
+      description,
+      actions: mergedActions
+    })
+  }))));
 };
 function getPlacementStyle(placement, top, bottom) {
   let style2;
@@ -27884,8 +27971,8 @@ var Q = {
   PRIMARY: "primary",
   SECONDARY: "secondary"
 }, Z = ["fa-classic", "fa-duotone", "fa-sharp", "fa-sharp-duotone", "fa-thumbprint", "fa-whiteboard", "fa-notdog", "fa-notdog-duo", "fa-chisel", "fa-etch", "fa-graphite", "fa-jelly", "fa-jelly-fill", "fa-jelly-duo", "fa-slab", "fa-slab-press", "fa-utility", "fa-utility-duo", "fa-utility-fill"];
-var i = "classic", t = "duotone", d = "sharp", l = "sharp-duotone", f = "chisel", h = "etch", n = "graphite", g = "jelly", o = "jelly-duo", u = "jelly-fill", m = "notdog", e = "notdog-duo", y = "slab", p = "slab-press", s = "thumbprint", w = "utility", a = "utility-duo", x = "utility-fill", b = "whiteboard", c = "Classic", I = "Duotone", F = "Sharp", v = "Sharp Duotone", S = "Chisel", A = "Etch", P = "Graphite", j = "Jelly", B = "Jelly Duo", N = "Jelly Fill", k = "Notdog", D = "Notdog Duo", T = "Slab", C = "Slab Press", W = "Thumbprint", K = "Utility", R = "Utility Duo", L = "Utility Fill", U = "Whiteboard", dt = [i, t, d, l, f, h, n, g, o, u, m, e, y, p, s, w, a, x, b];
-_ht = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ht, i, c), t, I), d, F), l, v), f, S), h, A), n, P), g, j), o, B), u, N), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ht, m, k), e, D), y, T), p, C), s, W), w, K), a, R), x, L), b, U);
+var i = "classic", t = "duotone", d = "sharp", l = "sharp-duotone", f = "chisel", h = "etch", n = "graphite", g = "jelly", o = "jelly-duo", u = "jelly-fill", m$1 = "notdog", e = "notdog-duo", y = "slab", p = "slab-press", s = "thumbprint", w = "utility", a = "utility-duo", x = "utility-fill", b = "whiteboard", c = "Classic", I = "Duotone", F = "Sharp", v = "Sharp Duotone", S = "Chisel", A = "Etch", P = "Graphite", j = "Jelly", B = "Jelly Duo", N = "Jelly Fill", k = "Notdog", D = "Notdog Duo", T = "Slab", C = "Slab Press", W = "Thumbprint", K = "Utility", R = "Utility Duo", L = "Utility Fill", U = "Whiteboard", dt = [i, t, d, l, f, h, n, g, o, u, m$1, e, y, p, s, w, a, x, b];
+_ht = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ht, i, c), t, I), d, F), l, v), f, S), h, A), n, P), g, j), o, B), u, N), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ht, m$1, k), e, D), y, T), p, C), s, W), w, K), a, R), x, L), b, U);
 var yt = {
   classic: {
     900: "fas",
@@ -28288,8 +28375,8 @@ var t$1 = {
   PRIMARY: "primary",
   SECONDARY: "secondary"
 }, f$1 = ["fa-classic", "fa-duotone", "fa-sharp", "fa-sharp-duotone", "fa-thumbprint", "fa-whiteboard", "fa-notdog", "fa-notdog-duo", "fa-chisel", "fa-etch", "fa-graphite", "fa-jelly", "fa-jelly-fill", "fa-jelly-duo", "fa-slab", "fa-slab-press", "fa-utility", "fa-utility-duo", "fa-utility-fill"];
-var h$1 = "classic", o$1 = "duotone", n$1 = "sharp", s$1 = "sharp-duotone", u$1 = "chisel", g$1 = "etch", y$1 = "graphite", m$1 = "jelly", a$1 = "jelly-duo", p$1 = "jelly-fill", w$1 = "notdog", e$1 = "notdog-duo", b$1 = "slab", c$1 = "slab-press", r$1 = "thumbprint", x$1 = "utility", i$1 = "utility-duo", I$1 = "utility-fill", F$1 = "whiteboard", v$1 = "Classic", S$1 = "Duotone", A$1 = "Sharp", P$1 = "Sharp Duotone", j$1 = "Chisel", B$1 = "Etch", N$1 = "Graphite", k$1 = "Jelly", D$1 = "Jelly Duo", C$1 = "Jelly Fill", T$1 = "Notdog", L$1 = "Notdog Duo", W$1 = "Slab", R$1 = "Slab Press", K$1 = "Thumbprint", U$1 = "Utility", J$1 = "Utility Duo", E$1 = "Utility Fill", _$1 = "Whiteboard";
-_wt = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_wt, h$1, v$1), o$1, S$1), n$1, A$1), s$1, P$1), u$1, j$1), g$1, B$1), y$1, N$1), m$1, k$1), a$1, D$1), p$1, C$1), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_wt, w$1, T$1), e$1, L$1), b$1, W$1), c$1, R$1), r$1, K$1), x$1, U$1), i$1, J$1), I$1, E$1), F$1, _$1);
+var h$1 = "classic", o$1 = "duotone", n$1 = "sharp", s$1 = "sharp-duotone", u$1 = "chisel", g$1 = "etch", y$1 = "graphite", m$1$1 = "jelly", a$1 = "jelly-duo", p$1 = "jelly-fill", w$1 = "notdog", e$1 = "notdog-duo", b$1 = "slab", c$1 = "slab-press", r$1 = "thumbprint", x$1 = "utility", i$1 = "utility-duo", I$1 = "utility-fill", F$1 = "whiteboard", v$1 = "Classic", S$1 = "Duotone", A$1 = "Sharp", P$1 = "Sharp Duotone", j$1 = "Chisel", B$1 = "Etch", N$1 = "Graphite", k$1 = "Jelly", D$1 = "Jelly Duo", C$1 = "Jelly Fill", T$1 = "Notdog", L$1 = "Notdog Duo", W$1 = "Slab", R$1 = "Slab Press", K$1 = "Thumbprint", U$1 = "Utility", J$1 = "Utility Duo", E$1 = "Utility Fill", _$1 = "Whiteboard";
+_wt = {}, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_wt, h$1, v$1), o$1, S$1), n$1, A$1), s$1, P$1), u$1, j$1), g$1, B$1), y$1, N$1), m$1$1, k$1), a$1, D$1), p$1, C$1), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_wt, w$1, T$1), e$1, L$1), b$1, W$1), c$1, R$1), r$1, K$1), x$1, U$1), i$1, J$1), I$1, E$1), F$1, _$1);
 var G$1 = "kit", d$1 = "kit-duotone", M$1 = "Kit", O = "Kit Duotone";
 _defineProperty(_defineProperty({}, G$1, M$1), d$1, O);
 var Hl = {
@@ -31222,6 +31309,11 @@ var faFloppyDisk = {
   iconName: "floppy-disk",
   icon: [448, 512, [128190, 128426, "save"], "f0c7", "M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-242.7c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32L64 32zm32 96c0-17.7 14.3-32 32-32l160 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32l-160 0c-17.7 0-32-14.3-32-32l0-64zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"]
 };
+var faPalette = {
+  prefix: "fas",
+  iconName: "palette",
+  icon: [512, 512, [127912], "f53f", "M512 256c0 .9 0 1.8 0 2.7-.4 36.5-33.6 61.3-70.1 61.3L344 320c-26.5 0-48 21.5-48 48 0 3.4 .4 6.7 1 9.9 2.1 10.2 6.5 20 10.8 29.9 6.1 13.8 12.1 27.5 12.1 42 0 31.8-21.6 60.7-53.4 62-3.5 .1-7 .2-10.6 .2-141.4 0-256-114.6-256-256S114.6 0 256 0 512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"]
+};
 var faKey = {
   prefix: "fas",
   iconName: "key",
@@ -31668,6 +31760,7 @@ const _pg = admin.pages || {
 const _dashboard = admin.dashboard_url || "/wp-admin/";
 const _pluginUrl = admin.plugin_url || "";
 admin.site_url || "";
+const _isPro = !!admin.pro;
 function link(page, args = {}) {
   const base = _pg[page] || "#";
   const qs = new URLSearchParams(args).toString();
@@ -31704,7 +31797,7 @@ const CURRENT = {
   "memberglut-tools": "tools",
   "memberglut-pro-features": "pro"
 };
-const MENU = [
+const CORE_MENU = [
   { key: "dashboard", label: __("Dashboard", "memberglut"), icon: faGaugeHigh, href: _pg.dashboard },
   { key: "members", label: __("Members", "memberglut"), icon: faUsers, href: _pg.members },
   { key: "plans", label: __("Membership Plans", "memberglut"), icon: faLayerGroup, href: _pg.plans },
@@ -31716,8 +31809,22 @@ const MENU = [
   { key: "forms", label: __("Forms & Pages", "memberglut"), icon: faFileLines, href: _pg.forms },
   { key: "tools", label: __("Data & Logs", "memberglut"), icon: faToolbox, href: _pg.tools },
   { key: "settings", label: __("Global Settings", "memberglut"), icon: faGear, href: _pg.settings },
-  { key: "pro", label: __("Pro Features", "memberglut"), icon: faStar, href: _pg.pro_features }
+  { key: "pro", label: _isPro ? __("Pro Modules", "memberglut") : __("Pro Features", "memberglut"), icon: faStar, href: _pg.pro_features }
 ];
+function buildMenu() {
+  const list = [...CORE_MENU];
+  const extra = (typeof window !== "undefined" && window.memberglutAdmin || {}).menu || [];
+  extra.forEach((item) => {
+    if (!item || !item.key || !item.href) return;
+    const at = list.findIndex((i2) => i2.key === (item.after || "emails"));
+    list.splice(at === -1 ? list.length - 1 : at + 1, 0, { ...item, icon: item.icon || faStar });
+    (item.pages || []).forEach((slug) => {
+      CURRENT[slug] = item.key;
+    });
+  });
+  return list;
+}
+const MENU = buildMenu();
 function NavMenu() {
   const [open, setOpen] = reactExports.useState(false);
   const page = new URLSearchParams(window.location.search).get("page") || "";
@@ -31772,10 +31879,10 @@ function Header({ active }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: _pluginUrl + "global-assets/images/memberglut-logo.svg", alt: "MemberGlut", className: "mg-logo-img" })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("nav", { className: "mg-header-nav", children: items.map((n2) => /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: n2.href, className: n2.key === active ? "active" : "", children: n2.label }, n2.key)) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-header-right", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: _pg.pro_features, className: "mg-header-pro", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mg-header-right", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("a", { href: _pg.pro_features, className: `mg-header-pro ${_isPro ? "is-active" : ""}`, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faStar }),
       " ",
-      __("Go Pro", "memberglut")
+      _isPro ? __("Pro", "memberglut") : __("Go Pro", "memberglut")
     ] }) })
   ] });
 }
@@ -31820,311 +31927,352 @@ function StatCard({ label, value, hint, trend, icon: icon3 }) {
 function StatusBadge({ status, label }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `mg-status-badge s-${status}`, children: label || status });
 }
+var createRoot;
+var m = reactDomExports;
+{
+  createRoot = m.createRoot;
+  m.hydrateRoot;
+}
 export {
-  SizeContext as $,
+  RefIcon$4 as $,
   ActionButton as A,
   BaseInput as B,
   CSSMotion as C,
-  DisabledContext as D,
-  PageHeader as E,
+  DesignTokenContext as D,
+  Input as E,
   FastColor as F,
-  Panel as G,
-  Portal as H,
+  Keyframe as G,
+  ListContext as H,
   Icon as I,
-  PresetColors as J,
+  NoStyleItemContext as J,
   KeyCode as K,
   List as L,
   Modal as M,
   NoFormStyle as N,
-  ReactDOM as O,
+  PageHeader as O,
   Page as P,
-  RefForm as Q,
-  React as R,
-  RefIcon$2 as S,
-  RefIcon$4 as T,
-  RefIcon$6 as U,
-  RefIcon$7 as V,
-  RefIcon$5 as W,
-  RefIcon$3 as X,
-  RefIcon$1 as Y,
-  RefIcon as Z,
-  RefResizeObserver as _,
+  Panel as Q,
+  Portal as R,
+  PresetColors as S,
+  PurePanel$2 as T,
+  PurePanel$1 as U,
+  React as V,
+  ReactDOM as W,
+  RefForm as X,
+  RefIcon$2 as Y,
+  RefIcon$1 as Z,
+  RefIcon$5 as _,
   AggregationColor as a,
-  faCircle as a$,
-  Skeleton as a0,
-  StatCard as a1,
-  StatusBadge as a2,
-  TARGET_CLS as a3,
-  ValidateMessagesContext as a4,
-  VariantContext as a5,
-  Wave as a6,
-  WrapperField as a7,
-  __ as a8,
-  _assertThisInitialized as a9,
-  composeRef as aA,
-  confirm as aB,
-  convertLegacyProps as aC,
-  createRoot$1 as aD,
-  defaultColor as aE,
-  destroyFns as aF,
-  devUseWarning as aG,
-  faArrowDown as aH,
-  faArrowRight as aI,
-  faArrowRightFromBracket as aJ,
-  faArrowUp as aK,
-  faArrowUpRightFromSquare as aL,
-  faArrowUpWideShort as aM,
-  faArrowsTurnRight as aN,
-  faBan as aO,
-  faBars as aP,
-  faBell as aQ,
-  faBoxArchive as aR,
-  faBroom as aS,
-  faBuildingColumns as aT,
-  faCalculator as aU,
-  faCalendarCheck as aV,
-  faCalendarDays as aW,
-  faCalendarPlus as aX,
-  faChartLine as aY,
-  faCheck as aZ,
-  faChevronLeft as a_,
-  _asyncToGenerator as aa,
-  _classCallCheck$1 as ab,
-  _createClass$1 as ac,
-  _createSuper as ad,
-  _defineProperty$1 as ae,
-  _extends as af,
-  _getPrototypeOf as ag,
-  _inherits as ah,
-  _isNativeReflectConstruct as ai,
-  _n as aj,
-  _objectSpread2$1 as ak,
-  _objectWithoutProperties as al,
-  _possibleConstructorReturn as am,
-  _regeneratorRuntime as an,
-  _slicedToArray$1 as ao,
-  _toArray as ap,
-  _toConsumableArray$1 as aq,
-  _typeof$1 as ar,
-  blue as as,
-  calcOffset as at,
-  calculateColor as au,
-  canUseDom as av,
-  classNames as aw,
-  clearFix as ax,
-  cloneElement as ay,
-  commonjsGlobal as az,
+  faArrowUpWideShort as a$,
+  RefIcon$6 as a0,
+  RefIcon$7 as a1,
+  RefIcon as a2,
+  RefIcon$3 as a3,
+  RefResizeObserver as a4,
+  SizeContext as a5,
+  Skeleton as a6,
+  StatCard as a7,
+  StatusBadge as a8,
+  TARGET_CLS as a9,
+  _typeof$1 as aA,
+  _unsupportedIterableToArray$1 as aB,
+  blue as aC,
+  calcOffset as aD,
+  calculateColor as aE,
+  canUseDom as aF,
+  classNames as aG,
+  clearFix as aH,
+  cloneElement as aI,
+  commonjsGlobal as aJ,
+  composeRef as aK,
+  confirm as aL,
+  convertLegacyProps as aM,
+  createRoot as aN,
+  createTheme as aO,
+  defaultColor as aP,
+  defaultConfig as aQ,
+  defaultPresetColors as aR,
+  defaultTheme as aS,
+  derivative as aT,
+  destroyFns as aU,
+  devUseWarning as aV,
+  faArrowDown as aW,
+  faArrowRight as aX,
+  faArrowRightFromBracket as aY,
+  faArrowUp as aZ,
+  faArrowUpRightFromSquare as a_,
+  THEME as aa,
+  ValidateMessagesContext as ab,
+  VariantContext as ac,
+  WatermarkContext as ad,
+  Wave as ae,
+  WrapperField as af,
+  __ as ag,
+  _assertThisInitialized as ah,
+  _asyncToGenerator as ai,
+  _classCallCheck$1 as aj,
+  _createClass$1 as ak,
+  _createSuper as al,
+  _defineProperty$1 as am,
+  _extends as an,
+  _getPrototypeOf as ao,
+  _inherits as ap,
+  _isNativeReflectConstruct as aq,
+  _n as ar,
+  _objectSpread2$1 as as,
+  _objectWithoutProperties as at,
+  _pg as au,
+  _possibleConstructorReturn as av,
+  _regeneratorRuntime as aw,
+  _slicedToArray$1 as ax,
+  _toArray as ay,
+  _toConsumableArray$1 as az,
   App as b,
-  faUserClock as b$,
-  faCircleCheck as b0,
-  faCircleInfo as b1,
-  faCircleUser as b2,
-  faClockRotateLeft as b3,
-  faCode as b4,
-  faCopy as b5,
-  faCreditCard as b6,
-  faCrown as b7,
-  faCubes as b8,
-  faEllipsis as b9,
-  faPaperPlane as bA,
-  faPen as bB,
-  faPenToSquare as bC,
-  faPeopleGroup as bD,
-  faPlug as bE,
-  faPlus as bF,
-  faPuzzlePiece as bG,
-  faRectangleList as bH,
-  faRepeat as bI,
-  faRightFromBracket as bJ,
-  faRightToBracket as bK,
-  faRotate as bL,
-  faRotateLeft as bM,
-  faSackDollar as bN,
-  faScaleBalanced as bO,
-  faShieldHalved as bP,
-  faSliders as bQ,
-  faStar as bR,
-  faTableCellsLarge as bS,
-  faTableColumns as bT,
-  faTableList as bU,
-  faTag as bV,
-  faTags as bW,
-  faTrashCan as bX,
-  faTriangleExclamation as bY,
-  faUser as bZ,
-  faUserCheck as b_,
-  faEnvelope as ba,
-  faEnvelopesBulk as bb,
-  faEraser as bc,
-  faEye as bd,
-  faEyeSlash as be,
-  faFileExport as bf,
-  faFileImport as bg,
-  faFileLines$1 as bh,
-  faFloppyDisk as bi,
-  faFolderTree as bj,
-  faGear as bk,
-  faGift as bl,
-  faGlobe as bm,
-  faHourglassEnd as bn,
-  faHourglassHalf as bo,
-  faIdCard as bp,
-  faInfinity as bq,
-  faKey as br,
-  faLayerGroup as bs,
-  faLink as bt,
-  faLock as bu,
-  faMagnifyingGlass as bv,
-  faMessage as bw,
-  faMinus as bx,
-  faMoneyBill as by,
-  faNoteSticky as bz,
-  Button as c,
-  merge as c$,
-  faUserGear as c0,
-  faUserLock as c1,
-  faUserPen as c2,
-  faUserPlus as c3,
-  faUserSecret as c4,
-  faUserShield as c5,
-  faUserTag as c6,
-  faUserXmark as c7,
-  faUsers as c8,
-  faVial as c9,
-  getColorAlpha as cA,
-  getDOM as cB,
-  getDefaultExportFromCjs as cC,
-  getGradientPercentColor as cD,
-  getMergedStatus as cE,
-  getNodeRef as cF,
-  getRoundNumber2 as cG,
-  getScrollBarSize as cH,
-  getShadowRoot as cI,
-  getStatusClassNames as cJ,
-  getTargetScrollBarSize as cK,
-  getTransitionName as cL,
-  initCollapseMotion as cM,
-  initComponentToken as cN,
-  initFadeMotion as cO,
-  initInputToken as cP,
-  initMotion as cQ,
-  initZoomMotion as cR,
-  isDOM as cS,
-  isEqual as cT,
-  isFragment as cU,
-  isVisible as cV,
-  jsxRuntimeExports as cW,
-  link as cX,
-  locale$3 as cY,
-  locale as cZ,
-  localeValues as c_,
-  faWandMagicSparkles as ca,
-  faXmark as cb,
-  fillRef as cc,
-  genAlphaColor as cd,
-  genBaseOutlinedStyle as ce,
-  genBasicInputStyle as cf,
-  genBorderlessStyle as cg,
-  genCollapseMotion as ch,
-  genCompactItemStyle as ci,
-  genDisabledStyle as cj,
-  genFilledGroupStyle as ck,
-  genFilledStyle as cl,
-  genFocusOutline as cm,
-  genFocusStyle as cn,
-  genInputGroupStyle as co,
-  genInputSmallStyle as cp,
-  genOutlinedGroupStyle as cq,
-  genOutlinedStyle as cr,
-  genPlaceholderStyle as cs,
-  genStyleHooks as ct,
-  genSubStyleComponent as cu,
-  genUnderlinedStyle as cv,
-  generateColor$1 as cw,
-  generateColor2 as cx,
-  get as cy,
-  getAllowClear as cz,
-  CSSMotionList as d,
-  mergeProps as d0,
-  modalGlobalConfig as d1,
-  omit as d2,
-  operationUnit as d3,
-  pickAttrs as d4,
-  pickClosable as d5,
-  presetPrimaryColors as d6,
-  queryArg as d7,
-  reactDomExports as d8,
-  reactExports as d9,
-  useLocale as dA,
-  useMemo as dB,
-  useMergedState as dC,
-  useModal as dD,
-  useRemovePasswordTimeout as dE,
-  useRowStyle as dF,
-  useSafeState as dG,
-  useSharedStyle as dH,
-  useSize as dI,
-  useStyle$4 as dJ,
-  useStyle$1 as dK,
-  useToken as dL,
-  useVariant as dM,
-  useWatch as dN,
-  useZIndex as dO,
-  warning$2 as dP,
-  warningOnce as dQ,
-  withConfirm as dR,
-  withError as dS,
-  withInfo as dT,
-  withSuccess as dU,
-  withWarn as dV,
-  wrapperRaf as dW,
-  zIndexContext as dX,
-  zoomIn as dY,
-  renderCloseIcon as da,
-  replaceElement as db,
-  resetComponent as dc,
-  resetIcon as dd,
-  resolveOnChange as de,
-  set as df,
-  supportNodeRef as dg,
-  supportRef as dh,
-  textEllipsis as di,
-  toArray$2 as dj,
-  toHexFormat as dk,
-  triggerFocus as dl,
-  unit$1 as dm,
-  useCSSVarCls as dn,
-  useClosable as dp,
-  useColStyle as dq,
-  useCompactItemContext as dr,
-  useComponentConfig as ds,
-  useComposeRef as dt,
-  useCount as du,
-  useEvent as dv,
-  useForm as dw,
-  useId as dx,
-  useLayoutEffect as dy,
-  useLayoutUpdateEffect as dz,
-  Color as e,
-  ColorBlock as f,
-  ColorPickerPrefixCls as g,
-  ColorPresets as h,
-  Compact$1 as i,
-  ConfigContext as j,
-  ConfigProvider as k,
-  ConfirmContent as l,
-  Context as m,
-  ContextIsolator as n,
-  DisabledContextProvider as o,
-  Drawer as p,
-  FontAwesomeIcon as q,
-  Footer as r,
-  FormContext as s,
-  FormItemInputContext as t,
-  FormItemPrefixContext as u,
-  FormProvider2 as v,
-  Input as w,
-  Keyframe as x,
-  ListContext as y,
-  NoStyleItemContext as z
+  faRotate as b$,
+  faArrowsTurnRight as b0,
+  faBan as b1,
+  faBars as b2,
+  faBell as b3,
+  faBoxArchive as b4,
+  faBroom as b5,
+  faBuildingColumns as b6,
+  faCalculator as b7,
+  faCalendarCheck as b8,
+  faCalendarDays as b9,
+  faGift as bA,
+  faGlobe as bB,
+  faHourglassEnd as bC,
+  faHourglassHalf as bD,
+  faIdCard as bE,
+  faInfinity as bF,
+  faKey as bG,
+  faLayerGroup as bH,
+  faLink as bI,
+  faLock as bJ,
+  faMagnifyingGlass as bK,
+  faMessage as bL,
+  faMinus as bM,
+  faMoneyBill as bN,
+  faNoteSticky as bO,
+  faPalette as bP,
+  faPaperPlane as bQ,
+  faPen as bR,
+  faPenToSquare as bS,
+  faPeopleGroup as bT,
+  faPlug as bU,
+  faPlus as bV,
+  faPuzzlePiece as bW,
+  faRectangleList as bX,
+  faRepeat as bY,
+  faRightFromBracket as bZ,
+  faRightToBracket as b_,
+  faCalendarPlus as ba,
+  faChartLine as bb,
+  faCheck as bc,
+  faChevronLeft as bd,
+  faCircle as be,
+  faCircleCheck as bf,
+  faCircleInfo as bg,
+  faCircleUser as bh,
+  faClockRotateLeft as bi,
+  faCode as bj,
+  faCopy as bk,
+  faCreditCard as bl,
+  faCrown as bm,
+  faCubes as bn,
+  faEllipsis as bo,
+  faEnvelope as bp,
+  faEnvelopesBulk as bq,
+  faEraser as br,
+  faEye as bs,
+  faEyeSlash as bt,
+  faFileExport as bu,
+  faFileImport as bv,
+  faFileLines$1 as bw,
+  faFloppyDisk as bx,
+  faFolderTree as by,
+  faGear as bz,
+  AppConfigContext as c,
+  getGradientPercentColor as c$,
+  faRotateLeft as c0,
+  faSackDollar as c1,
+  faScaleBalanced as c2,
+  faShieldHalved as c3,
+  faSliders as c4,
+  faStar as c5,
+  faTableCellsLarge as c6,
+  faTableColumns as c7,
+  faTableList as c8,
+  faTag as c9,
+  genCompactItemStyle as cA,
+  genComponentStyleHook as cB,
+  genControlHeight as cC,
+  genDisabledStyle as cD,
+  genFilledGroupStyle as cE,
+  genFilledStyle as cF,
+  genFocusOutline as cG,
+  genFocusStyle as cH,
+  genFontMapToken as cI,
+  genInputGroupStyle as cJ,
+  genInputSmallStyle as cK,
+  genModalMaskStyle as cL,
+  genOutlinedGroupStyle as cM,
+  genOutlinedStyle as cN,
+  genPlaceholderStyle as cO,
+  genStyleHooks as cP,
+  genSubStyleComponent as cQ,
+  genUnderlinedStyle as cR,
+  generate$1 as cS,
+  generateColor$1 as cT,
+  generateColor2 as cU,
+  get as cV,
+  getAllowClear as cW,
+  getColorAlpha as cX,
+  getComputedToken$1 as cY,
+  getDOM as cZ,
+  getDefaultExportFromCjs as c_,
+  faTags as ca,
+  faTrashCan as cb,
+  faTriangleExclamation as cc,
+  faUser as cd,
+  faUserCheck as ce,
+  faUserClock as cf,
+  faUserGear as cg,
+  faUserLock as ch,
+  faUserPen as ci,
+  faUserPlus as cj,
+  faUserSecret as ck,
+  faUserShield as cl,
+  faUserTag as cm,
+  faUserXmark as cn,
+  faUsers as co,
+  faVial as cp,
+  faWandMagicSparkles as cq,
+  faXmark as cr,
+  fillRef as cs,
+  formatToken as ct,
+  genAlphaColor as cu,
+  genBaseOutlinedStyle as cv,
+  genBasicInputStyle as cw,
+  genBorderlessStyle as cx,
+  genCollapseMotion as cy,
+  genColorMapToken as cz,
+  Button as d,
+  useInternalMessage as d$,
+  getMergedStatus as d0,
+  getNodeRef as d1,
+  getRoundNumber2 as d2,
+  getScrollBarSize as d3,
+  getShadowRoot as d4,
+  getStatusClassNames as d5,
+  getTargetScrollBarSize as d6,
+  getTransitionName as d7,
+  globalConfig as d8,
+  gold as d9,
+  reactDomExports as dA,
+  reactExports as dB,
+  renderCloseIcon as dC,
+  replaceElement as dD,
+  resetComponent as dE,
+  resetIcon as dF,
+  resolveOnChange as dG,
+  seedToken as dH,
+  set as dI,
+  supportNodeRef as dJ,
+  supportRef as dK,
+  textEllipsis as dL,
+  toArray$2 as dM,
+  toHexFormat as dN,
+  triggerFocus as dO,
+  unit$1 as dP,
+  unstableSetRender as dQ,
+  useCSSVarCls as dR,
+  useClosable as dS,
+  useColStyle as dT,
+  useCompactItemContext as dU,
+  useComponentConfig as dV,
+  useComposeRef as dW,
+  useCount as dX,
+  useEvent as dY,
+  useForm as dZ,
+  useId as d_,
+  index as da,
+  initCollapseMotion as db,
+  initComponentToken as dc,
+  initFadeMotion as dd,
+  initInputToken as de,
+  initMotion as df,
+  initZoomMotion as dg,
+  isDOM as dh,
+  isEqual as di,
+  isFragment as dj,
+  isVisible as dk,
+  jsxRuntimeExports as dl,
+  link as dm,
+  locale as dn,
+  locale$3 as dp,
+  localeValues as dq,
+  merge as dr,
+  mergeProps as ds,
+  modalGlobalConfig as dt,
+  omit as du,
+  operationUnit as dv,
+  pickAttrs as dw,
+  pickClosable as dx,
+  presetPrimaryColors as dy,
+  queryArg as dz,
+  CSSMotionList as e,
+  useInternalNotification as e0,
+  useLayoutEffect as e1,
+  useLayoutUpdateEffect as e2,
+  useLocale as e3,
+  useMemo as e4,
+  useMergedState as e5,
+  useMessage as e6,
+  useModal as e7,
+  useNotification as e8,
+  useRemovePasswordTimeout as e9,
+  useRowStyle as ea,
+  useSafeState as eb,
+  useSharedStyle as ec,
+  useSize as ed,
+  useStyle$4 as ee,
+  useStyle$1 as ef,
+  useToken as eg,
+  useVariant as eh,
+  useWatch as ei,
+  useZIndex as ej,
+  version$1 as ek,
+  warning$2 as el,
+  warningOnce as em,
+  withConfirm as en,
+  withError as eo,
+  withInfo as ep,
+  withSuccess as eq,
+  withWarn as er,
+  wrapPromiseFn as es,
+  wrapperRaf as et,
+  zIndexContext as eu,
+  zoomIn as ev,
+  Collapse$1 as f,
+  Color as g,
+  ColorBlock as h,
+  ColorPickerPrefixCls as i,
+  ColorPresets as j,
+  Compact$1 as k,
+  ConfigContext as l,
+  ConfigProvider as m,
+  ConfirmContent as n,
+  Context as o,
+  ContextIsolator as p,
+  DialogWrap as q,
+  DisabledContext as r,
+  DisabledContextProvider as s,
+  Drawer as t,
+  FontAwesomeIcon as u,
+  Footer as v,
+  FormContext as w,
+  FormItemInputContext as x,
+  FormItemPrefixContext as y,
+  FormProvider2 as z
 };

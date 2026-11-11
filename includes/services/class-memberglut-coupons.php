@@ -23,7 +23,9 @@ class MemberGlut_Coupons {
 	 * @return array
 	 */
 	public static function to_client( $row ) {
-		return array(
+		$meta = is_array( $row['meta'] ) ? $row['meta'] : array();
+		$ext  = isset( $meta['ext'] ) && is_array( $meta['ext'] ) ? $meta['ext'] : array();
+		$out  = array(
 			'id'             => (int) $row['id'],
 			'code'           => $row['code'],
 			'type'           => $row['type'],
@@ -40,6 +42,36 @@ class MemberGlut_Coupons {
 			'status'         => self::status( $row ),
 			'created_at'     => memberglut_iso( $row['created_at'] ),
 		);
+		foreach ( self::extra_schema() as $key => $def ) {
+			$out[ $key ] = array_key_exists( $key, $ext ) ? $ext[ $key ] : $def['default'];
+		}
+		return $out;
+	}
+
+	/**
+	 * Add-on coupon settings: key => [ type, default, … ] (memberglut_coupon_settings_schema). Stored in meta.ext.
+	 *
+	 * @return array
+	 */
+	public static function extra_schema() {
+		$out = array();
+		foreach ( (array) apply_filters( 'memberglut_coupon_settings_schema', array() ) as $key => $def ) {
+			if ( is_array( $def ) && ! empty( $def['type'] ) && array_key_exists( 'default', $def ) ) {
+				$out[ sanitize_key( $key ) ] = $def;
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * Add-on settings of a coupon (meta.ext) from a coupon row.
+	 *
+	 * @param array $row Row.
+	 * @return array
+	 */
+	public static function ext( $row ) {
+		$c = self::to_client( $row );
+		return array_intersect_key( $c, self::extra_schema() );
 	}
 
 	/**
@@ -111,10 +143,26 @@ class MemberGlut_Coupons {
 		if ( $starts && $expires && $expires < $starts ) {
 			$errors['expires'] = __( 'The expiry date is before the start date.', 'memberglut' );
 		}
+		$existing = $id ? memberglut_repo( 'coupons' )->find( $id ) : null;
+		$meta     = $existing && is_array( $existing['meta'] ) ? $existing['meta'] : array();
+		$ext      = isset( $meta['ext'] ) && is_array( $meta['ext'] ) ? $meta['ext'] : array();
+		foreach ( self::extra_schema() as $key => $def ) {
+			if ( ! array_key_exists( $key, $d ) ) {
+				continue;
+			}
+			$clean = MemberGlut_Settings::sanitize( $d[ $key ], $def, $key );
+			if ( is_wp_error( $clean ) ) {
+				$errors[ $key ] = $clean->get_error_message();
+			} else {
+				$ext[ $key ] = $clean;
+			}
+		}
 		if ( $errors ) {
 			return new WP_Error( 'memberglut_invalid_coupon', reset( $errors ), array( 'status' => 400, 'fields' => $errors ) );
 		}
+		$meta['ext'] = $ext;
 		$data = array(
+			'meta'           => $meta,
 			'code'           => $code,
 			'type'           => $type,
 			'amount'         => $amount,

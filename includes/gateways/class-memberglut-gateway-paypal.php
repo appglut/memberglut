@@ -180,7 +180,11 @@ class MemberGlut_Gateway_Paypal extends MemberGlut_Gateway {
 			$ids[ $k ]['product'] = $p['id'];
 			MemberGlut_Plans::set_gateway_ids( $plan['id'], $ids );
 		}
-		$sig = md5( $s['currency'] . '|' . $plan['price'] . '|' . $plan['duration']['unit'] . $plan['duration']['length'] . '|' . ( $s['trial'] ? $s['trial_days'] : 0 ) . '|' . ( $plan['limit_cycles'] ? $plan['cycles'] : 0 ) );
+		$period = isset( $s['period_price'] ) ? (float) $s['period_price'] : (float) $plan['price'];
+		// When the first period costs something else than the regular price (one-time coupon, proration credit), it
+		// becomes a "trial" cycle of the same length with that price.
+		$first  = ! $s['trial'] && abs( ( (float) $s['total'] - (float) $s['signup_fee'] ) - $period ) > 0.001 ? max( 0, (float) $s['total'] - (float) $s['signup_fee'] ) : null;
+		$sig    = md5( $s['currency'] . '|' . $period . '|' . $plan['duration']['unit'] . $plan['duration']['length'] . '|' . ( $s['trial'] ? $s['trial_days'] : 0 ) . '|' . ( $plan['limit_cycles'] ? $plan['cycles'] : 0 ) . '|' . ( null === $first ? '' : $first ) );
 		if ( ! empty( $ids[ $k ]['plans'][ $sig ] ) ) {
 			return $ids[ $k ]['plans'][ $sig ];
 		}
@@ -188,13 +192,15 @@ class MemberGlut_Gateway_Paypal extends MemberGlut_Gateway {
 		$seq    = 1;
 		if ( $s['trial'] ) {
 			$cycles[] = array( 'frequency' => array( 'interval_unit' => 'DAY', 'interval_count' => min( 365, $s['trial_days'] ) ), 'tenure_type' => 'TRIAL', 'sequence' => $seq++, 'total_cycles' => 1, 'pricing_scheme' => array( 'fixed_price' => $this->money( 0, $s['currency'] ) ) );
+		} elseif ( null !== $first ) {
+			$cycles[] = array( 'frequency' => array( 'interval_unit' => $this->unit( $plan['duration']['unit'] ), 'interval_count' => $plan['duration']['length'] ), 'tenure_type' => 'TRIAL', 'sequence' => $seq++, 'total_cycles' => 1, 'pricing_scheme' => array( 'fixed_price' => $this->money( $first, $s['currency'] ) ) );
 		}
 		$cycles[] = array(
 			'frequency'      => array( 'interval_unit' => $this->unit( $plan['duration']['unit'] ), 'interval_count' => $plan['duration']['length'] ),
 			'tenure_type'    => 'REGULAR',
 			'sequence'       => $seq,
-			'total_cycles'   => $plan['limit_cycles'] ? (int) $plan['cycles'] : 0,
-			'pricing_scheme' => array( 'fixed_price' => $this->money( $plan['price'], $s['currency'] ) ),
+			'total_cycles'   => $plan['limit_cycles'] ? max( 1, (int) $plan['cycles'] - ( null === $first ? 0 : 1 ) ) : 0,
+			'pricing_scheme' => array( 'fixed_price' => $this->money( $period, $s['currency'] ) ),
 		);
 		$pp = $this->api(
 			'POST',
@@ -307,7 +313,10 @@ class MemberGlut_Gateway_Paypal extends MemberGlut_Gateway {
 			return new WP_Error( 'memberglut_paypal', __( 'Payment not found.', 'memberglut' ) );
 		}
 		$coupon = ! empty( $payment['meta']['coupon_id'] ) ? memberglut_repo( 'coupons' )->find( (int) $payment['meta']['coupon_id'] ) : null;
-		$s      = MemberGlut_Pricing::summary( $plan, $coupon, $user->ID, array( 'change' => ! empty( $payment['meta']['change_from'] ) ) );
+		// The summary taken at checkout (it includes what add-ons computed from the form: tax, currency, credit…).
+		$s = ! empty( $payment['meta']['summary'] ) && is_array( $payment['meta']['summary'] )
+			? array_merge( MemberGlut_Pricing::summary( $plan, $coupon, $user->ID, array( 'change' => ! empty( $payment['meta']['change_from'] ) ) ), $payment['meta']['summary'] )
+			: MemberGlut_Pricing::summary( $plan, $coupon, $user->ID, array( 'change' => ! empty( $payment['meta']['change_from'] ) ) );
 		$pp     = $this->billing_plan( $plan, $s );
 		if ( is_wp_error( $pp ) ) {
 			return $pp;
@@ -322,9 +331,10 @@ class MemberGlut_Gateway_Paypal extends MemberGlut_Gateway {
 		if ( $s['signup_fee'] > 0 ) {
 			$override['payment_preferences'] = array( 'setup_fee' => $this->money( $s['signup_fee'], $s['currency'] ), 'setup_fee_failure_action' => 'CANCEL' );
 		}
-		if ( $coupon && $s['discount'] > 0 ) {
-			$seq                        = $s['trial'] ? 2 : 1;
-			$override['billing_cycles'] = array( array( 'sequence' => $seq, 'pricing_scheme' => array( 'fixed_price' => $this->money( $s['recurring'] && $coupon['recurring'] ? $s['renewal'] : $plan['price'] - $s['discount'], $s['currency'] ) ) ) );
+		if ( $coupon && $s['discount'] > 0 && $coupon['recurring'] ) {
+			// Recurring coupon: every regular cycle costs the discounted renewal amount.
+			$seq                        = $s['trial'] || abs( ( (float) $s['total'] - (float) $s['signup_fee'] ) - ( isset( $s['period_price'] ) ? (float) $s['period_price'] : (float) $plan['price'] ) ) > 0.001 ? 2 : 1;
+			$override['billing_cycles'] = array( array( 'sequence' => $seq, 'pricing_scheme' => array( 'fixed_price' => $this->money( $s['renewal'], $s['currency'] ) ) ) );
 		}
 		if ( $override ) {
 			$body['plan'] = $override;

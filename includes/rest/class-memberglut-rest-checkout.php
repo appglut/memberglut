@@ -43,7 +43,8 @@ class MemberGlut_REST_Checkout extends MemberGlut_REST_Controller {
 			$coupon = null;
 		}
 		$change = $user_id && MemberGlut_Subscription_Service::in_group( $user_id, $plan['group'] );
-		$s      = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $change ) );
+		$renew  = MemberGlut_Checkout::renewable_sub( $user_id, $plan );
+		$s      = MemberGlut_Pricing::summary( $plan, $coupon, $user_id, array( 'change' => (bool) $change && ! $renew, 'renewal' => (bool) $renew, 'data' => $d ) );
 		return rest_ensure_response(
 			array(
 				'html'          => MemberGlut_Checkout::summary_html( $s ),
@@ -52,6 +53,10 @@ class MemberGlut_REST_Checkout extends MemberGlut_REST_Controller {
 				'gateways'      => array_keys( MemberGlut_Checkout::gateways_for( $plan ) ),
 				'coupon_error'  => $error,
 				'coupon_ok'     => (bool) $coupon,
+				'currency'      => $s['currency'],
+				'recurring'     => $s['recurring'],
+				'renewal'       => $s['renewal'],
+				'text'          => $s['text'],
 			)
 		);
 	}

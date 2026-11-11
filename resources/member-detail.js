@@ -1,22 +1,26 @@
-import { cW as jsxRuntimeExports, P as Page, b as App, d7 as queryArg, d9 as reactExports, a8 as __, cX as link, a0 as Skeleton, q as FontAwesomeIcon, a_ as faChevronLeft, c as Button, b_ as faUserCheck, c7 as faUserXmark, ba as faEnvelope, c2 as faUserPen, bF as faPlus, bA as faPaperPlane, bz as faNoteSticky, bX as faTrashCan, br as faKey, bJ as faRightFromBracket, a2 as StatusBadge, b9 as faEllipsis, bs as faLayerGroup, aX as faCalendarPlus, aO as faBan, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { dl as jsxRuntimeExports, P as Page, b as App, dz as queryArg, dB as reactExports, ag as __, dm as link, a6 as Skeleton, u as FontAwesomeIcon, bd as faChevronLeft, d as Button, ce as faUserCheck, cn as faUserXmark, V as React, bp as faEnvelope, ci as faUserPen, bV as faPlus, bQ as faPaperPlane, bO as faNoteSticky, cb as faTrashCan, bG as faKey, bZ as faRightFromBracket, a8 as StatusBadge, bo as faEllipsis, bH as faLayerGroup, ba as faCalendarPlus, b1 as faBan } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { A as Avatar, E as EditSubscriptionModal, C as ChangePlanModal } from "./chunks/MemberModals-CT7Zmyyq.js";
-import { ay as memberAction, E as Empty, x as deleteNote, m as addNote, aX as subscriptionAction, a5 as getMember, B as deleteSubscription, a9 as getPayments, a0 as getEvents, a3 as getLogins, l as addMember, a$ as updateSubscription } from "./chunks/api-C3opcxY4.js";
-import { i as initials, d as date, f as fromNow, m as money, a as dateTime, S as SUB_STATUS, G as GATEWAY, b as planPrice, P as PAY_STATUS } from "./chunks/format-DZEqfpos.js";
-import { r as roleName } from "./chunks/lookups-cQsk1BIx.js";
-import { A as Alert } from "./chunks/index-dB_sQhvz.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { P as Popconfirm } from "./chunks/index-BgJjhEIZ.js";
-import { T as Tabs } from "./chunks/index-DPM4vg2p.js";
-import { D as Descriptions, T as Timeline } from "./chunks/Timeline-C1D1DK_S.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { D as Dropdown, F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/index-BtIaElEq.js";
-import "./chunks/index-BQU-XdN2.js";
-import "./chunks/index--FwfDeQZ.js";
-import "./chunks/index-D6ChUS7m.js";
+import { E as EditSubscriptionModal, C as ChangePlanModal } from "./chunks/MemberModals-8zg5nQ_p.js";
+import { aF as memberAction, E as Empty, A as deleteNote, o as addNote, b3 as subscriptionAction, ab as getMember, K as deleteSubscription, af as getPayments, a6 as getEvents, a9 as getLogins, n as addMember, b7 as updateSubscription } from "./chunks/api-BoF1RtIE.js";
+import { t as toolbarFor } from "./chunks/registry-Cs5PTTmS.js";
+import { i as initials, d as date, b as fromNow, m as money, a as dateTime, S as SUB_STATUS, G as GATEWAY, c as planPrice, P as PAY_STATUS } from "./chunks/format-CXuEAMXg.js";
+import { r as roleName } from "./chunks/lookups-2moJUDPH.js";
+import { A as Alert } from "./chunks/index-DBTNcr8l.js";
+import { A as Avatar } from "./chunks/index-BjzJaiPN.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { P as Popconfirm } from "./chunks/index-CmZYsh7n.js";
+import { T as Tabs } from "./chunks/index-BedyQTUQ.js";
+import { D as Descriptions, T as Timeline } from "./chunks/Timeline-BZkA49tz.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { D as Dropdown, F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/index-BYeBYKdc.js";
+import "./chunks/index-C6h9-TWP.js";
+import "./chunks/index-DLAXZnY0.js";
+import "./chunks/index-Cb3PZqfZ.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-n8Z4Xk8Z.js";
 const EVENT_COLOR = { grant: "green", activate: "green", approve: "green", payment: "blue", renew: "blue", cancel: "orange", hold: "orange", expire: "red", revoke: "red", reject: "red", pending: "gray" };
 function SubscriptionCard({ s, onAction }) {
   const plan = s.plan || { name: `#${s.plan_id}`, color: "#94a3b8" };
@@ -222,6 +226,7 @@ function MemberDetail() {
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-page-actions", children: [
         pending && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserCheck }), onClick: () => run(() => memberAction(userId, "approve"), __("Member approved.", "memberglut")), children: __("Approve", "memberglut") }),
         pending && /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: __("Reject this registration?", "memberglut"), okButtonProps: { danger: true }, onConfirm: () => run(() => memberAction(userId, "reject"), __("Registration rejected.", "memberglut")), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { danger: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserXmark }), children: __("Reject", "memberglut") }) }),
+        toolbarFor("member").map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx(React.Fragment, { children: t.render({ userId, member: m, reload: load }) }, t.key)),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faEnvelope }), href: `mailto:${u.email}`, children: __("Email", "memberglut") }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faUserPen }), href: u.edit_url, children: __("Edit user", "memberglut") }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { type: "primary", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPlus }), onClick: () => setEdit({ sub: null, isNew: true }), children: __("Add plan", "memberglut") })
@@ -304,4 +309,4 @@ function MemberDetail() {
 function MemberDetailPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "members", children: /* @__PURE__ */ jsxRuntimeExports.jsx(MemberDetail, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(MemberDetailPage, {}));
+boot(MemberDetailPage);

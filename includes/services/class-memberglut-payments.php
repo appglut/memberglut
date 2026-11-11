@@ -70,6 +70,8 @@ class MemberGlut_Payments {
 						'key'       => wp_generate_password( 20, false ),
 						'coupon_id' => isset( $s['coupon_id'] ) ? (int) $s['coupon_id'] : 0,
 					),
+					$s ? array( 'summary' => array_intersect_key( $s, array_flip( array( 'currency', 'subtotal', 'signup_fee', 'discount', 'tax', 'total', 'recurring', 'renewal', 'trial', 'trial_days', 'coupon_id', 'period_price', 'first_credit', 'renewal_tax', 'lines' ) ) ) ) : array(),
+					isset( $s['meta'] ) ? (array) $s['meta'] : array(),
 					isset( $a['meta'] ) ? (array) $a['meta'] : array()
 				),
 			)
@@ -389,7 +391,14 @@ class MemberGlut_Payments {
 	public static function manual_renewals() {
 		$repo = memberglut_repo( 'subscriptions' );
 		$soon = gmdate( 'Y-m-d H:i:s', time() + DAY_IN_SECONDS );
-		foreach ( $repo->query( array( 'where' => array( 'status' => array( 'active', 'on_hold' ), 'gateway' => 'bank', 'gateway_subscription_id' => '', 'next_payment_at IS NOT NULL' => true, 'next_payment_at <=' => $soon ), 'per_page' => 200 ) ) as $sub ) {
+		/**
+		 * Gateways whose recurring plans are renewed by a pending “renewal” payment the member pays (bank transfer,
+		 * pay-by-link gateways of add-ons).
+		 *
+		 * @param string[] $gateways Gateway IDs.
+		 */
+		$gateways = array_values( array_unique( (array) apply_filters( 'memberglut_manual_renewal_gateways', array( 'bank' ) ) ) );
+		foreach ( $repo->query( array( 'where' => array( 'status' => array( 'active', 'on_hold' ), 'gateway' => $gateways, 'gateway_subscription_id' => '', 'next_payment_at IS NOT NULL' => true, 'next_payment_at <=' => $soon ), 'per_page' => 200 ) ) as $sub ) {
 			$plan = MemberGlut_Plans::get( $sub['plan_id'] );
 			if ( ! $plan || 'recurring' !== $plan['billing'] ) {
 				continue;
@@ -400,23 +409,42 @@ class MemberGlut_Payments {
 				$due = ( (int) $sub['retry_count'] + 1 ) * max( 1, (int) memberglut_setting( 'retry_interval', 3 ) );
 				if ( $age >= $due ) {
 					self::renewal_failed( $sub );
-					do_action( 'memberglut_bank_payment_pending', $open, MemberGlut_Subscription_Service::get( $sub['id'] ) );
+					$fresh = MemberGlut_Subscription_Service::get( $sub['id'] );
+					if ( 'bank' === $sub['gateway'] ) {
+						do_action( 'memberglut_bank_payment_pending', $open, $fresh );
+					}
+					do_action( 'memberglut_renewal_payment_pending', $open, $fresh, true );
 				}
 				continue;
 			}
-			$s = MemberGlut_Pricing::summary( $plan, null, $sub['user_id'], array( 'change' => true ) );
-			$p = self::create(
+			$s    = MemberGlut_Pricing::summary( $plan, null, $sub['user_id'], array( 'change' => true, 'renewal' => true, 'current' => $sub ) );
+			$meta = is_array( $sub['meta'] ) ? $sub['meta'] : array();
+			$p    = self::create(
 				array(
 					'user_id'         => $sub['user_id'],
 					'subscription_id' => $sub['id'],
 					'plan_id'         => $sub['plan_id'],
 					'type'            => 'renewal',
-					'gateway'         => 'bank',
+					'gateway'         => $sub['gateway'],
 					'amount'          => $sub['billing_amount'] > 0 ? $sub['billing_amount'] : $s['renewal'],
 					'subtotal'        => $plan['price'],
+					'summary'         => array(
+						'currency' => ! empty( $meta['currency'] ) ? $meta['currency'] : $s['currency'],
+						'tax'      => isset( $meta['renewal_tax'] ) ? (float) $meta['renewal_tax'] : (float) $s['renewal_tax'],
+					),
 				)
 			);
-			do_action( 'memberglut_bank_payment_pending', $p, $sub );
+			if ( 'bank' === $sub['gateway'] ) {
+				do_action( 'memberglut_bank_payment_pending', $p, $sub );
+			}
+			/**
+			 * A renewal payment of a manually renewed subscription is waiting to be paid.
+			 *
+			 * @param array $payment  Pending renewal payment.
+			 * @param array $sub      Subscription.
+			 * @param bool  $reminder True when this is a reminder for an unpaid renewal.
+			 */
+			do_action( 'memberglut_renewal_payment_pending', $p, $sub, false );
 		}
 	}
 

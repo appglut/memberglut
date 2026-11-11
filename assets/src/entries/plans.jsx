@@ -1,7 +1,6 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
 import 'antd/dist/reset.css';
 import '../admin.css';
 import { PlansPage } from '../pages/Plans';
+import boot from '../boot';
 
-createRoot(document.getElementById('memberglut-root')).render(<PlansPage />);
+boot(PlansPage);

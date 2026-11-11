@@ -1,21 +1,24 @@
-import { a8 as __, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, bh as faFileLines, c3 as faUserPlus, bK as faRightToBracket, bp as faIdCard, bT as faTableColumns, b4 as faCode, c as Button, q as FontAwesomeIcon, ca as faWandMagicSparkles, aZ as faCheck, bY as faTriangleExclamation, aL as faArrowUpRightFromSquare, aK as faArrowUp, aH as faArrowDown, bu as faLock, bB as faPen, bX as faTrashCan, bF as faPlus, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { ag as __, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, bw as faFileLines, cj as faUserPlus, b_ as faRightToBracket, bE as faIdCard, c7 as faTableColumns, bj as faCode, d as Button, u as FontAwesomeIcon, cq as faWandMagicSparkles, bc as faCheck, cc as faTriangleExclamation, a_ as faArrowUpRightFromSquare, aZ as faArrowUp, aW as faArrowDown, bJ as faLock, bR as faPen, cb as faTrashCan, bV as faPlus } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { S as SettingsPanel, C as CopyCode } from "./chunks/SettingsPanel-CZprfnRR.js";
-import { a2 as getFormsConfig, aH as saveFormsConfig, S as Select, T as Tooltip, t as createPages } from "./chunks/api-C3opcxY4.js";
-import { L, b as planOptions } from "./chunks/lookups-cQsk1BIx.js";
-import { b as planPrice } from "./chunks/format-DZEqfpos.js";
-import { S as Spin } from "./chunks/index-D6ChUS7m.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { A as Alert } from "./chunks/index-dB_sQhvz.js";
-import { F as Form } from "./chunks/index--FwfDeQZ.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import { M as Modal } from "./chunks/index-BtIaElEq.js";
-import "./chunks/index-DPM4vg2p.js";
-import "./chunks/index-Bdt2tpd-.js";
-import "./chunks/index-B15yPtij.js";
-import "./chunks/index-BQU-XdN2.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
+import { S as SettingsPanel, a as CopyCode } from "./chunks/SettingsPanel-CL4JwW_5.js";
+import { a8 as getFormsConfig, aP as saveFormsConfig, S as Select, T as Tooltip, w as createPages } from "./chunks/api-BoF1RtIE.js";
+import { L, b as planOptions } from "./chunks/lookups-2moJUDPH.js";
+import { c as planPrice } from "./chunks/format-CXuEAMXg.js";
+import { f as fieldOptions } from "./chunks/registry-Cs5PTTmS.js";
+import { S as Spin } from "./chunks/index-n8Z4Xk8Z.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { A as Alert } from "./chunks/index-DBTNcr8l.js";
+import { F as Form } from "./chunks/index-Cb3PZqfZ.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { M as Modal } from "./chunks/index-BYeBYKdc.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/index-BedyQTUQ.js";
+import "./chunks/index-d8vYGx8q.js";
+import "./chunks/index-BoUobS93.js";
+import "./chunks/index-C6h9-TWP.js";
+import "./chunks/index-DLAXZnY0.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
 const PAGE_SLOTS = [
   ["page_register", __("Registration & checkout", "memberglut"), "[memberglut_register]", __("Account fields, plan choice and payment. Plan signup links open this page.", "memberglut")],
   ["page_login", __("Login", "memberglut"), "[memberglut_login]", __("Replaces wp-login.php when “Use MemberGlut pages” is on.", "memberglut")],
@@ -26,7 +29,23 @@ const PAGE_SLOTS = [
 ];
 const LOCKED_KEYS = ["email", "password"];
 const NO_PROFILE = ["password", "password_confirm", "username", "email"];
-const FIELD_TYPES = (L.field_types || ["text", "textarea", "email", "url", "tel", "number", "date", "select", "radio", "checkbox", "country", "hidden"]).filter((t) => t !== "password").map((t) => ({ value: t, label: t }));
+const FIELD_TYPES = (L.field_types || ["text", "textarea", "email", "url", "tel", "number", "date", "select", "radio", "checkbox", "country", "hidden"]).filter((t) => t !== "password").map((t) => ({ value: t, label: L.field_type_labels && L.field_type_labels[t] || t }));
+const CHOICE_TYPES = L.choice_types || ["select", "radio", "checkbox"];
+function OptionControl({ o, value, onChange, fields }) {
+  if (o.render) return o.render({ value, onChange, fields });
+  switch (o.type) {
+    case "switch":
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { checked: !!value, onChange });
+    case "select":
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { value, onChange, options: o.options || [], allowClear: true, placeholder: o.placeholder });
+    case "number":
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { type: "number", value, onChange: (e) => onChange(e.target.value === "" ? "" : Number(e.target.value)), placeholder: o.placeholder, style: { width: 160 } });
+    case "textarea":
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Input.TextArea, { rows: o.rows || 3, value, onChange: (e) => onChange(e.target.value), placeholder: o.placeholder });
+    default:
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { value, onChange: (e) => onChange(e.target.value), placeholder: o.placeholder });
+  }
+}
 function FieldBuilder({ values, update }) {
   const [editing, setEditing] = reactExports.useState(null);
   const [form] = Form.useForm();
@@ -42,16 +61,25 @@ function FieldBuilder({ values, update }) {
     setEditing(i);
     form.setFieldsValue(i === "new" ? { type: "text", label: "", key: "", options: "", required: false } : list[i]);
   };
+  const current = editing !== null && editing !== "new" ? list[editing] : null;
+  const isCore = !!current && !current.custom;
+  const extraOptions = fieldOptions().filter((o) => (!isCore || o.core) && (!o.types || o.types.includes(type)));
   const save = async () => {
     const v = await form.validateFields();
+    const extra = {};
+    fieldOptions().forEach((o) => {
+      if (v[o.key] !== void 0) extra[o.key] = v[o.key];
+    });
     if (editing === "new") {
       if (list.some((f) => f.key === v.key)) {
         form.setFields([{ name: "key", errors: [__("This key is already used.", "memberglut")] }]);
         return;
       }
-      update("reg_fields", [...list, { ...v, on: true, required: !!v.required, custom: true }]);
+      update("reg_fields", [...list, { ...v, ...extra, on: true, required: !!v.required, custom: true }]);
+    } else if (isCore) {
+      set(editing, { label: v.label, required: LOCKED_KEYS.includes(current.key) ? true : !!v.required, ...extra });
     } else {
-      set(editing, { label: v.label, type: v.type, options: v.options || "", required: !!v.required });
+      set(editing, { label: v.label, type: v.type, options: v.options || "", required: !!v.required, ...extra });
     }
     setEditing(null);
   };
@@ -82,7 +110,7 @@ function FieldBuilder({ values, update }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { size: "small", checked: locked || f.required, disabled: locked, onChange: (v) => set(i, { required: v }) }),
           locked ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: __("Always shown", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faLock, className: "mg-muted" }) }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { size: "small", checked: f.on, onChange: (v) => set(i, { on: v }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
-            f.custom && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "small", type: "text", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPen }), onClick: () => open(i) }),
+            (f.custom || fieldOptions().some((o) => o.core)) && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "small", type: "text", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faPen }), onClick: () => open(i) }),
             f.custom && /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { size: "small", type: "text", danger: true, icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faTrashCan }), onClick: () => update("reg_fields", list.filter((x, j) => j !== i)) })
           ] })
         ] }, f.key);
@@ -96,10 +124,11 @@ function FieldBuilder({ values, update }) {
       } }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-form-grid", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "key", label: __("Meta key", "memberglut"), rules: [{ required: true, pattern: /^[a-z0-9_]+$/, message: __("Lowercase letters, numbers and _ only.", "memberglut") }], children: /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { placeholder: "company", disabled: editing !== "new" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "type", label: __("Type", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { options: FIELD_TYPES }) })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "type", label: __("Type", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Select, { options: isCore ? [{ value: type, label: type }] : FIELD_TYPES, disabled: isCore, showSearch: true, optionFilterProp: "label" }) })
       ] }),
-      ["select", "radio", "checkbox"].includes(type) && /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "options", label: __("Choices", "memberglut"), extra: __("One per line. Use value|Label to store a different value.", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Input.TextArea, { rows: 4 }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "required", valuePropName: "checked", label: __("Required", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, {}) })
+      !isCore && CHOICE_TYPES.includes(type) && /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "options", label: __("Choices", "memberglut"), extra: __("One per line. Use value|Label to store a different value.", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Input.TextArea, { rows: 4 }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: "required", valuePropName: "checked", label: __("Required", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { disabled: !!current && LOCKED_KEYS.includes(current.key) }) }),
+      extraOptions.map((o) => /* @__PURE__ */ jsxRuntimeExports.jsx(Form.Item, { name: o.key, label: o.label, extra: o.tip, children: /* @__PURE__ */ jsxRuntimeExports.jsx(OptionControl, { o, fields: list }) }, o.key))
     ] }) })
   ] });
 }
@@ -344,4 +373,4 @@ function FormsPages() {
 function FormsPagesPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "", wide: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(FormsPages, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(FormsPagesPage, {}));
+boot(FormsPagesPage);

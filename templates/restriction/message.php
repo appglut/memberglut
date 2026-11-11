@@ -9,6 +9,7 @@
  * @var string       $teaser   Teaser HTML.
  * @var string       $message  Message HTML (tags replaced, kses'd).
  * @var string       $form     Login form HTML.
+ * @var string       $extra    HTML of add-ons (e.g. a purchase form), already escaped.
  * @var array        $decision Access decision.
  * @var WP_Post|null $post     Post.
  */
@@ -24,6 +25,9 @@ defined( 'ABSPATH' ) || exit;
 		<div class="memberglut-paywall-message"><?php echo wp_kses_post( $message ); ?></div>
 		<?php if ( $form ) : ?>
 			<div class="memberglut-paywall-form"><?php echo $form; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Form markup built and escaped by MemberGlut_Shortcodes::login(). ?></div>
+		<?php endif; ?>
+		<?php if ( ! empty( $extra ) ) : ?>
+			<div class="memberglut-paywall-extra"><?php echo $extra; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by the add-on that adds it (memberglut_paywall_extra). ?></div>
 		<?php endif; ?>
 	</div>
 </div>

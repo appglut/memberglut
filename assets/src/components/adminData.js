@@ -27,6 +27,9 @@ export const _pluginUrl = admin.plugin_url || '';
 
 export const _siteUrl = admin.site_url || '';
 
+/** Whether MemberGlut Pro is active (memberglut_is_pro_active()). */
+export const _isPro = !!admin.pro;
+
 /** Build a link to a MemberGlut page with extra query args, e.g. link('plan_editor', { plan_id: 3 }). */
 export function link(page, args = {}) {
   const base = _pg[page] || '#';

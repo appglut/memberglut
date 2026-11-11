@@ -81,8 +81,11 @@ class MemberGlut_App {
 			'memberglut-rule-editor'  => array( 'rule-editor', __( 'Edit Rule', 'memberglut' ), false ),
 		);
 		/**
-		 * Add-on screens inside the MemberGlut shell: slug => [ entry, title, in menu, [ 'script' => URL, 'cap' => capability ] ].
-		 * The add-on script renders into #memberglut-root (window.React / wp.element are available).
+		 * Add-on screens inside the MemberGlut shell: slug => [ entry, title, in menu, extra ].
+		 *
+		 * Extra: [ 'screen' => key ] renders the screen the add-on registered with memberglutAdmin.registerScreen()
+		 * in the shared shell (entry 'addon', UI kit in window.memberglutUI); [ 'script' => URL ] loads a
+		 * standalone script that renders into #memberglut-root instead. 'cap' sets the capability.
 		 */
 		$this->pages = (array) apply_filters( 'memberglut_admin_pages', $this->pages );
 		return $this->pages;
@@ -126,7 +129,7 @@ class MemberGlut_App {
 
 		foreach ( $this->pages() as $slug => $page ) {
 			$label = $page[1];
-			if ( 'memberglut-pro-features' === $slug ) {
+			if ( 'memberglut-pro-features' === $slug && ! memberglut_is_pro_active() ) {
 				$label = '<span style="color:#fbbf24;">' . esc_html__( '⭐ Pro Features', 'memberglut' ) . '</span>';
 			}
 			add_submenu_page(
@@ -215,7 +218,12 @@ class MemberGlut_App {
 		wp_add_inline_script( 'memberglut-registry', self::registry_js() );
 
 		$extra = isset( $this->pages()[ $page ][3] ) && is_array( $this->pages()[ $page ][3] ) ? $this->pages()[ $page ][3] : array();
-		if ( ! empty( $extra['script'] ) ) {
+		if ( ! empty( $extra['screen'] ) ) {
+			// Registered add-on screen: rendered by the shared host entry.
+			$entry  = 'addon';
+			$handle = 'memberglut-addon';
+		}
+		if ( ! empty( $extra['script'] ) && empty( $extra['screen'] ) ) {
 			wp_enqueue_script( $handle, $extra['script'], array( 'wp-i18n', 'wp-element', 'memberglut-registry' ), MEMBERGLUT_VERSION, true );
 		} elseif ( file_exists( $build_path . '/' . $entry . '.js' ) ) {
 			wp_enqueue_script( $handle, $build_url . '/' . $entry . '.js', array( 'wp-i18n', 'memberglut-registry' ), MEMBERGLUT_VERSION, true );
@@ -248,6 +256,8 @@ class MemberGlut_App {
 			'site_url'      => home_url(),
 			'dashboard_url' => admin_url( 'index.php' ),
 			'version'       => MEMBERGLUT_VERSION,
+			'pro'           => memberglut_is_pro_active(),
+			'screen'        => ! empty( $extra['screen'] ) ? sanitize_key( $extra['screen'] ) : '',
 			'lookups'       => MemberGlut_Lookups::all(),
 			'rtl'           => is_rtl(),
 			'user'          => array(
@@ -299,15 +309,21 @@ class MemberGlut_App {
 
 	/**
 	 * window.memberglutAdmin: registerSection( screen, section ), registerRuleTarget( target ),
-	 * registerRuleCondition( condition ). Screens: settings, forms, plan, rule.
+	 * registerRuleCondition( condition ), registerFieldOption( option ), registerScreen( key, def ),
+	 * registerMenuItem( item ), registerToolbar( screen, item ). Section screens: settings, forms, plan, rule, coupon. needsKit = true loads the shared UI kit
+	 * (window.memberglutUI) on the built-in screens before they render.
 	 *
 	 * @return string
 	 */
 	private static function registry_js() {
-		return 'window.memberglutAdmin=window.memberglutAdmin||{sections:{},ruleTargets:[],ruleConditions:[],'
+		return 'window.memberglutAdmin=window.memberglutAdmin||{sections:{},ruleTargets:[],ruleConditions:[],fieldOptions:[],screens:{},menu:[],needsKit:false,'
 			. 'registerSection:function(s,d){(this.sections[s]=this.sections[s]||[]).push(d);},'
 			. 'registerRuleTarget:function(t){this.ruleTargets.push(t);},'
-			. 'registerRuleCondition:function(c){this.ruleConditions.push(c);}};';
+			. 'registerRuleCondition:function(c){this.ruleConditions.push(c);},'
+			. 'registerFieldOption:function(o){this.fieldOptions.push(o);},'
+			. 'registerScreen:function(k,d){this.screens[k]=d;},'
+			. 'registerMenuItem:function(i){this.menu.push(i);},'
+			. 'toolbars:{},registerToolbar:function(s,t){(this.toolbars[s]=this.toolbars[s]||[]).push(t);}};';
 	}
 
 	/**
@@ -321,7 +337,8 @@ class MemberGlut_App {
 		}
 
 		$page_def = $this->pages()[ $this->current_page() ];
-		if ( empty( $page_def[3]['script'] ) && ! file_exists( MEMBERGLUT_PLUGIN_PATH . 'resources/' . $page_def[0] . '.js' ) ) {
+		$entry    = ! empty( $page_def[3]['screen'] ) ? 'addon' : $page_def[0];
+		if ( empty( $page_def[3]['script'] ) && ! file_exists( MEMBERGLUT_PLUGIN_PATH . 'resources/' . $entry . '.js' ) ) {
 			echo '<div class="wrap" style="padding:40px;font-size:15px;"><h1>MemberGlut</h1><p>';
 			esc_html_e( 'The admin screens are not built yet. Run "npm install" and "npm run build" in the plugin folder.', 'memberglut' );
 			echo '</p></div>';

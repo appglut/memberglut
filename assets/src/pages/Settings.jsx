@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { App, Spin, Table, Select, Input } from 'antd';
 import {
   faGear, faShieldHalved, faRightToBracket, faArrowsTurnRight, faCircleUser, faCreditCard,
-  faEnvelope, faUserLock, faUserShield, faScaleBalanced, faSliders,
+  faEnvelope, faUserLock, faUserShield, faScaleBalanced, faSliders, faPalette,
 } from '@fortawesome/free-solid-svg-icons';
 import Page from '../components/Page';
 import SettingsPanel, { CopyCode } from '../components/SettingsPanel';
@@ -126,6 +126,22 @@ export const DEFAULTS = {
   lockout_minutes: 15,
   honeypot: true,
   logout_on_close: false,
+  new_device_alert: false,
+  suspicious_alert: true,
+  // Login page design
+  login_style: false,
+  login_logo: '',
+  login_logo_width: 84,
+  login_hide_logo: false,
+  login_bg_color: '',
+  login_bg_image: '',
+  login_form_bg: '',
+  login_form_transparent: false,
+  login_text_color: '',
+  login_button_color: '',
+  login_radius: 8,
+  login_hide_back: false,
+  login_custom_css: '',
   captcha_provider: 'none',
   captcha_on: ['register', 'login'],
   recaptcha_version: 'v3',
@@ -369,6 +385,25 @@ const SECTIONS = [
       { key: 'lockout_minutes', type: 'number', label: __( 'Lock for', 'memberglut' ), suffix: __( 'minutes', 'memberglut' ), min: 1, max: 1440, show: (v) => v.limit_failed },
       { key: 'honeypot', type: 'switch', label: __( 'Honeypot on forms', 'memberglut' ), tip: __( 'A hidden field that catches bots without bothering people.', 'memberglut' ) },
       { key: 'logout_on_close', type: 'switch', label: __( 'Log out when the browser closes', 'memberglut' ), tip: __( 'Ignores “Remember me”.', 'memberglut' ) },
+      { key: 'new_device_alert', type: 'switch', label: __( 'Email members about new-device logins', 'memberglut' ), tip: __( 'Sends the “New device login” email when an account logs in from a device or network it never used. Edit the text in Emails.', 'memberglut' ) },
+      { key: 'suspicious_alert', type: 'switch', label: __( 'Email the admin about suspicious activity', 'memberglut' ), tip: __( 'When a login is locked after failed attempts, or one account logs in from many IP addresses within an hour. At most one email per account or IP per hour.', 'memberglut' ) },
+    ],
+  },
+  {
+    key: 'login_design', title: __( 'Login page design', 'memberglut' ), icon: faPalette, desc: __( 'Brand the WordPress login screen (wp-login.php). Your MemberGlut front-end forms follow your theme instead.', 'memberglut' ), fields: [
+      { key: 'login_style', type: 'switch', label: __( 'Customize the WordPress login page', 'memberglut' ), tip: __( 'The logo also links to your home page instead of wordpress.org.', 'memberglut' ) },
+      { key: 'login_logo', type: 'url', label: __( 'Logo URL', 'memberglut' ), tip: __( 'Empty keeps the WordPress logo.', 'memberglut' ), placeholder: site + '/wp-content/uploads/logo.png', show: (v) => v.login_style },
+      { key: 'login_logo_width', type: 'number', label: __( 'Logo width', 'memberglut' ), suffix: 'px', min: 40, max: 320, show: (v) => v.login_style && v.login_logo },
+      { key: 'login_hide_logo', type: 'switch', label: __( 'Hide the logo', 'memberglut' ), show: (v) => v.login_style && !v.login_logo },
+      { key: 'login_bg_color', type: 'color', label: __( 'Background colour', 'memberglut' ), show: (v) => v.login_style },
+      { key: 'login_bg_image', type: 'url', label: __( 'Background image URL', 'memberglut' ), show: (v) => v.login_style },
+      { key: 'login_form_transparent', type: 'switch', label: __( 'Transparent form', 'memberglut' ), show: (v) => v.login_style },
+      { key: 'login_form_bg', type: 'color', label: __( 'Form background', 'memberglut' ), show: (v) => v.login_style && !v.login_form_transparent },
+      { key: 'login_text_color', type: 'color', label: __( 'Text and link colour', 'memberglut' ), show: (v) => v.login_style },
+      { key: 'login_button_color', type: 'color', label: __( 'Button colour', 'memberglut' ), show: (v) => v.login_style },
+      { key: 'login_radius', type: 'number', label: __( 'Corner radius', 'memberglut' ), suffix: 'px', min: 0, max: 32, show: (v) => v.login_style },
+      { key: 'login_hide_back', type: 'switch', label: __( 'Hide “Go to site” link', 'memberglut' ), show: (v) => v.login_style },
+      { key: 'login_custom_css', type: 'code', label: __( 'Extra CSS', 'memberglut' ), rows: 4, placeholder: '.login form { box-shadow: none; }', show: (v) => v.login_style },
     ],
   },
   {

@@ -225,6 +225,10 @@ class MemberGlut_Mailer {
 			'{site_url}'            => __( 'Site address', 'memberglut' ),
 			'{admin_email}'         => __( 'Admin email', 'memberglut' ),
 		);
+		$tags['{login_ip}']      = __( 'Login IP address (security emails)', 'memberglut' );
+		$tags['{login_device}']  = __( 'Login device (security emails)', 'memberglut' );
+		$tags['{login_time}']    = __( 'Login time (security emails)', 'memberglut' );
+		$tags['{alert_details}'] = __( 'What happened (suspicious activity email)', 'memberglut' );
 		foreach ( MemberGlut_Settings::custom_fields() as $f ) {
 			/* translators: %s: field label */
 			$tags[ '{field:' . $f['key'] . '}' ] = sprintf( __( 'Custom field: %s', 'memberglut' ), $f['label'] );
@@ -450,7 +454,15 @@ class MemberGlut_Mailer {
 			return false;
 		}
 		list( $subject, $body, $html ) = self::render( $email, $context );
-		$ok = self::mail( $to, $subject, $body, $html );
+		/**
+		 * Files attached to a MemberGlut email (e.g. a PDF invoice on the receipt).
+		 *
+		 * @param string[] $attachments Absolute paths.
+		 * @param string   $key         Email key.
+		 * @param array    $context     Context.
+		 */
+		$attachments = array_filter( (array) apply_filters( 'memberglut_email_attachments', array(), $key, $context ), 'is_readable' );
+		$ok          = self::mail( $to, $subject, $body, $html, $attachments );
 		$uid = ! empty( $context['user_id'] ) ? (int) $context['user_id'] : ( isset( $context['user'] ) && $context['user'] instanceof WP_User ? $context['user']->ID : null );
 		if ( $ok ) {
 			if ( ! $force ) {
@@ -484,10 +496,11 @@ class MemberGlut_Mailer {
 	 * @param string|array $to      To.
 	 * @param string       $subject Subject.
 	 * @param string       $body    Body.
-	 * @param bool         $html    HTML.
+	 * @param bool         $html        HTML.
+	 * @param string[]     $attachments Files to attach.
 	 * @return bool
 	 */
-	public static function mail( $to, $subject, $body, $html ) {
+	public static function mail( $to, $subject, $body, $html, $attachments = array() ) {
 		$headers = array( 'Content-Type: ' . ( $html ? 'text/html' : 'text/plain' ) . '; charset=UTF-8' );
 		$name    = memberglut_setting( 'sender_name', '' );
 		$name    = $name ? $name : wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
@@ -501,7 +514,7 @@ class MemberGlut_Mailer {
 		add_filter( 'wp_mail_from_name', $set_name, 99 );
 		add_filter( 'wp_mail_from', $set_from, 99 );
 		self::$last_error = '';
-		$ok = wp_mail( $to, $subject, $body, $headers );
+		$ok = wp_mail( $to, $subject, $body, $headers, $attachments );
 		remove_filter( 'wp_mail_from_name', $set_name, 99 );
 		remove_filter( 'wp_mail_from', $set_from, 99 );
 		if ( ! $ok ) {

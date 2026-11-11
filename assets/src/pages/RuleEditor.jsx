@@ -34,7 +34,7 @@ function ExtraTargetFields({ t, def, onChange }) {
     <Space wrap>
       {(def.fields || []).map((f) => (f.type === 'select'
         ? <Select key={f.key} value={t[f.key]} placeholder={f.label} options={f.options || []} onChange={(v) => onChange({ [f.key]: v })} style={{ minWidth: 180 }} />
-        : <Input key={f.key} type={f.type === 'number' ? 'number' : 'text'} value={t[f.key]} placeholder={f.label} onChange={(e) => onChange({ [f.key]: e.target.value })} style={{ width: 200 }} />))}
+        : <Input key={f.key} type={['number', 'date'].includes(f.type) ? f.type : 'text'} value={t[f.key]} placeholder={f.label} title={f.label} onChange={(e) => onChange({ [f.key]: e.target.value })} style={{ width: f.width || 200 }} />))}
     </Space>
   );
 }

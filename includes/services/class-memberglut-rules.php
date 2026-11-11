@@ -42,8 +42,13 @@ class MemberGlut_Rules {
 			return self::$override;
 		}
 		if ( null === self::$active ) {
-			$rows         = memberglut_repo( 'rules' )->query( array( 'where' => array( 'status' => 'active' ), 'orderby' => 'priority DESC, id ASC' ) );
-			self::$active = array_map( array( __CLASS__, 'normalize' ), $rows );
+			$rows = memberglut_repo( 'rules' )->query( array( 'where' => array( 'status' => 'active' ), 'orderby' => 'priority DESC, id ASC' ) );
+			/**
+			 * Rules that apply right now (add-ons drop rules outside their schedule, etc.).
+			 *
+			 * @param array[] $rules Normalized active rules, highest priority first.
+			 */
+			self::$active = array_values( (array) apply_filters( 'memberglut_active_rules', array_map( array( __CLASS__, 'normalize' ), $rows ) ) );
 		}
 		return self::$active;
 	}

@@ -4,7 +4,7 @@
  *
  * @package MemberGlut
  *
- * @var array[] $rows payment (row), plan (name), receipt (URL).
+ * @var array[] $rows payment (row), plan (name), receipt (URL), links ([ label, url ] from add-ons).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -39,7 +39,12 @@ $memberglut_labels = array(
 						<td><?php echo esc_html( $memberglut_r['plan'] ); ?></td>
 						<td><?php echo esc_html( memberglut_format_price( $memberglut_p['amount'], $memberglut_p['currency'] ) ); ?></td>
 						<td><span class="mg-badge mg-badge-<?php echo esc_attr( $memberglut_p['status'] ); ?>"><?php echo esc_html( isset( $memberglut_labels[ $memberglut_p['status'] ] ) ? $memberglut_labels[ $memberglut_p['status'] ] : $memberglut_p['status'] ); ?></span></td>
-						<td><?php if ( $memberglut_r['receipt'] && in_array( $memberglut_p['status'], array( 'completed', 'pending', 'refunded' ), true ) ) : ?><a href="<?php echo esc_url( $memberglut_r['receipt'] ); ?>"><?php esc_html_e( 'Receipt', 'memberglut' ); ?></a><?php endif; ?></td>
+						<td>
+							<?php if ( $memberglut_r['receipt'] && in_array( $memberglut_p['status'], array( 'completed', 'pending', 'refunded' ), true ) ) : ?><a href="<?php echo esc_url( $memberglut_r['receipt'] ); ?>"><?php esc_html_e( 'Receipt', 'memberglut' ); ?></a><?php endif; ?>
+							<?php foreach ( isset( $memberglut_r['links'] ) ? (array) $memberglut_r['links'] : array() as $memberglut_link ) : ?>
+								<a href="<?php echo esc_url( $memberglut_link['url'] ); ?>"><?php echo esc_html( $memberglut_link['label'] ); ?></a>
+							<?php endforeach; ?>
+						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>

@@ -1,5 +1,5 @@
-import { d as dayjs, L } from "./lookups-cQsk1BIx.js";
-import { az as commonjsGlobal, cC as getDefaultExportFromCjs, a8 as __ } from "./Page-Ch8DcxYv.js";
+import { d as dayjs, L } from "./lookups-2moJUDPH.js";
+import { aJ as commonjsGlobal, c_ as getDefaultExportFromCjs, ag as __ } from "./client-CTTyQOnd.js";
 var relativeTime$1 = { exports: {} };
 (function(module, exports) {
   !function(r, e) {
@@ -112,14 +112,29 @@ function planPrice(p) {
 function initials(name = "") {
   return name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 }
+const format = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  GATEWAY,
+  PAY_STATUS,
+  SUB_STATUS,
+  date,
+  dateTime,
+  fromNow,
+  initials,
+  money,
+  periodLabel,
+  planDuration,
+  planPrice
+}, Symbol.toStringTag, { value: "Module" }));
 export {
   GATEWAY as G,
   PAY_STATUS as P,
   SUB_STATUS as S,
   dateTime as a,
-  planPrice as b,
+  fromNow as b,
+  planPrice as c,
   date as d,
-  fromNow as f,
+  format as f,
   initials as i,
   money as m,
   planDuration as p

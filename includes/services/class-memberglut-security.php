@@ -152,12 +152,22 @@ class MemberGlut_Security {
 					sprintf( 'Login locked after %1$d failed attempts (%2$s)', $count, 0 === $i ? 'username ' . sanitize_user( $username ) : 'IP ' . memberglut_client_ip() ),
 					array( 'ip' => memberglut_client_ip() )
 				);
+				$user = null;
 				if ( 0 === $i ) {
 					$user = is_email( $username ) ? get_user_by( 'email', $username ) : get_user_by( 'login', $username );
 					if ( $user ) {
 						memberglut_event( 'login_locked', __( 'Login locked after too many failed attempts', 'memberglut' ), array( 'user_id' => $user->ID, 'object_type' => 'user', 'object_id' => $user->ID ) );
 					}
 				}
+				/**
+				 * A username or IP was locked after too many failed logins.
+				 *
+				 * @param string       $username Username or email tried.
+				 * @param string       $scope    'username' or 'ip'.
+				 * @param int          $count    Failed attempts.
+				 * @param WP_User|null $user     Account, when the username exists.
+				 */
+				do_action( 'memberglut_login_locked', (string) $username, 0 === $i ? 'username' : 'ip', $count, $user ? $user : null );
 			}
 		}
 	}
@@ -223,6 +233,22 @@ class MemberGlut_Security {
 	}
 
 	/**
+	 * Devices a user may be logged in on at once.
+	 *
+	 * @param WP_User $user User.
+	 * @return int
+	 */
+	public static function max_sessions( $user ) {
+		/**
+		 * Session limit of a user (e.g. per role).
+		 *
+		 * @param int     $max  Limit from Global Settings › Security.
+		 * @param WP_User $user User.
+		 */
+		return max( 1, (int) apply_filters( 'memberglut_max_sessions', (int) memberglut_setting( 'max_sessions', 1 ), $user ) );
+	}
+
+	/**
 	 * “Block new logins” behaviour.
 	 *
 	 * @param WP_User|WP_Error|null $user Result so far.
@@ -232,7 +258,7 @@ class MemberGlut_Security {
 		if ( ! $user instanceof WP_User || ! self::limited( $user ) || 'block' !== memberglut_setting( 'session_behavior', 'logout_oldest' ) ) {
 			return $user;
 		}
-		$max = max( 1, (int) memberglut_setting( 'max_sessions', 1 ) );
+		$max = self::max_sessions( $user );
 		if ( count( self::sessions( $user->ID ) ) >= $max ) {
 			memberglut_event( 'login_blocked', __( 'Login refused: too many active sessions', 'memberglut' ), array( 'user_id' => $user->ID, 'object_type' => 'user', 'object_id' => $user->ID ) );
 			return new WP_Error(
@@ -290,7 +316,7 @@ class MemberGlut_Security {
 		update_user_meta( $user->ID, self::LAST_SEEN_META, time() );
 
 		if ( self::limited( $user ) && 'logout_oldest' === memberglut_setting( 'session_behavior', 'logout_oldest' ) ) {
-			$max      = max( 1, (int) memberglut_setting( 'max_sessions', 1 ) );
+			$max      = self::max_sessions( $user );
 			$sessions = self::sessions( $user->ID );
 			unset( $sessions[ $verifier ] );
 			$extra = count( $sessions ) - ( $max - 1 );

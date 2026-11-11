@@ -12,6 +12,7 @@ import Page, { StatusBadge } from '../components/Page';
 import { link, queryArg } from '../components/adminData';
 import { ChangePlanModal, EditSubscriptionModal } from '../components/MemberModals';
 import * as api from '../services/api';
+import { toolbarFor } from '../services/registry';
 import { money, date, dateTime, fromNow, SUB_STATUS, PAY_STATUS, GATEWAY, initials, planPrice } from '../services/format';
 import { roleName } from '../services/lookups';
 
@@ -170,6 +171,7 @@ function MemberDetail() {
         <div className="mg-page-actions">
           {pending && <Button type="primary" icon={<FontAwesomeIcon icon={faUserCheck} />} onClick={() => run(() => api.memberAction(userId, 'approve'), __( 'Member approved.', 'memberglut' ))}>{__( 'Approve', 'memberglut' )}</Button>}
           {pending && <Popconfirm title={__( 'Reject this registration?', 'memberglut' )} okButtonProps={{ danger: true }} onConfirm={() => run(() => api.memberAction(userId, 'reject'), __( 'Registration rejected.', 'memberglut' ))}><Button danger icon={<FontAwesomeIcon icon={faUserXmark} />}>{__( 'Reject', 'memberglut' )}</Button></Popconfirm>}
+          {toolbarFor('member').map((t) => <React.Fragment key={t.key}>{t.render({ userId, member: m, reload: load })}</React.Fragment>)}
           <Button icon={<FontAwesomeIcon icon={faEnvelope} />} href={`mailto:${u.email}`}>{__( 'Email', 'memberglut' )}</Button>
           <Button icon={<FontAwesomeIcon icon={faUserPen} />} href={u.edit_url}>{__( 'Edit user', 'memberglut' )}</Button>
           <Button type="primary" icon={<FontAwesomeIcon icon={faPlus} />} onClick={() => setEdit({ sub: null, isNew: true })}>{__( 'Add plan', 'memberglut' )}</Button>

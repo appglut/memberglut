@@ -1,20 +1,22 @@
-import { a8 as __, cW as jsxRuntimeExports, P as Page, E as PageHeader, d7 as queryArg, b as App, d9 as reactExports, q as FontAwesomeIcon, c8 as faUsers, c as Button, bf as faFileExport, c0 as faUserGear, bk as faGear, bg as faFileImport, bv as faMagnifyingGlass, bX as faTrashCan, b5 as faCopy, b0 as faCircleCheck, bY as faTriangleExclamation, bn as faHourglassEnd, aU as faCalculator, bL as faRotate, aS as faBroom, bc as faEraser, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { ag as __, dl as jsxRuntimeExports, P as Page, O as PageHeader, dz as queryArg, b as App, dB as reactExports, u as FontAwesomeIcon, co as faUsers, d as Button, bu as faFileExport, cg as faUserGear, bz as faGear, bv as faFileImport, bK as faMagnifyingGlass, cb as faTrashCan, bk as faCopy, bf as faCircleCheck, cc as faTriangleExclamation, bC as faHourglassEnd, b7 as faCalculator, b$ as faRotate, b5 as faBroom, br as faEraser } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { ag as getRoles, S as Select, N as exportSetup, a4 as getLogs, q as clearLogs, a0 as getEvents, ao as getStatus, I as exportMembers, s as convertUsers, aC as previewSetupImport, aN as saveSettings, aE as runMaintenance, ar as importSetup } from "./chunks/api-C3opcxY4.js";
-import { a as dateTime } from "./chunks/format-DZEqfpos.js";
-import { b as planOptions } from "./chunks/lookups-cQsk1BIx.js";
-import { T as Tabs } from "./chunks/index-DPM4vg2p.js";
-import { C as Checkbox, F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import { U as Upload } from "./chunks/index-BDu_JW7A.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import { T as TypedInputNumber, D as DatePicker } from "./chunks/index-BQU-XdN2.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { S as Spin } from "./chunks/index-D6ChUS7m.js";
-import { M as Modal } from "./chunks/index-BtIaElEq.js";
-import { A as Alert } from "./chunks/index-dB_sQhvz.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
-import "./chunks/progress-C7I7l5SB.js";
+import { am as getRoles, S as Select, X as exportSetup, aa as getLogs, t as clearLogs, a6 as getEvents, at as getStatus, U as exportMembers, v as convertUsers, aK as previewSetupImport, aV as saveSettings, aM as runMaintenance, ax as importSetup } from "./chunks/api-BoF1RtIE.js";
+import { a as dateTime } from "./chunks/format-CXuEAMXg.js";
+import { b as planOptions } from "./chunks/lookups-2moJUDPH.js";
+import { T as Tabs } from "./chunks/index-BedyQTUQ.js";
+import { C as Checkbox, F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { U as Upload } from "./chunks/index-B04HEf0N.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { T as TypedInputNumber } from "./chunks/index-C6h9-TWP.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { D as DatePicker } from "./chunks/index-DLAXZnY0.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { S as Spin } from "./chunks/index-n8Z4Xk8Z.js";
+import { M as Modal } from "./chunks/index-BYeBYKdc.js";
+import { A as Alert } from "./chunks/index-DBTNcr8l.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
+import "./chunks/progress-Dds9qb8O.js";
 const LEVEL_COLOR = { info: "blue", warning: "orange", error: "red", debug: "default" };
 const SECTIONS = [
   ["settings", __("Global settings", "memberglut")],
@@ -452,4 +454,4 @@ function Tools() {
 function ToolsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Tools, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(ToolsPage, {}));
+boot(ToolsPage);

@@ -20,6 +20,7 @@ const PAGES = {
   settings: 'Settings',
   tools: 'Tools',
   'pro-features': 'ProFeatures',
+  addon: 'Addon',
 };
 
 const input = {};

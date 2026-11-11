@@ -32,6 +32,12 @@ class MemberGlut_Roles_Service {
 		add_action( 'set_user_role', array( __CLASS__, 'remember_admins' ), 10, 3 );
 		add_action( 'add_user_role', array( __CLASS__, 'remember_admin_on_add' ), 10, 2 );
 		add_action( 'login_form_memberglut_rescue', array( __CLASS__, 'rescue_screen' ) );
+		add_filter( 'memberglut_account_tabs', array( __CLASS__, 'account_tabs' ), 5, 2 );
+
+		if ( self::option( 'hierarchy' ) ) {
+			add_filter( 'editable_roles', array( __CLASS__, 'editable_roles' ) );
+			add_filter( 'map_meta_cap', array( __CLASS__, 'hierarchy_caps' ), 10, 4 );
+		}
 
 		if ( self::option( 'multi_roles' ) ) {
 			add_action( 'show_user_profile', array( __CLASS__, 'render_role_checkboxes' ), 1 );
@@ -46,6 +52,87 @@ class MemberGlut_Roles_Service {
 	}
 
 	/* ---------------------------------------------------------------------
+	 * Role hierarchy and per-role behaviour
+	 * ------------------------------------------------------------------ */
+
+	/**
+	 * Whether the hierarchy limits this actor (administrators and super admins are never limited).
+	 *
+	 * @param int $actor User.
+	 * @return bool
+	 */
+	private static function limited_actor( $actor ) {
+		if ( ! $actor || is_super_admin( $actor ) ) {
+			return false;
+		}
+		$user = get_userdata( $actor );
+		return $user && ! in_array( 'administrator', (array) $user->roles, true );
+	}
+
+	/**
+	 * Role dropdowns only offer roles below the current user's level.
+	 *
+	 * @param array $roles Roles.
+	 * @return array
+	 */
+	public static function editable_roles( $roles ) {
+		$actor = get_current_user_id();
+		if ( ! self::limited_actor( $actor ) ) {
+			return $roles;
+		}
+		$mine = self::user_level( $actor );
+		foreach ( array_keys( $roles ) as $role ) {
+			if ( self::role_level( $role ) >= $mine ) {
+				unset( $roles[ $role ] );
+			}
+		}
+		return $roles;
+	}
+
+	/**
+	 * Users can only edit, delete or promote users whose highest role is below their own.
+	 *
+	 * @param string[] $caps    Primitive caps.
+	 * @param string   $cap     Meta cap.
+	 * @param int      $user_id Actor.
+	 * @param array    $args    Args (target user first).
+	 * @return string[]
+	 */
+	public static function hierarchy_caps( $caps, $cap, $user_id, $args ) {
+		if ( ! in_array( $cap, array( 'edit_user', 'delete_user', 'remove_user', 'promote_user' ), true ) || empty( $args[0] ) ) {
+			return $caps;
+		}
+		$target = (int) $args[0];
+		if ( $target === (int) $user_id || ! self::limited_actor( (int) $user_id ) ) {
+			return $caps;
+		}
+		if ( self::user_level( $target ) >= self::user_level( (int) $user_id ) ) {
+			$caps[] = 'do_not_allow';
+		}
+		return $caps;
+	}
+
+	/**
+	 * Hide the Profile / Delete account tabs for roles that may not use them.
+	 *
+	 * @param array $tabs    Tabs.
+	 * @param int   $user_id User.
+	 * @return array
+	 */
+	public static function account_tabs( $tabs, $user_id ) {
+		if ( ! $user_id ) {
+			return $tabs;
+		}
+		if ( isset( $tabs['profile'] ) && ! self::user_may( $user_id, 'edit_profile' ) ) {
+			unset( $tabs['profile'] );
+		}
+		if ( isset( $tabs['delete'] ) && ! self::user_may( $user_id, 'delete_account' ) ) {
+			unset( $tabs['delete'] );
+		}
+		return $tabs;
+	}
+
+	/* ---------------------------------------------------------------------
 	 * Options
 	 * ------------------------------------------------------------------ */
 
@@ -56,7 +143,83 @@ class MemberGlut_Roles_Service {
 	 */
 	public static function options() {
 		$stored = get_option( self::OPTIONS, array() );
-		return array_merge( array( 'multi_roles' => true, 'rescue' => true ), is_array( $stored ) ? $stored : array() );
+		$o      = array_merge(
+			array(
+				'multi_roles' => true,
+				'rescue'      => true,
+				'hierarchy'   => false,
+				'levels'      => array(),
+				'behaviour'   => array(),
+			),
+			is_array( $stored ) ? $stored : array()
+		);
+		$o['levels']    = is_array( $o['levels'] ) ? $o['levels'] : array();
+		$o['behaviour'] = is_array( $o['behaviour'] ) ? $o['behaviour'] : array();
+		return $o;
+	}
+
+	/**
+	 * Default level of a role when none is stored (core roles follow WordPress' own order).
+	 *
+	 * @param string $role Role.
+	 * @return int
+	 */
+	public static function default_level( $role ) {
+		$map = array( 'administrator' => 100, 'editor' => 70, 'author' => 50, 'contributor' => 30, 'subscriber' => 10 );
+		return isset( $map[ $role ] ) ? $map[ $role ] : 10;
+	}
+
+	/**
+	 * Level of a role (0–100, higher = more senior).
+	 *
+	 * @param string $role Role.
+	 * @return int
+	 */
+	public static function role_level( $role ) {
+		if ( 'administrator' === $role ) {
+			return 100;
+		}
+		$levels = self::options()['levels'];
+		return isset( $levels[ $role ] ) ? (int) $levels[ $role ] : self::default_level( $role );
+	}
+
+	/**
+	 * Highest level among a user's roles.
+	 *
+	 * @param int $user_id User.
+	 * @return int
+	 */
+	public static function user_level( $user_id ) {
+		$user = get_userdata( (int) $user_id );
+		if ( ! $user ) {
+			return 0;
+		}
+		$max = 0;
+		foreach ( (array) $user->roles as $role ) {
+			$max = max( $max, self::role_level( $role ) );
+		}
+		return $max;
+	}
+
+	/**
+	 * Per-role behaviour flag (edit_profile, delete_account). True unless switched off for every role of the user.
+	 *
+	 * @param int    $user_id User.
+	 * @param string $flag    Flag.
+	 * @return bool
+	 */
+	public static function user_may( $user_id, $flag ) {
+		$user = get_userdata( (int) $user_id );
+		if ( ! $user || ! $user->roles ) {
+			return true;
+		}
+		$b = self::options()['behaviour'];
+		foreach ( (array) $user->roles as $role ) {
+			if ( ! isset( $b[ $role ][ $flag ] ) || $b[ $role ][ $flag ] ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -78,12 +241,39 @@ class MemberGlut_Roles_Service {
 	 */
 	public static function save_options( $input ) {
 		$o = self::options();
-		foreach ( array( 'multi_roles', 'rescue' ) as $k ) {
+		foreach ( array( 'multi_roles', 'rescue', 'hierarchy' ) as $k ) {
 			if ( isset( $input[ $k ] ) ) {
 				$o[ $k ] = (bool) rest_sanitize_boolean( $input[ $k ] );
 			}
 		}
+		$roles = array_keys( wp_roles()->roles );
+		if ( isset( $input['levels'] ) && is_array( $input['levels'] ) ) {
+			$levels = array();
+			foreach ( $input['levels'] as $role => $level ) {
+				$role = sanitize_key( $role );
+				if ( in_array( $role, $roles, true ) && 'administrator' !== $role ) {
+					$levels[ $role ] = max( 0, min( 99, (int) $level ) );
+				}
+			}
+			$o['levels'] = $levels;
+		}
+		if ( isset( $input['behaviour'] ) && is_array( $input['behaviour'] ) ) {
+			$behaviour = array();
+			foreach ( $input['behaviour'] as $role => $flags ) {
+				$role = sanitize_key( $role );
+				if ( ! in_array( $role, $roles, true ) || 'administrator' === $role || ! is_array( $flags ) ) {
+					continue;
+				}
+				foreach ( array( 'edit_profile', 'delete_account' ) as $flag ) {
+					if ( isset( $flags[ $flag ] ) ) {
+						$behaviour[ $role ][ $flag ] = (bool) rest_sanitize_boolean( $flags[ $flag ] );
+					}
+				}
+			}
+			$o['behaviour'] = $behaviour;
+		}
 		update_option( self::OPTIONS, $o );
+		memberglut_event( 'settings', __( 'Role options saved', 'memberglut' ), array( 'object_type' => 'role' ) );
 		return $o;
 	}
 

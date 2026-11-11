@@ -1,18 +1,20 @@
-import { a8 as __, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, d7 as queryArg, cX as link, a2 as StatusBadge, E as PageHeader, c as Button, q as FontAwesomeIcon, bf as faFileExport, bF as faPlus, a1 as StatCard, bN as faSackDollar, aT as faBuildingColumns, bY as faTriangleExclamation, bM as faRotateLeft, bv as faMagnifyingGlass, p as Drawer, aL as faArrowUpRightFromSquare, b0 as faCircleCheck, bA as faPaperPlane, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { ag as __, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, dz as queryArg, dm as link, a8 as StatusBadge, O as PageHeader, d as Button, u as FontAwesomeIcon, bu as faFileExport, bV as faPlus, a7 as StatCard, c1 as faSackDollar, b6 as faBuildingColumns, cc as faTriangleExclamation, c0 as faRotateLeft, bK as faMagnifyingGlass, t as Drawer, a_ as faArrowUpRightFromSquare, bf as faCircleCheck, bQ as faPaperPlane } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { U as UserSearch } from "./chunks/UserSearch-BP7wCTRz.js";
-import { a9 as getPayments, J as exportPayments, S as Select, a8 as getPayment, h as Space, az as paymentAction, n as addPayment } from "./chunks/api-C3opcxY4.js";
-import { G as GATEWAY, d as date, P as PAY_STATUS, m as money, a as dateTime } from "./chunks/format-DZEqfpos.js";
-import { L, b as planOptions } from "./chunks/lookups-cQsk1BIx.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { D as DatePicker, T as TypedInputNumber } from "./chunks/index-BQU-XdN2.js";
-import { F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import { S as Spin } from "./chunks/index-D6ChUS7m.js";
-import { D as Descriptions, T as Timeline } from "./chunks/Timeline-C1D1DK_S.js";
-import { F as Form } from "./chunks/index--FwfDeQZ.js";
-import { M as Modal } from "./chunks/index-BtIaElEq.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
+import { U as UserSearch } from "./chunks/UserSearch-BeTAvkOP.js";
+import { af as getPayments, V as exportPayments, S as Select, ae as getPayment, j as Space, aH as paymentAction, p as addPayment } from "./chunks/api-BoF1RtIE.js";
+import { G as GATEWAY, d as date, P as PAY_STATUS, m as money, a as dateTime } from "./chunks/format-CXuEAMXg.js";
+import { L, b as planOptions } from "./chunks/lookups-2moJUDPH.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { D as DatePicker } from "./chunks/index-DLAXZnY0.js";
+import { F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { S as Spin } from "./chunks/index-n8Z4Xk8Z.js";
+import { D as Descriptions, T as Timeline } from "./chunks/Timeline-BZkA49tz.js";
+import { F as Form } from "./chunks/index-Cb3PZqfZ.js";
+import { M as Modal } from "./chunks/index-BYeBYKdc.js";
+import { T as TypedInputNumber } from "./chunks/index-C6h9-TWP.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
 const TYPE = {
   new: __("New subscription", "memberglut"),
   renewal: __("Renewal", "memberglut"),
@@ -302,4 +304,4 @@ function Payments() {
 function PaymentsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "payments", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Payments, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(PaymentsPage, {}));
+boot(PaymentsPage);

@@ -1,18 +1,20 @@
-import { aZ as faCheck, bx as faMinus, aO as faBan, a8 as __, cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, a0 as Skeleton, E as PageHeader, c as Button, q as FontAwesomeIcon, bg as faFileImport, bf as faFileExport, bF as faPlus, bu as faLock, b9 as faEllipsis, b5 as faCopy, c5 as faUserShield, bX as faTrashCan, bi as faFloppyDisk, b1 as faCircleInfo, bv as faMagnifyingGlass, cb as faXmark, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { bc as faCheck, bM as faMinus, b1 as faBan, ag as __, dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, a6 as Skeleton, O as PageHeader, d as Button, u as FontAwesomeIcon, bv as faFileImport, bu as faFileExport, bV as faPlus, bJ as faLock, bo as faEllipsis, bk as faCopy, cl as faUserShield, cb as faTrashCan, bx as faFloppyDisk, bg as faCircleInfo, bK as faMagnifyingGlass, cr as faXmark } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { ag as getRoles, Z as getCapabilities, af as getRoleOptions, T as Tooltip, E as Empty, K as exportRoles, aL as saveRoleOptions, ax as makeDefaultRole, aK as saveRole, v as deleteCapability, k as addCapability, S as Select, r as cloneRole, u as createRole, aB as previewRoleImport, z as deleteRole, aq as importRoles } from "./chunks/api-C3opcxY4.js";
-import { U as Upload } from "./chunks/index-BDu_JW7A.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import { D as Dropdown, F as ForwardTable } from "./chunks/Table-Bxvjbdok.js";
-import { S as Segmented } from "./chunks/index-B15yPtij.js";
-import { I as Input } from "./chunks/index-D-BW9vN4.js";
-import { F as Form } from "./chunks/index--FwfDeQZ.js";
-import { M as Modal } from "./chunks/index-BtIaElEq.js";
-import { A as Alert } from "./chunks/index-dB_sQhvz.js";
-import "./chunks/progress-C7I7l5SB.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
-import "./chunks/index-D6ChUS7m.js";
+import { am as getRoles, a3 as getCapabilities, al as getRoleOptions, T as Tooltip, E as Empty, W as exportRoles, aT as saveRoleOptions, aE as makeDefaultRole, aS as saveRole, y as deleteCapability, m as addCapability, S as Select, u as cloneRole, x as createRole, aJ as previewRoleImport, I as deleteRole, aw as importRoles } from "./chunks/api-BoF1RtIE.js";
+import { U as Upload } from "./chunks/index-B04HEf0N.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { D as Dropdown, F as ForwardTable } from "./chunks/Table-DscmDL3I.js";
+import { T as TypedInputNumber } from "./chunks/index-C6h9-TWP.js";
+import { S as Segmented } from "./chunks/index-BoUobS93.js";
+import { I as Input } from "./chunks/index-D-VkJOw2.js";
+import { F as Form } from "./chunks/index-Cb3PZqfZ.js";
+import { M as Modal } from "./chunks/index-BYeBYKdc.js";
+import { A as Alert } from "./chunks/index-DBTNcr8l.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/progress-Dds9qb8O.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
+import "./chunks/index-n8Z4Xk8Z.js";
 const STATE_OPTS = [
   { value: "grant", icon: faCheck, label: __("Grant", "memberglut") },
   { value: "unset", icon: faMinus, label: __("Not set", "memberglut") },
@@ -128,6 +130,7 @@ function ImportModal({ data, onClose, onDone }) {
   ] }) });
 }
 function Roles() {
+  var _a;
   const { message, modal } = App.useApp();
   const [roles, setRoles] = reactExports.useState([]);
   const [groups, setGroups] = reactExports.useState([]);
@@ -143,7 +146,8 @@ function Roles() {
   const [deleting, setDeleting] = reactExports.useState(null);
   const [importData, setImportData] = reactExports.useState(null);
   const [newCap, setNewCap] = reactExports.useState("");
-  const [options, setOptions] = reactExports.useState({ multi_roles: true, rescue: true });
+  const [options, setOptions] = reactExports.useState({ multi_roles: true, rescue: true, hierarchy: false, levels: {}, behaviour: {} });
+  const defaultLevel = (slug) => ({ administrator: 100, editor: 70, author: 50, contributor: 30, subscriber: 10 })[slug] ?? 10;
   const applyCaps = (c) => {
     setGroups(c.groups);
     setCaps(c.roleCaps);
@@ -324,6 +328,13 @@ function Roles() {
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Locked out? wp-login.php?action=memberglut_rescue emails a 15-minute link that restores the Administrator role.", "memberglut") })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { size: "small", checked: options.rescue, onChange: (v) => saveOption("rescue", v) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-role-opt", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Role hierarchy", "memberglut") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: __("Users can only edit, delete or promote users whose role has a lower level than their own. Administrators are never limited.", "memberglut") })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { size: "small", checked: !!options.hierarchy, onChange: (v) => saveOption("hierarchy", v) })
           ] })
         ] })
       ] }),
@@ -361,6 +372,23 @@ function Roles() {
           /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faCircleInfo }),
           " ",
           __("The Administrator role is protected so you cannot lock yourself out. Its capabilities can be viewed but not changed.", "memberglut")
+        ] }),
+        !locked && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-role-behaviour", style: { display: "flex", flexWrap: "wrap", gap: 24, alignItems: "center", margin: "0 0 16px" }, children: [
+          options.hierarchy && /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("b", { children: __("Level", "memberglut") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TypedInputNumber, { size: "small", min: 0, max: 99, value: ((_a = options.levels) == null ? void 0 : _a[current]) ?? defaultLevel(current), onChange: (v) => saveOption("levels", { ...options.levels || {}, [current]: v ?? 0 }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Tooltip, { title: __("0–99. Administrators are 100. Higher levels manage lower ones.", "memberglut"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faCircleInfo, className: "mg-muted" }) })
+          ] }),
+          ["edit_profile", "delete_account"].map((flag) => {
+            var _a2, _b;
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { style: { display: "flex", gap: 8, alignItems: "center" }, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Switch, { size: "small", checked: ((_b = (_a2 = options.behaviour) == null ? void 0 : _a2[current]) == null ? void 0 : _b[flag]) ?? true, onChange: (v) => {
+                var _a3;
+                return saveOption("behaviour", { ...options.behaviour || {}, [current]: { ...((_a3 = options.behaviour) == null ? void 0 : _a3[current]) || {}, [flag]: v } });
+              } }),
+              flag === "edit_profile" ? __("Can edit own profile (My Account)", "memberglut") : __("Can delete own account", "memberglut")
+            ] }, flag);
+          })
         ] }),
         role.used_by_plans.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mg-fs-note", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(FontAwesomeIcon, { icon: faCircleInfo }),
@@ -430,4 +458,4 @@ function Roles() {
 function RolesPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "roles", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Roles, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(RolesPage, {}));
+boot(RolesPage);

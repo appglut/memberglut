@@ -1,4 +1,4 @@
-import { d9 as reactExports, dy as useLayoutEffect, aw as classNames, ay as cloneElement, ct as genStyleHooks, c$ as merge, dc as resetComponent, x as Keyframe, ds as useComponentConfig } from "./Page-Ch8DcxYv.js";
+import { dB as reactExports, e1 as useLayoutEffect, aG as classNames, aI as cloneElement, cP as genStyleHooks, dr as merge, dE as resetComponent, G as Keyframe, dV as useComponentConfig } from "./client-CTTyQOnd.js";
 function throttle(delay, callback, options) {
   var _ref = options || {}, _ref$noTrailing = _ref.noTrailing, noTrailing = _ref$noTrailing === void 0 ? false : _ref$noTrailing, _ref$noLeading = _ref.noLeading, noLeading = _ref$noLeading === void 0 ? false : _ref$noLeading, _ref$debounceMode = _ref.debounceMode, debounceMode = _ref$debounceMode === void 0 ? void 0 : _ref$debounceMode;
   var timeoutID;
@@ -563,5 +563,6 @@ Spin.setDefaultIndicator = (indicator) => {
   defaultIndicator = indicator;
 };
 export {
-  Spin as S
+  Spin as S,
+  debounce as d
 };

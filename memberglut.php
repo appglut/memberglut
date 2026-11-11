@@ -24,6 +24,8 @@ define( 'MEMBERGLUT_PLUGIN_FILE', __FILE__ );
 define( 'MEMBERGLUT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'MEMBERGLUT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'MEMBERGLUT_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+// Version of the add-on API (hooks, admin registry, UI kit). Add-ons such as MemberGlut Pro check it.
+define( 'MEMBERGLUT_ADDON_API', 2 );
 
 // Action Scheduler (bundled; it negotiates versions with other copies, e.g. WooCommerce's).
 if ( is_readable( MEMBERGLUT_PLUGIN_PATH . 'vendor/woocommerce/action-scheduler/action-scheduler.php' ) ) {

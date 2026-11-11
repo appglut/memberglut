@@ -1,4 +1,4 @@
-import { az as commonjsGlobal, cC as getDefaultExportFromCjs } from "./Page-Ch8DcxYv.js";
+import { aJ as commonjsGlobal, c_ as getDefaultExportFromCjs } from "./client-CTTyQOnd.js";
 var dayjs_min = { exports: {} };
 (function(module, exports) {
   !function(t, e) {
@@ -287,13 +287,17 @@ const L = {
   taxonomies: [],
   templates: [],
   gateways: [],
-  site: { url: "/" },
+  custom_fields: [],
+  email_tags: [],
+  statuses: {},
+  test_mode: false,
+  site: { url: "/", name: "" },
   signup_base: "",
   can: {},
   currency: { code: "USD", symbol: "$", position: "before", thousand: ",", decimal: ".", decimals: 2 },
   ...admin.lookups || {}
 };
-admin.user || {};
+const currentUser = admin.user || { id: 0, name: "" };
 const planById = (id) => L.plans.find((p) => p.id === Number(id));
 const planOptions = (filter) => L.plans.filter(filter || (() => true)).map((p) => ({ value: p.id, label: p.status === "active" ? p.name : `${p.name} (inactive)` }));
 const roleOptions = (filter) => L.roles.filter(filter || (() => true)).map((r) => ({ value: r.slug, label: r.name }));
@@ -303,12 +307,24 @@ const signupUrl = (slug) => {
   const base = L.signup_base || `${(L.site.url || "/").replace(/\/$/, "")}/register/`;
   return `${base}${base.includes("?") ? "&" : "?"}plan=${encodeURIComponent(slug || "plan")}`;
 };
+const lookups = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  L,
+  currentUser,
+  pageOptions,
+  planById,
+  planOptions,
+  roleName,
+  roleOptions,
+  signupUrl
+}, Symbol.toStringTag, { value: "Module" }));
 export {
   L,
   planById as a,
   planOptions as b,
   roleOptions as c,
   dayjs as d,
+  lookups as l,
   pageOptions as p,
   roleName as r,
   signupUrl as s

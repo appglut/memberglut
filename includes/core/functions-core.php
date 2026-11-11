@@ -26,7 +26,13 @@ function memberglut_setting( $key, $default = null ) {
  * @return mixed
  */
 function memberglut_form_setting( $key, $default = null ) {
-	return MemberGlut_Settings::form( $key, $default );
+	/**
+	 * A form setting (Forms & Pages), e.g. translated by a multilingual add-on.
+	 *
+	 * @param mixed  $value Value.
+	 * @param string $key   Key.
+	 */
+	return apply_filters( 'memberglut_form_setting', MemberGlut_Settings::form( $key, $default ), $key );
 }
 
 /**

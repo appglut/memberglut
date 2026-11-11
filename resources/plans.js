@@ -1,16 +1,17 @@
-import { cW as jsxRuntimeExports, P as Page, b as App, d9 as reactExports, cX as link, q as FontAwesomeIcon, bR as faStar, a8 as __, E as PageHeader, c as Button, bF as faPlus, R as React, aI as faArrowRight, bU as faTableList, bS as faTableCellsLarge, c8 as faUsers, bC as faPenToSquare, b5 as faCopy, bt as faLink, bX as faTrashCan, aD as createRoot } from "./chunks/Page-Ch8DcxYv.js";
+import { dl as jsxRuntimeExports, P as Page, b as App, dB as reactExports, dm as link, u as FontAwesomeIcon, c5 as faStar, ag as __, O as PageHeader, d as Button, bV as faPlus, V as React, aX as faArrowRight, c8 as faTableList, c6 as faTableCellsLarge, co as faUsers, bS as faPenToSquare, bk as faCopy, bI as faLink, cb as faTrashCan } from "./chunks/client-CTTyQOnd.js";
 import { s as sprintf } from "./chunks/sprintf-DmNrJSYG.js";
-import { T as Tooltip, ae as getPlans, aR as setPlanStatus, G as duplicatePlan, y as deletePlan } from "./chunks/api-C3opcxY4.js";
-import { b as planPrice, m as money, p as planDuration } from "./chunks/format-DZEqfpos.js";
-import { r as roleName } from "./chunks/lookups-cQsk1BIx.js";
-import { T as Tag } from "./chunks/index-8aTEZ5cr.js";
-import { S as Switch } from "./chunks/index-DYGuXoRz.js";
-import { S as Segmented } from "./chunks/index-B15yPtij.js";
-import { F as ForwardTable, C as Checkbox } from "./chunks/Table-Bxvjbdok.js";
-import { P as Popconfirm } from "./chunks/index-BgJjhEIZ.js";
-import "./chunks/useBreakpoint-m1SzewdH.js";
-import "./chunks/index-D6ChUS7m.js";
-import "./chunks/index-Bdt2tpd-.js";
+import { T as Tooltip, ak as getPlans, aZ as setPlanStatus, N as duplicatePlan, H as deletePlan } from "./chunks/api-BoF1RtIE.js";
+import { c as planPrice, m as money, p as planDuration } from "./chunks/format-CXuEAMXg.js";
+import { r as roleName } from "./chunks/lookups-2moJUDPH.js";
+import { T as Tag } from "./chunks/index-42CDOxMR.js";
+import { S as Switch } from "./chunks/index-DNVHX8xZ.js";
+import { S as Segmented } from "./chunks/index-BoUobS93.js";
+import { F as ForwardTable, C as Checkbox } from "./chunks/Table-DscmDL3I.js";
+import { P as Popconfirm } from "./chunks/index-CmZYsh7n.js";
+import { b as boot } from "./chunks/boot-Di0iJtho.js";
+import "./chunks/useBreakpoint-CN6HiEl_.js";
+import "./chunks/index-n8Z4Xk8Z.js";
+import "./chunks/index-d8vYGx8q.js";
 function Plans() {
   const { message, modal } = App.useApp();
   const [plans, setPlans] = reactExports.useState([]);
@@ -194,4 +195,4 @@ function Plans() {
 function PlansPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Page, { active: "plans", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plans, {}) });
 }
-createRoot(document.getElementById("memberglut-root")).render(/* @__PURE__ */ jsxRuntimeExports.jsx(PlansPage, {}));
+boot(PlansPage);

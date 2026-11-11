@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faFileLines } from '@fortawesome/free-regular-svg-icons';
 import { __ } from '@wordpress/i18n';
-import { _pg, _dashboard, _pluginUrl } from './adminData';
+import { _pg, _dashboard, _pluginUrl, _isPro } from './adminData';
 
 import './app-header.css';
 
@@ -30,7 +30,7 @@ const CURRENT = {
   'memberglut-pro-features': 'pro',
 };
 
-export const MENU = [
+const CORE_MENU = [
   { key: 'dashboard', label: __( 'Dashboard', 'memberglut' ), icon: faGaugeHigh, href: _pg.dashboard },
   { key: 'members', label: __( 'Members', 'memberglut' ), icon: faUsers, href: _pg.members },
   { key: 'plans', label: __( 'Membership Plans', 'memberglut' ), icon: faLayerGroup, href: _pg.plans },
@@ -42,8 +42,27 @@ export const MENU = [
   { key: 'forms', label: __( 'Forms & Pages', 'memberglut' ), icon: faFileLines, href: _pg.forms },
   { key: 'tools', label: __( 'Data & Logs', 'memberglut' ), icon: faToolbox, href: _pg.tools },
   { key: 'settings', label: __( 'Global Settings', 'memberglut' ), icon: faGear, href: _pg.settings },
-  { key: 'pro', label: __( 'Pro Features', 'memberglut' ), icon: faStar, href: _pg.pro_features },
+  { key: 'pro', label: _isPro ? __( 'Pro Modules', 'memberglut' ) : __( 'Pro Features', 'memberglut' ), icon: faStar, href: _pg.pro_features },
 ];
+
+/**
+ * Menu with the add-on screens: memberglutAdmin.registerMenuItem({ key, label, href, icon, after, pages }).
+ * `after` is the key of the item to insert after (default: before Data & Logs); `pages` are admin page slugs that
+ * highlight the item.
+ */
+function buildMenu() {
+  const list = [...CORE_MENU];
+  const extra = ((typeof window !== 'undefined' && window.memberglutAdmin) || {}).menu || [];
+  extra.forEach((item) => {
+    if (!item || !item.key || !item.href) return;
+    const at = list.findIndex((i) => i.key === (item.after || 'emails'));
+    list.splice(at === -1 ? list.length - 1 : at + 1, 0, { ...item, icon: item.icon || faStar });
+    (item.pages || []).forEach((slug) => { CURRENT[slug] = item.key; });
+  });
+  return list;
+}
+
+export const MENU = buildMenu();
 
 /**
  * Three-bar button for the left of every header. Opens a side menu with the main MemberGlut pages.

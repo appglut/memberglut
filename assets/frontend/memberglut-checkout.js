@@ -34,13 +34,52 @@
 	/* ------------------------------------------------------------------
 	 * Summary, coupon and methods follow the chosen plan
 	 * ---------------------------------------------------------------- */
+
+	/**
+	 * Extra checkout inputs sent with the summary request: every named input inside the payment section (except the
+	 * coupon and the payment method) and any input marked data-mg-summary elsewhere in the form (e.g. country).
+	 * Names like a[] and a[b] become arrays / objects.
+	 */
+	function summaryFields(form) {
+		var out = {};
+		var inputs = qsa(form, '[data-mg-checkout] [name], [name][data-mg-summary]');
+		inputs.forEach(function (el) {
+			var name = el.name;
+			if (!name || name === 'coupon' || name === 'gateway' || el.disabled) { return; }
+			if ((el.type === 'checkbox' || el.type === 'radio') && !el.checked) { return; }
+			var m = name.match(/^([^\[]+)(?:\[([^\]]*)\])?(?:\[\])?$/);
+			if (!m) { return; }
+			var key = m[1];
+			if (/\[\]$/.test(name)) {
+				if (m[2] !== undefined && m[2] !== '') {
+					out[key] = out[key] || {};
+					(out[key][m[2]] = out[key][m[2]] || []).push(el.value);
+				} else {
+					(out[key] = Array.isArray(out[key]) ? out[key] : []).push(el.value);
+				}
+			} else if (m[2] !== undefined) {
+				out[key] = out[key] && typeof out[key] === 'object' ? out[key] : {};
+				out[key][m[2]] = el.value;
+			} else {
+				out[key] = el.value;
+			}
+		});
+		return out;
+	}
+
+	var lastCoupon = {};
 	function refresh(form, withCoupon) {
 		var box = qs(form, '[data-mg-checkout]');
 		var plan = mg.selectedPlan(form);
 		if (!box || !plan || !plan.id || plan.type !== 'paid') { return Promise.resolve(); }
 		var coupon = qs(form, 'input[name="coupon"]');
 		var email = qs(form, 'input[name="mg[email]"]');
-		return postJSON('summary', { plan: plan.id, coupon: withCoupon && coupon ? coupon.value : '', email: email ? email.value : '' }).then(function (d) {
+		var body = summaryFields(form);
+		if (withCoupon !== null) { lastCoupon[plan.id] = !!withCoupon; }
+		body.plan = plan.id;
+		body.coupon = (withCoupon === null ? lastCoupon[plan.id] : withCoupon) && coupon ? coupon.value : '';
+		body.email = email ? email.value : '';
+		return postJSON('summary', body).then(function (d) {
 			qs(box, '[data-mg-summary]').innerHTML = d.html;
 			box.classList.toggle('no-payment', !d.needs_payment);
 			qsa(box, '.mg-gateway-option').forEach(function (opt) {
@@ -55,8 +94,15 @@
 			field.classList.toggle('has-error', !!d.coupon_error);
 			qs(field, '.mg-field-error').textContent = d.coupon_error || (d.coupon_ok ? i18n.couponOk : '');
 			field.classList.toggle('is-ok', !!d.coupon_ok);
+			form.dispatchEvent(new CustomEvent('memberglut:summary', { detail: d }));
 		}).catch(function () {});
 	}
+	/** Refresh the order summary (add-ons call it when their checkout inputs change). */
+	mg.refreshSummary = function (form) { return refresh(form, null); };
+	document.addEventListener('change', function (e) {
+		var form = e.target.closest && e.target.closest('form[data-mg-form]');
+		if (form && e.target.matches && e.target.matches('[data-mg-summary], [data-mg-checkout] [data-mg-summary-field]')) { refresh(form, null); }
+	});
 	function showNote(form) {
 		var chosen = qs(form, 'input[name="gateway"]:checked');
 		qsa(form, '[data-gateway-note]').forEach(function (n) {

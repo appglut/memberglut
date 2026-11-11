@@ -21,7 +21,14 @@ class MemberGlut_REST_Public extends MemberGlut_REST_Controller {
 	 * @return void
 	 */
 	public function register_routes() {
-		foreach ( array( 'register', 'login', 'lost-password', 'reset-password' ) as $route ) {
+		/**
+		 * Front-end forms posted by memberglut.js to /public/{form} (data-mg-form="{form}"). Add-on forms are handled
+		 * with the memberglut_form_action filter, like their no-JavaScript post-back.
+		 *
+		 * @param string[] $forms Form names (dashes).
+		 */
+		$forms = (array) apply_filters( 'memberglut_public_forms', array( 'register', 'login', 'lost-password', 'reset-password' ) );
+		foreach ( array_unique( array_map( 'sanitize_key', $forms ) ) as $route ) {
 			$this->route( '/public/' . $route, 'POST', 'handle', false );
 		}
 		do_action( 'memberglut_public_routes', $this );
@@ -82,7 +89,10 @@ class MemberGlut_REST_Public extends MemberGlut_REST_Controller {
 				$res = MemberGlut_Auth::reset_password( $data );
 				break;
 			default:
-				$res = new WP_Error( 'memberglut_unknown', __( 'Unknown form.', 'memberglut' ), array( 'status' => 404 ) );
+				$res = apply_filters( 'memberglut_form_action', null, $action, $data );
+				if ( null === $res ) {
+					$res = new WP_Error( 'memberglut_unknown', __( 'Unknown form.', 'memberglut' ), array( 'status' => 404 ) );
+				}
 		}
 		if ( is_wp_error( $res ) ) {
 			$d = $res->get_error_data();
