@@ -3,7 +3,7 @@
  * Plugin Name: MemberGlut - Membership, Roles & Content Restriction
  * Plugin URI: https://wordpress.org/plugins/memberglut/
  * Description: Membership plans, subscriptions, payments, content restriction, member accounts and a full role & capability editor.
- * Version: 2.0.0
+ * Version: 2.0.1
  * Author: AppGlut
  * Author URI: https://appglut.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MEMBERGLUT_VERSION', '2.0.0' );
+define( 'MEMBERGLUT_VERSION', '2.0.1' );
 define( 'MEMBERGLUT_PLUGIN_FILE', __FILE__ );
 define( 'MEMBERGLUT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'MEMBERGLUT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );

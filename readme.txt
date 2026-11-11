@@ -3,7 +3,7 @@ Contributors: appglut
 Tags: membership, subscriptions, content restriction, paywall, user roles
 Requires at least: 6.2
 Tested up to: 7.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -255,6 +255,18 @@ Used when Turnstile is chosen in Global Settings › Captcha. The script is load
 
 == Changelog ==
 
+= 2.0.1 =
+* New: role hierarchy — users can only manage users with a lower role level.
+* New: per-role switches to allow or block editing the profile and deleting the account.
+* New: brand the WordPress login page (logo, colours, background, form style, extra CSS).
+* New: “New device login” email for members and “Suspicious account activity” email for the admin.
+* New: see and change a page’s access from the front-end toolbar.
+* New: Elementor widget and show/hide by plan or role for Elementor, Beaver Builder and Bricks elements.
+* New: Easy Digital Downloads and GiveWP can give a plan on purchase or donation (removed on refund).
+* New: WP-CLI commands and WordPress Abilities API support.
+* New: [memberglut_security_badge] shortcode.
+* Dev: memberglut_login_locked action; add-on API for MemberGlut Pro screens.
+
 = 2.0.0 =
 * New: membership plans with one-time and recurring billing, trials, sign-up fees, plan groups, upgrades and downgrades.
 * New: Stripe, PayPal, bank transfer and manual payments; coupons; refunds; receipts.
@@ -277,6 +289,9 @@ Used when Turnstile is chosen in Global Settings › Captcha. The script is load
 * Initial release.
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+Adds role hierarchy, login page branding, security alert emails, page-builder visibility, WP-CLI and more.
 
 = 2.0.0 =
 Major update with plans, payments and a new admin. Your 1.x data is migrated automatically — please back up your database before updating.
